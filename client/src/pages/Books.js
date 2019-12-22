@@ -7,7 +7,7 @@ import { Col, Row, Container } from "../components/Grid";
 import { List, ListItem } from "../components/List";
 import { Input, TextArea, FormBtn } from "../components/Form";
 
-class Books extends Component {
+class Tickers extends Component {
   state = {
     books: [],
     title: "",
@@ -16,20 +16,20 @@ class Books extends Component {
   };
 
   componentDidMount() {
-    this.loadBooks();
+    this.loadStocks();
   }
 
-  loadBooks = () => {
-    API.getBooks()
+  loadStocks = () => {
+    API.getTickers()
       .then(res =>
         this.setState({ books: res.data, title: "", author: "", synopsis: "" })
       )
       .catch(err => console.log(err));
   };
 
-  deleteBook = id => {
-    API.deleteBook(id)
-      .then(res => this.loadBooks())
+  deleteTicker = id => {
+    API.deleteTicker(id)
+      .then(res => this.loadStocks())
       .catch(err => console.log(err));
   };
 
@@ -43,12 +43,12 @@ class Books extends Component {
   handleFormSubmit = event => {
     event.preventDefault();
     if (this.state.title && this.state.author) {
-      API.saveBook({
+      API.saveTicker({
         title: this.state.title,
         author: this.state.author,
         synopsis: this.state.synopsis
       })
-        .then(res => this.loadBooks())
+        .then(res => this.loadStocks())
         .catch(err => console.log(err));
     }
   };
@@ -59,14 +59,14 @@ class Books extends Component {
         <Row>
           <Col size="md-6">
             <Jumbotron>
-              <h1>What Books Should I Read?</h1>
+              <h1>Which Stock Tickers Do You Want To Track?</h1>
             </Jumbotron>
             <form>
               <Input
                 value={this.state.title}
                 onChange={this.handleInputChange}
                 name="title"
-                placeholder="Title (required)"
+                placeholder="Stock Ticker (required)"
               />
               <Input
                 value={this.state.author}
@@ -78,19 +78,19 @@ class Books extends Component {
                 value={this.state.synopsis}
                 onChange={this.handleInputChange}
                 name="synopsis"
-                placeholder="Synopsis (Optional)"
+                placeholder="Notes (Optional)"
               />
               <FormBtn
                 disabled={!(this.state.author && this.state.title)}
                 onClick={this.handleFormSubmit}
               >
-                Submit Book
+                Submit Ticker Info
               </FormBtn>
             </form>
           </Col>
           <Col size="md-6 sm-12">
             <Jumbotron>
-              <h1>Books On My List</h1>
+              <h1>Stocks Being Tracked</h1>
             </Jumbotron>
             {this.state.books.length ? (
               <List>
@@ -101,7 +101,7 @@ class Books extends Component {
                         {book.title} by {book.author}
                       </strong>
                     </Link>
-                    <DeleteBtn onClick={() => this.deleteBook(book._id)} />
+                    <DeleteBtn onClick={() => this.deleteTicker(book._id)} />
                   </ListItem>
                 ))}
               </List>
@@ -115,4 +115,4 @@ class Books extends Component {
   }
 }
 
-export default Books;
+export default Tickers;

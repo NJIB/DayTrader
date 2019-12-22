@@ -13,7 +13,7 @@ class Detail extends Component {
   // The book id for this route can be accessed using this.props.match.params.id
 
   componentDidMount() {
-    API.getBook(this.props.match.params.id)
+    API.getTicker(this.props.match.params.id)
       .then(res => this.setState({ book: res.data }))
       .catch(err => console.log(err));
   }
