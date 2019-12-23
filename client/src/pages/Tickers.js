@@ -124,33 +124,47 @@ class Tickers extends Component {
           {/* <Col size="md-6 sm-12"> */}
           <Col size="md-12 sm-12">
             <Jumbotron>
-              <h1>Stocks Being Tracked</h1>
+              <h3>Stocks Being Tracked</h3>
             </Jumbotron>
-            {/* Inserting table headers */}
-            <table style={{ width: '100%', border: '1px solid black' }}>
-              <tr>
-                <th>Ticker</th>
-                <th>Quantity</th>
-                <th>Notes</th>
-              </tr>
-            </table>
             {this.state.tickers.length ? (
-              <List>
-                {this.state.tickers.map(ticker => (
-                  //Insert table here
-                  <ListItem key={ticker._id}>
-                    <Link to={"/tickers/" + ticker._id}>
-                      <strong>
-                        {ticker.ticker} {ticker.quantity}
-                      </strong>
-                    </Link>
-                    <DeleteBtn onClick={() => this.deleteTicker(ticker._id)} />
-                  </ListItem>
-                ))}
-              </List>
+              <table className={'table'} style={{ width: '100%' }}>
+                <thead>
+                  <tr>
+                    <th scope={'col'} style={{ width: '30%' }}>Ticker</th>
+                    <th scope={'col'} style={{ width: '30%' }}>Quantity</th>
+                    <th scope={'col'} style={{ width: '30%' }}>X</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <List>
+                    {this.state.tickers.map(ticker => (
+                      <tr>
+                        <ListItem key={ticker._id}>
+                          <td style={{ width: '30%' }}>
+                            <Link to={"/tickers/" + ticker._id}>
+                              <strong>
+                                {ticker.ticker}
+                              </strong>
+                            </Link>
+                          </td>
+
+                          <td style={{ width: '30%' }}>
+                            {ticker.quantity}
+                          </td>
+
+                          <td style={{ width: '30%' }}>
+                            <DeleteBtn onClick={() => this.deleteTicker(ticker._id)} />
+                          </td>
+                      </ListItem>
+                      </tr>
+                    ))}
+                  </List>
+                </tbody>
+              </table>
             ) : (
-                <h3>No Results to Display</h3>
+                <h2>No Results to Display</h2>
               )}
+
           </Col>
         </Row>
       </Container>
