@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
 const tickerSchema = new Schema({
-  title: { type: String, required: true },
+  ticker: { type: String, required: true },
   quantity: { type: String, required: true },
   notes: String,
   date: { type: Date, default: Date.now }

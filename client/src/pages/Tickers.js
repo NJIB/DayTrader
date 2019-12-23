@@ -73,21 +73,43 @@ class Tickers extends Component {
                     placeholder="Stock Ticker"
                   />
                 </Col>
-                <Col size="md-2">
+                <Col size="md-1">
                   <Input
                     value={this.state.quantity}
                     onChange={this.handleInputChange}
                     name="quantity"
-                    placeholder="Quantity"
+                    placeholder="Qty"
                   />
                 </Col>
+                <Col size="md-2">
+                  <Input
+                    // value={this.state.quantity}
+                    onChange={this.handleInputChange}
+                    name="transactiondate"
+                    placeholder="Date"
+                  />
+                </Col>
+                <Col size="md-1">
+                  <div class="custom-control custom-radio custom-control-inline">
+                    <input type="radio" id="customRadioInline1" name="customRadioInline1" class="custom-control-input" />
+                    <label class="custom-control-label" for="customRadioInline1">Buy</label>
+                  </div>
+                </Col>
+                <Col size="md-1">
+                  <div class="custom-control custom-radio custom-control-inline">
+                    <input type="radio" id="customRadioInline2" name="customRadioInline1" class="custom-control-input" />
+                    <label class="custom-control-label" for="customRadioInline2">Sell</label>
+                  </div>
 
-                <NotesArea
-                  value={this.state.notes}
-                  onChange={this.handleInputChange}
-                  name="notes"
-                  placeholder="Notes (Optional)"
-                />
+                </Col>
+                <Col size="md-4">
+                  <NotesArea
+                    value={this.state.notes}
+                    onChange={this.handleInputChange}
+                    name="notes"
+                    placeholder="Notes (Optional)"
+                  />
+                </Col>
                 <Col size="md-1">
                   <FormBtn
                     disabled={!(this.state.quantity && this.state.ticker)}
@@ -104,6 +126,14 @@ class Tickers extends Component {
             <Jumbotron>
               <h1>Stocks Being Tracked</h1>
             </Jumbotron>
+            {/* Inserting table headers */}
+            <table style={{ width: '100%', border: '1px solid black' }}>
+              <tr>
+                <th>Ticker</th>
+                <th>Quantity</th>
+                <th>Notes</th>
+              </tr>
+            </table>
             {this.state.tickers.length ? (
               <List>
                 {this.state.tickers.map(ticker => (
@@ -111,7 +141,7 @@ class Tickers extends Component {
                   <ListItem key={ticker._id}>
                     <Link to={"/tickers/" + ticker._id}>
                       <strong>
-                        {ticker.ticker} by {ticker.quantity}
+                        {ticker.ticker} {ticker.quantity}
                       </strong>
                     </Link>
                     <DeleteBtn onClick={() => this.deleteTicker(ticker._id)} />
