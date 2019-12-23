@@ -1,6 +1,6 @@
 import React from "react";
 
-// This file exports the Input, TextArea, and FormBtn components
+// This file exports the Input, NotesArea, and FormBtn components
 
 export function Input(props) {
   return (
@@ -10,7 +10,7 @@ export function Input(props) {
   );
 }
 
-export function TextArea(props) {
+export function NotesArea(props) {
   return (
     <div className="form-group">
       <textarea className="form-control" rows="20" {...props} />

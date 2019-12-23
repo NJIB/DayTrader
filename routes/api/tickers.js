@@ -1,12 +1,12 @@
 const router = require("express").Router();
 const tickersController = require("../../controllers/tickersController");
 
-// Matches with "/api/books"
+// Matches with "/api/tickers"
 router.route("/")
   .get(tickersController.findAll)
   .post(tickersController.create);
 
-// Matches with "/api/books/:id"
+// Matches with "/api/tickers/:id"
 router
   .route("/:id")
   .get(tickersController.findById)

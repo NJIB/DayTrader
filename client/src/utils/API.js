@@ -1,20 +1,20 @@
 import axios from "axios";
 
 export default {
-  // Gets all books
+  // Gets all tickers
   getTickers: function() {
-    return axios.get("/api/books");
+    return axios.get("/api/tickers");
   },
-  // Gets the book with the given id
+  // Gets the ticker with the given id
   getTicker: function(id) {
-    return axios.get("/api/books/" + id);
+    return axios.get("/api/tickers/" + id);
   },
-  // Deletes the book with the given id
+  // Deletes the ticker with the given id
   deleteTicker: function(id) {
-    return axios.delete("/api/books/" + id);
+    return axios.delete("/api/tickers/" + id);
   },
-  // Saves a book to the database
-  saveTicker: function(bookData) {
-    return axios.post("/api/books", bookData);
+  // Saves a ticker to the database
+  saveTicker: function(tickerData) {
+    return axios.post("/api/tickers", tickerData);
   }
 };
