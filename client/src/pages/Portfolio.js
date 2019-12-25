@@ -7,7 +7,7 @@ import { Col, Row, Container } from "../components/Grid";
 import { List, ListItem } from "../components/List";
 import { Input, NotesArea, FormBtn } from "../components/Form";
 
-class Tickers extends Component {
+class Portfolio extends Component {
   state = {
     tickers: [],
     ticker: "",
@@ -61,7 +61,7 @@ class Tickers extends Component {
           {/* <Col size="md-6"> */}
           <Col size="md-12">
             <Jumbotron>
-              <h1>Which Stock Tickers Do You Want To Track?</h1>
+              <h1>Add Stock / Transaction to Portfolio:</h1>
             </Jumbotron>
             <form>
               <Row>
@@ -73,23 +73,23 @@ class Tickers extends Component {
                     placeholder="Stock Ticker"
                   />
                 </Col>
-                {/* <Col size="md-1">
+                <Col size="md-1">
                   <Input
                     value={this.state.quantity}
                     onChange={this.handleInputChange}
                     name="quantity"
                     placeholder="Qty"
                   />
-                </Col> */}
-                {/* <Col size="md-2">
+                </Col>
+                <Col size="md-2">
                   <Input
                     // value={this.state.quantity}
                     onChange={this.handleInputChange}
                     name="transactiondate"
                     placeholder="Date"
                   />
-                </Col> */}
-                {/* <Col size="md-1">
+                </Col>
+                <Col size="md-1">
                   <div class="custom-control custom-radio custom-control-inline">
                     <input type="radio" id="customRadioInline1" name="customRadioInline1" class="custom-control-input" />
                     <label class="custom-control-label" for="customRadioInline1">Buy</label>
@@ -101,21 +101,21 @@ class Tickers extends Component {
                     <label class="custom-control-label" for="customRadioInline2">Sell</label>
                   </div>
 
-                </Col> */}
-                {/* <Col size="md-4">
+                </Col>
+                <Col size="md-4">
                   <NotesArea
                     value={this.state.notes}
                     onChange={this.handleInputChange}
                     name="notes"
                     placeholder="Notes (Optional)"
                   />
-                </Col> */}
+                </Col>
                 <Col size="md-1">
                   <FormBtn
                     disabled={!(this.state.quantity && this.state.ticker)}
                     onClick={this.handleFormSubmit}
                   >
-                    Search
+                    Save
               </FormBtn>
                 </Col>
               </Row>
@@ -164,4 +164,4 @@ class Tickers extends Component {
   }
 }
 
-export default Tickers;
+export default Portfolio;

@@ -16,5 +16,10 @@ export default {
   // Saves a ticker to the database
   saveTicker: function(tickerData) {
     return axios.post("/api/tickers", tickerData);
+  },
+  //NJIB added - to be spliced in
+    getTickerData: function(query) {
+      return axios.get("/api/", { params: { q: query } });
   }
+  
 };
