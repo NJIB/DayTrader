@@ -26,7 +26,8 @@ class Detail extends Component {
           <Col size="md-12">
             <Jumbotron>
               <h1>
-                {this.state.ticker.ticker} {this.state.ticker.quantity}
+                {this.state.ticker.ticker}
+                {this.state.ticker.quantity}
               </h1>
             </Jumbotron>
           </Col>

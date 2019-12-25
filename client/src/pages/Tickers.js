@@ -56,7 +56,7 @@ class Tickers extends Component {
 
   render() {
     return (
-      <Container fluid>
+      <Container fluid className='SearchPane'>
         <Row>
           {/* <Col size="md-6"> */}
           <Col size="md-12">
@@ -126,41 +126,33 @@ class Tickers extends Component {
             <Jumbotron>
               <h3>Stocks Being Tracked</h3>
             </Jumbotron>
+
+            <table className={'table'} style={{ width: '100%' }}>
+              <thead>
+                <tr>
+                  <th scope={'col'} style={{ width: '30%' }}>Ticker</th>
+                  <th scope={'col'} style={{ width: '30%' }}>Quantity</th>
+                  <th scope={'col'} style={{ width: '30%' }}>X</th>
+                </tr>
+              </thead>
+            </table>
+
             {this.state.tickers.length ? (
-              <table className={'table'} style={{ width: '100%' }}>
-                <thead>
-                  <tr>
-                    <th scope={'col'} style={{ width: '30%' }}>Ticker</th>
-                    <th scope={'col'} style={{ width: '30%' }}>Quantity</th>
-                    <th scope={'col'} style={{ width: '30%' }}>X</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <List>
-                    {this.state.tickers.map(ticker => (
-                      <tr>
-                        <ListItem key={ticker._id}>
-                          <td style={{ width: '30%' }}>
-                            <Link to={"/tickers/" + ticker._id}>
-                              <strong>
-                                {ticker.ticker}
-                              </strong>
-                            </Link>
-                          </td>
+              <List>
+                {this.state.tickers.map(ticker => (
+                  <ListItem key={ticker._id}>
+                    <Link to={"/tickers/" + ticker._id}>
+                        <strong>
+                          {ticker.ticker}
+                        </strong>
+                    </Link>
 
-                          <td style={{ width: '30%' }}>
-                            {ticker.quantity}
-                          </td>
+                    {ticker.quantity}
 
-                          <td style={{ width: '30%' }}>
-                            <DeleteBtn onClick={() => this.deleteTicker(ticker._id)} />
-                          </td>
-                      </ListItem>
-                      </tr>
-                    ))}
-                  </List>
-                </tbody>
-              </table>
+                    <DeleteBtn onClick={() => this.deleteTicker(ticker._id)} />
+                  </ListItem>
+                ))}
+              </List>
             ) : (
                 <h2>No Results to Display</h2>
               )}
