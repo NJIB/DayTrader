@@ -20,6 +20,5 @@ export default {
   //NJIB added - to be spliced in
     getTickerData: function(query) {
       return axios.get("/api/", { params: { q: query } });
-  }
-  
+  } 
 };
