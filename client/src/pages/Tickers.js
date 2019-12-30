@@ -98,39 +98,6 @@ class Tickers extends Component {
           </Col>
           {/* <Col size="md-6 sm-12"> */}
           <Col size="md-12 sm-12">
-            <Jumbotron>
-              <h3>Stocks Being Tracked</h3>
-            </Jumbotron>
-
-            <table className={'table'} style={{ width: '100%' }}>
-              <thead>
-                <tr>
-                  <th scope={'col'} style={{ width: '30%' }}>Ticker</th>
-                  <th scope={'col'} style={{ width: '30%' }}>Quantity</th>
-                  <th scope={'col'} style={{ width: '30%' }}>X</th>
-                </tr>
-              </thead>
-            </table>
-
-            {this.state.tickers.length ? (
-              <List>
-                {this.state.tickers.map(ticker => (
-                  <ListItem key={ticker._id}>
-                    <Link to={"/tickers/" + ticker._id}>
-                        <strong>
-                          {ticker.ticker}
-                        </strong>
-                    </Link>
-
-                    {ticker.quantity}
-
-                    <DeleteBtn onClick={() => this.deleteTicker(ticker._id)} />
-                  </ListItem>
-                ))}
-              </List>
-            ) : (
-                <h2>No Results to Display</h2>
-              )}
 
           </Col>
         </Row>
