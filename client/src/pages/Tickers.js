@@ -85,46 +85,9 @@ class Tickers extends Component {
                     placeholder="Stock Ticker"
                   />
                 </Col>
-                {/* <Col size="md-1">
-                  <Input
-                    value={this.state.quantity}
-                    onChange={this.handleInputChange}
-                    name="quantity"
-                    placeholder="Qty"
-                  />
-                </Col> */}
-                {/* <Col size="md-2">
-                  <Input
-                    // value={this.state.quantity}
-                    onChange={this.handleInputChange}
-                    name="transactiondate"
-                    placeholder="Date"
-                  />
-                </Col> */}
-                {/* <Col size="md-1">
-                  <div class="custom-control custom-radio custom-control-inline">
-                    <input type="radio" id="customRadioInline1" name="customRadioInline1" class="custom-control-input" />
-                    <label class="custom-control-label" for="customRadioInline1">Buy</label>
-                  </div>
-                </Col>
-                <Col size="md-1">
-                  <div class="custom-control custom-radio custom-control-inline">
-                    <input type="radio" id="customRadioInline2" name="customRadioInline1" class="custom-control-input" />
-                    <label class="custom-control-label" for="customRadioInline2">Sell</label>
-                  </div>
-
-                </Col> */}
-                {/* <Col size="md-4">
-                  <NotesArea
-                    value={this.state.notes}
-                    onChange={this.handleInputChange}
-                    name="notes"
-                    placeholder="Notes (Optional)"
-                  />
-                </Col> */}
                 <Col size="md-1">
                   <FormBtn
-                    disabled={!(this.state.quantity && this.state.ticker)}
+                    disabled={!(this.state.tickerSearch)}
                     onClick={this.handleFormSubmit}
                   >
                     Search
