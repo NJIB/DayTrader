@@ -10,7 +10,7 @@ import { Input, NotesArea, FormBtn } from "../components/Form";
 class Tickers extends Component {
   state = {
     tickers: [],
-    ticker: "",
+    tickerSearch: "",
     quantity: "",
     notes: ""
   };
@@ -40,6 +40,18 @@ class Tickers extends Component {
     });
   };
 
+  // handleFormSubmit = event => {
+  //   event.preventDefault();
+  //   //Check validation on the following line (may need to be different from ticker example)
+  //   if (this.state.ticker && this.state.quantity) {
+  //     API.getTickerInfo({
+  //       ticker: this.state.tickerSearch
+  //     })
+  //       .then(res => this.loadStocks())
+  //       .catch(err => console.log(err));
+  //   }
+  // };
+
   handleFormSubmit = event => {
     event.preventDefault();
     //Check validation on the following line (may need to be different from ticker example)
@@ -67,9 +79,9 @@ class Tickers extends Component {
               <Row>
                 <Col size="md-2">
                   <Input
-                    value={this.state.ticker}
+                    value={this.state.tickerSearch}
                     onChange={this.handleInputChange}
-                    name="ticker"
+                    name="tickerSearch"
                     placeholder="Stock Ticker"
                   />
                 </Col>

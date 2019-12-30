@@ -56,7 +56,8 @@ class Portfolio extends Component {
 
   render() {
     return (
-      <Container fluid className='SearchPane'>
+      // <Container fluid className='SearchPane'>
+      <Container fluid>
         <Row>
           {/* <Col size="md-6"> */}
           <Col size="md-12">
@@ -90,15 +91,15 @@ class Portfolio extends Component {
                   />
                 </Col>
                 <Col size="md-1">
-                  <div class="custom-control custom-radio custom-control-inline">
-                    <input type="radio" id="customRadioInline1" name="customRadioInline1" class="custom-control-input" />
-                    <label class="custom-control-label" for="customRadioInline1">Buy</label>
+                  <div className="custom-control custom-radio custom-control-inline">
+                    <input type="radio" id="customRadioInline1" name="customRadioInline1" className="custom-control-input" />
+                    <label className="custom-control-label" for="customRadioInline1">Buy</label>
                   </div>
                 </Col>
                 <Col size="md-1">
-                  <div class="custom-control custom-radio custom-control-inline">
-                    <input type="radio" id="customRadioInline2" name="customRadioInline1" class="custom-control-input" />
-                    <label class="custom-control-label" for="customRadioInline2">Sell</label>
+                  <div className="custom-control custom-radio custom-control-inline">
+                    <input type="radio" id="customRadioInline2" name="customRadioInline1" className="custom-control-input" />
+                    <label className="custom-control-label" for="customRadioInline2">Sell</label>
                   </div>
 
                 </Col>
