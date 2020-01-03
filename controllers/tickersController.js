@@ -34,13 +34,13 @@ module.exports = {
       .then(dbModel => res.json(dbModel))
       .catch(err => res.status(422).json(err));
   }
-  // ,
-  // getTickerInfo: function(req, res) {
-  //   axios
-  //   .get("http://www.recipepuppy.com/api/", { params: req.query })
-  //   .then(({ data: { results } }) => res.json(results))
-  //   .catch(err => res.status(422).json(err));
-  // }
+  ,
+  getTickerInfo: function(req, res) {
+    axios
+    .get("http://www.recipepuppy.com/api/", { params: req.query })
+    .then(({ data: { results } }) => res.json(results))
+    .catch(err => res.status(422).json(err));
+  }
 };
 
 

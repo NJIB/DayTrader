@@ -6,13 +6,16 @@ import { Link } from "react-router-dom";
 import { Col, Row, Container } from "../components/Grid";
 import { List, ListItem } from "../components/List";
 import { Input, NotesArea, FormBtn } from "../components/Form";
+import {tickerChart} from "../components/Charts";
+// import {Bar} from 'react-chartjs-2';
 
 class Tickers extends Component {
   state = {
     tickers: [],
-    tickerSearch: "",
-    quantity: "",
-    notes: ""
+    tickerSearch: ""
+    // ,
+    // quantity: "",
+    // notes: ""
   };
 
   componentDidMount() {
@@ -27,11 +30,11 @@ class Tickers extends Component {
       .catch(err => console.log(err));
   };
 
-  deleteTicker = id => {
-    API.deleteTicker(id)
-      .then(res => this.loadStocks())
-      .catch(err => console.log(err));
-  };
+  // deleteTicker = id => {
+  //   API.deleteTicker(id)
+  //     .then(res => this.loadStocks())
+  //     .catch(err => console.log(err));
+  // };
 
   handleInputChange = event => {
     const { name, value } = event.target;
@@ -52,19 +55,29 @@ class Tickers extends Component {
   //   }
   // };
 
-  handleFormSubmit = event => {
+  handleFormSubmit = async event => {
     event.preventDefault();
+    console.log("START");
     //Check validation on the following line (may need to be different from ticker example)
-    if (this.state.ticker && this.state.quantity) {
-      API.saveTicker({
-        ticker: this.state.ticker,
-        quantity: this.state.quantity,
-        notes: this.state.notes
-      })
-        .then(res => this.loadStocks())
-        .catch(err => console.log(err));
+    if (this.state.tickerSearch) {
+      var settings = {
+        "async": true,
+        "crossDomain": true,
+        // "url": "https://apidojo-yahoo-finance-v1.p.rapidapi.com/stock/v2/get-historical-data?frequency=1d&filter=history&period1=" + startDate + "&period2=" + dateNowSeconds + "&symbol=" + tickerData,
+        "url": "https://apidojo-yahoo-finance-v1.p.rapidapi.com/stock/v2/get-historical-data?frequency=1d&filter=history&period1=1546405200&period2=1578020649&symbol=IBM",
+        "method": "GET",
+        "headers": {
+            "x-rapidapi-host": "apidojo-yahoo-finance-v1.p.rapidapi.com",
+            "x-rapidapi-key": "7eb729d91fmshd56769216684858p17fff1jsna4991481e499"
+        }
     }
-  };
+
+    console.log("queryURL: " + settings.url);
+
+    const chartResponse = await fetch(settings.url, settings) 
+        console.log(chartResponse.json());
+  }
+};
 
   render() {
     return (
@@ -98,6 +111,58 @@ class Tickers extends Component {
           </Col>
           {/* <Col size="md-6 sm-12"> */}
           <Col size="md-12 sm-12">
+
+            <div className="container">
+              <div id="tickerOutput" className="card card-default">
+                <div className="row" id="graphRow1">
+                  <div className="col-sm-12 col-md-6 col-lg-4">
+                    <div className="row" id="tickerChartHeader1-1"></div>
+                    <div className="row" id="periodButtons1-1"></div>
+                    <div className="row" id="tickerChart1-1">
+                      <canvas id="myChart1-1" width="200" height="200"></canvas>
+                    </div>
+                  </div>
+                  <div className="col-sm-12 col-md-6 col-lg-4">
+                    <div className="row" id="tickerChartHeader1-2"></div>
+                    <div className="row" id="periodButtons1-2"></div>
+                    <div className="row" id="tickerChart1-2">
+                      <canvas id="myChart1-2" width="200" height="200"></canvas>
+                    </div>
+                  </div>
+                  <div className="col-sm-12 col-md-6 col-lg-4">
+                    <div className="row" id="tickerChartHeader1-3"></div>
+                    <div className="row" id="periodButtons1-3"></div>
+                    <div className="row" id="tickerChart1-3">
+                      <canvas id="myChart1-3" width="200" height="200"></canvas>
+                    </div>
+                  </div>
+                </div>
+                <div className="row" id="graphRow2">
+                  <div className="col-sm-12 col-md-6 col-lg-4">
+                    <div className="row" id="tickerChartHeader2-1"></div>
+                    <div className="row" id="periodButtons2-1"></div>
+                    <div className="row" id="tickerChart2-1">
+                      <canvas id="myChart1-1" width="200" height="200"></canvas>
+                    </div>
+                  </div>
+                  <div className="col-sm-12 col-md-6 col-lg-4">
+                    <div className="row" id="tickerChartHeader2-2"></div>
+                    <div className="row" id="periodButtons2-2"></div>
+                    <div className="row" id="tickerChart2-2">
+                      <canvas id="myChart1-2" width="200" height="200"></canvas>
+                    </div>
+                  </div>
+                  <div className="col-sm-12 col-md-6 col-lg-4">
+                    <div className="row" id="tickerChartHeader2-3"></div>
+                    <div className="row" id="periodButtons2-3"></div>
+                    <div className="row" id="tickerChart2-3">
+                      <canvas id="myChart1-3" width="200" height="200"></canvas>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
 
           </Col>
         </Row>

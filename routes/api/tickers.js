@@ -19,24 +19,25 @@ router
 
 
 // //NJIB added to handle API call
-// const axios = require("axios");
+const axios = require("axios");
 
-// var startDate = (moment().format("MM")) + "/"
-// + (moment().format("DD")) + "/"
-// + (moment().format("YYYY"));
+var startDate = (moment().format("MM")) + "/"
++ (moment().format("DD")) + "/"
++ (moment().format("YYYY"));
 
-// // Convert to seconds
-// startDate = parseInt((moment(startDate) / 1000));
-// console.log("startDate: " + startDate);
+// Convert to seconds
+startDate = parseInt((moment(startDate) / 1000));
+console.log("startDate: " + startDate);
 
 // dateNowSeconds = parseInt((moment() / 1000));
-// console.log("dateNowSeconds: " + dateNowSeconds);
+let dateNowSeconds = parseInt((moment() / 1000));
+console.log("dateNowSeconds: " + dateNowSeconds);
 
-// var priceResults = [];
-// var volResults = [];
-// var dayDate = [];
+var priceResults = [];
+var volResults = [];
+var dayDate = [];
 
-// //Chart data API
+//Chart data API
 // var settings = {
 //   "async": true,
 //   "crossDomain": true,
@@ -52,7 +53,7 @@ router
 
 // router.get("/stock", (req, res) => {
 //   axios
-//     .get("https://apidojo-yahoo-finance-v1.p.rapidapi.com/stock/v2/get-historical-data?frequency=1d&filter=history&period1=" + startDate + "&period2=" + dateNowSeconds + "&symbol=" +, { params: req.query })
+//     .get({ settings })
 //     .then(({ data: { results } }) => res.json(results))
 //     .catch(err => res.status(422).json(err));
 // });
