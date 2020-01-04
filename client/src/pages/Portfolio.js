@@ -120,14 +120,14 @@ class Portfolio extends Component {
                     <label className="custom-control-label" for="customRadioInline1">Buy</label>
                   </div> */}
                   <InputGroup>
-                      <InputGroup.Radio aria-label="Buy" id="rbBuy" />
-                      <label>Buy</label>
+                    <InputGroup.Radio aria-label="Buy" id="rbBuy" />
+                    <label>Buy</label>
                   </InputGroup>
                 </Col>
                 <Col size="md-1">
-                <InputGroup>
-                      <InputGroup.Radio aria-label="Sell" id="rbSell" />
-                      <label>Sell</label>
+                  <InputGroup>
+                    <InputGroup.Radio aria-label="Sell" id="rbSell" />
+                    <label>Sell</label>
                   </InputGroup>
                   {/* <div className="rbSell custom-control custom-radio custom-control-inline">
                     <input type="radio" id="customRadioInline2" name="customRadioInline1" className="custom-control-input" />
@@ -154,6 +154,9 @@ class Portfolio extends Component {
               </Row>
             </form>
           </Col>
+        </Row>
+
+        <Row>
           {/* <Col size="md-6 sm-12"> */}
           <Col size="md-12 sm-12">
             <Jumbotron>
@@ -161,34 +164,48 @@ class Portfolio extends Component {
             </Jumbotron>
 
             <table className={'table'} style={{ width: '100%' }}>
-              <thead>
+              <thead style={{ width: '100%' }}>
                 <tr>
-                  <th scope={'col'} style={{ width: '30%' }}>Ticker</th>
-                  <th scope={'col'} style={{ width: '30%' }}>Quantity</th>
-                  <th scope={'col'} style={{ width: '30%' }}>X</th>
+                  <th scope={'col'} style={{ width: '20%' }}>Ticker</th>
+                  <th scope={'col'} style={{ width: '20%' }}>Quantity</th>
+                  <th scope={'col'} style={{ width: '20%' }}>Avg. Price</th>
+                  <th scope={'col'} style={{ width: '20%' }}>Compare</th>
+                  <th scope={'col'} style={{ width: '20%' }}>Delete</th>
                 </tr>
               </thead>
+              {/* </table> */}
+              <tbody>
+                {this.state.tickers.length ? (
+                  // <List>
+                  <tr>
+                    {this.state.tickers.map(ticker => (
+                      <ListItem key={ticker._id}>
+                        <td scope={'col'} style={{ width: '20%' }}>
+                          <Link to={"/tickers/" + ticker._id}>
+                            <strong>
+                              {ticker.ticker}
+                            </strong>
+                          </Link>
+                        </td>
+                        <td>
+                          {ticker.quantity}
+                        </td>
+                        <td>
+                          <DeleteBtn onClick={() => this.deleteTicker(ticker._id)} />
+                        </td>
+                      </ListItem>
+
+                    ))}
+                  </tr>
+
+                  // </List>
+
+                ) : (
+                    <h2>No Results to Display</h2>
+                  )}
+              </tbody>
             </table>
 
-            {this.state.tickers.length ? (
-              <List>
-                {this.state.tickers.map(ticker => (
-                  <ListItem key={ticker._id}>
-                    <Link to={"/tickers/" + ticker._id}>
-                      <strong>
-                        {ticker.ticker}
-                      </strong>
-                    </Link>
-
-                    {ticker.quantity}
-
-                    <DeleteBtn onClick={() => this.deleteTicker(ticker._id)} />
-                  </ListItem>
-                ))}
-              </List>
-            ) : (
-                <h2>No Results to Display</h2>
-              )}
 
           </Col>
         </Row>
