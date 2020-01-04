@@ -49,7 +49,7 @@ class Portfolio extends Component {
     event.preventDefault();
     //Check validation on the following line (may need to be different from ticker example)
     if (this.state.ticker && this.state.quantity) {
-      if (document.getElementsByName('rbSell').checked) {
+      if (document.getElementById('rbSell').checked) {
         console.log("Sell rb checked");
         this.state.quantity = (this.state.quantity * -1);
       }
@@ -120,14 +120,19 @@ class Portfolio extends Component {
                     <label className="custom-control-label" for="customRadioInline1">Buy</label>
                   </div> */}
                   <InputGroup>
-                      <InputGroup.Radio aria-label="Buy" />
+                      <InputGroup.Radio aria-label="Buy" id="rbBuy" />
+                      <label>Buy</label>
                   </InputGroup>
                 </Col>
                 <Col size="md-1">
-                  <div className="rbSell custom-control custom-radio custom-control-inline">
+                <InputGroup>
+                      <InputGroup.Radio aria-label="Sell" id="rbSell" />
+                      <label>Sell</label>
+                  </InputGroup>
+                  {/* <div className="rbSell custom-control custom-radio custom-control-inline">
                     <input type="radio" id="customRadioInline2" name="customRadioInline1" className="custom-control-input" />
                     <label className="custom-control-label" for="customRadioInline2">Sell</label>
-                  </div>
+                  </div> */}
 
                 </Col>
                 <Col size="md-3">
