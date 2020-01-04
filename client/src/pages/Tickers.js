@@ -15,9 +15,6 @@ class Tickers extends Component {
   state = {
     tickers: [],
     tickerSearch: ""
-    // ,
-    // quantity: "",
-    // notes: ""
   };
 
   componentDidMount() {
@@ -60,13 +57,28 @@ class Tickers extends Component {
   handleFormSubmit = async event => {
     event.preventDefault();
     console.log("START");
+    console.log("this: ", this);
     //Check validation on the following line (may need to be different from ticker example)
     if (this.state.tickerSearch) {
-      var settings = {
+      let tickerData = this.state.tickerSearch;
+
+      var startDate = (moment().format("MM")) + "/"
+        + (moment().format("DD")) + "/"
+        + (moment().format("YYYY"));
+
+      // Convert to seconds
+      startDate = parseInt((moment(startDate) / 1000));
+      console.log("startDate: " + startDate);
+
+      let dateNowSeconds = parseInt((moment() / 1000));
+      console.log("dateNowSeconds: " + dateNowSeconds);
+
+
+      console.log("****tickerData: ", tickerData, " ****");
+      let settings = {
         "async": true,
         "crossDomain": true,
-        // "url": "https://apidojo-yahoo-finance-v1.p.rapidapi.com/stock/v2/get-historical-data?frequency=1d&filter=history&period1=" + startDate + "&period2=" + dateNowSeconds + "&symbol=" + tickerData,
-        "url": "https://apidojo-yahoo-finance-v1.p.rapidapi.com/stock/v2/get-historical-data?frequency=1d&filter=history&period1=1546405200&period2=1578020649&symbol=IBM",
+        "url": "https://apidojo-yahoo-finance-v1.p.rapidapi.com/stock/v2/get-historical-data?frequency=1d&filter=history&period1=1546405200&period2=1578020649&symbol=" + tickerData,
         "method": "GET",
         "headers": {
           "x-rapidapi-host": "apidojo-yahoo-finance-v1.p.rapidapi.com",
@@ -91,11 +103,11 @@ class Tickers extends Component {
       var ctx = document.getElementById('myChart1-1').getContext('2d');
 
       console.log("ctx: " + ctx);
-      for (var i = (chartResponse.prices.length - 1); i > 0; i--) {
-        priceResults.push(chartResponse.prices[i].close);
-        volResults.push(chartResponse.prices[i].volume / 1000000);
-        dayDate.push(moment((chartResponse.prices[i].date) * 1000).format("MMM Do YY"));
-      }
+      // for (var i = (chartResponse.prices.length - 1); i > 0; i--) {
+      //   priceResults.push(chartResponse.prices[i].close);
+      //   volResults.push(chartResponse.prices[i].volume / 1000000);
+      //   dayDate.push(moment((chartResponse.prices[i].date) * 1000).format("MMM Do YY"));
+      // }
 
       // console.log("priceResults: " + priceResults);
       // console.log("volResults: " + volResults);
@@ -146,7 +158,7 @@ class Tickers extends Component {
                     <div className="row" id="periodButtons1-1"></div>
                     <div className="row" id="tickerChart1-1">
                       <canvas id="myChart1-1" width="200" height="200">
-                      {/* <mixedChart data={
+                        {/* <mixedChart data={
         type: 'bar',
         data: {
           datasets: [{
