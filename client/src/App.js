@@ -5,14 +5,14 @@ import Tickers from "./pages/Tickers";
 import Portfolio from "./pages/Portfolio";
 import Detail from "./pages/Detail";
 import NoMatch from "./pages/NoMatch";
-import Nav from "./components/Nav";
+import NavBar from "./components/Nav";
 
 
 function App() {
   return (
     <Router>
       <div>
-        <Nav />
+        <NavBar />
         <Switch>
           <Route exact path="/" component={Tickers} />
           <Route exact path="/tickers" component={Tickers} />

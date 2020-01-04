@@ -79,7 +79,7 @@ class Portfolio extends Component {
           {/* <Col size="md-6"> */}
           <Col size="md-12">
             <Jumbotron>
-              <h1>Add Stock / Transaction to Portfolio:</h1>
+              <h2>Add Stock / Transaction to Portfolio:</h2>
             </Jumbotron>
             <form>
               <Row>
@@ -115,10 +115,6 @@ class Portfolio extends Component {
                   />
                 </Col>
                 <Col size="md-1">
-                  {/* <div className="rbBuy custom-control custom-radio custom-control-inline">
-                    <input type="radio" id="customRadioInline1" name="customRadioInline1" className="custom-control-input" value="Buy" />
-                    <label className="custom-control-label" for="customRadioInline1">Buy</label>
-                  </div> */}
                   <InputGroup>
                     <InputGroup.Radio aria-label="Buy" id="rbBuy" />
                     <label>Buy</label>
@@ -129,11 +125,6 @@ class Portfolio extends Component {
                     <InputGroup.Radio aria-label="Sell" id="rbSell" />
                     <label>Sell</label>
                   </InputGroup>
-                  {/* <div className="rbSell custom-control custom-radio custom-control-inline">
-                    <input type="radio" id="customRadioInline2" name="customRadioInline1" className="custom-control-input" />
-                    <label className="custom-control-label" for="customRadioInline2">Sell</label>
-                  </div> */}
-
                 </Col>
                 <Col size="md-3">
                   <NotesArea
@@ -164,22 +155,25 @@ class Portfolio extends Component {
             </Jumbotron>
 
             <table className={'table'} style={{ width: '100%' }}>
-              <thead style={{ width: '100%' }}>
+            {/* <table responsive> */}
+            {/* <thead style={{ width: '100%' }}> */}
+            <thead>
                 <tr>
-                  <th scope={'col'} style={{ width: '20%' }}>Ticker</th>
+                <th scope={'col'} style={{ width: '20%' }}>Ticker</th>
                   <th scope={'col'} style={{ width: '20%' }}>Quantity</th>
                   <th scope={'col'} style={{ width: '20%' }}>Avg. Price</th>
                   <th scope={'col'} style={{ width: '20%' }}>Compare</th>
-                  <th scope={'col'} style={{ width: '20%' }}>Delete</th>
+                  <th scope={'col'} style={{ width: '5%' }}>Delete</th>
                 </tr>
               </thead>
               {/* </table> */}
               <tbody>
-                {this.state.tickers.length ? (
-                  // <List>
-                  <tr>
-                    {this.state.tickers.map(ticker => (
-                      <ListItem key={ticker._id}>
+                {this.state.tickers.length ? 
+                  // // <List>
+                  // <tr>
+                    this.state.tickers.map(ticker => (
+                      // <ListItem key={ticker._id}>
+                      <tr>
                         <td scope={'col'} style={{ width: '20%' }}>
                           <Link to={"/tickers/" + ticker._id}>
                             <strong>
@@ -187,20 +181,27 @@ class Portfolio extends Component {
                             </strong>
                           </Link>
                         </td>
-                        <td>
+                        <td scope={'col'} style={{ width: '20%' }}>
                           {ticker.quantity}
                         </td>
-                        <td>
+                        <td scope={'col'} style={{ width: '20%' }}>
+                          {"Avg. price calc"}
+                        </td>
+                        <td scope={'col'} style={{ width: '20%' }}>
+                          {"Compare checkbox"}
+                        </td>
+                        <td scope={'col'} style={{ width: '5%' }, {textAlign: "center"}}>
                           <DeleteBtn onClick={() => this.deleteTicker(ticker._id)} />
                         </td>
-                      </ListItem>
+                        </tr>
+                      // </ListItem>
 
-                    ))}
-                  </tr>
+                    ))
+                  // </tr>
 
                   // </List>
 
-                ) : (
+                 : (
                     <h2>No Results to Display</h2>
                   )}
               </tbody>

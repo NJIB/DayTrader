@@ -1,36 +1,34 @@
 import React from "react";
+import { Nav } from 'react-bootstrap';
+import { Col, Row, Container } from "../Grid";
+import "./style.css";
 
-function Nav() {
+function NavBar() {
   return (
+
     <nav className="navbar navbar-expand-lg navbar-dark bg-info">
-      <a className="navbar-brand" href="/">
-      <img src="/images/target.png" width="30" height="30" className="d-inline-block align-top" id="hunoza_target" alt="hunoza target" />
-      Day Trader
+      <Col size="md-9">
+      <a className="navbar-brand logo" href="/">
+        <img src="/images/target.png" width="50" height="50" className="d-inline-block align-top" id="hunoza_target" alt="hunoza target" />
+        Day Trader
       </a>
+      </Col>
 
-  {/* <button className="navbar-toggler toggler-example" type="button" data-toggle="collapse" data-target="#navbarSupportedContent1"
-    aria-controls="navbarSupportedContent1" aria-expanded="false" aria-label="Toggle navigation"><span class="dark-blue-text"><i
-        class="fas fa-bars fa-1x"></i></span></button> */}
 
-  <div className="collapse navbar-collapse" id="navbarSupportedContent1">
+      <Nav variant="tabs" defaultActiveKey="/">
+        <Nav.Item>
+          <Nav.Link href="/">Research Stocks</Nav.Link>
+        </Nav.Item>
+        <Nav.Item>
+          <Nav.Link eventKey="portfolio" href="/portfolio">Portfolio</Nav.Link><span className="sr-only">(current)</span>
+        </Nav.Item>
+        <Nav.Item>
+          <Nav.Link eventKey="detail" href="/detail">Detail</Nav.Link>
+        </Nav.Item>
+      </Nav>
 
-    <ul className="navbar-nav mr-auto">
-      <li className="nav-item active">
-        <a className="nav-link" href="/">Research Stocks <span className="sr-only">(current)</span></a>
-      </li>
-      <li className="nav-item">
-        <a className="nav-link" href="/portfolio">Portfolio</a>
-      </li>
-      <li className="nav-item">
-        <a className="nav-link" href="/detail">Details</a>
-      </li>
-    </ul>
-
-  </div>
-
-</nav>
-
+    </nav>
   );
 }
 
-export default Nav;
+export default NavBar;

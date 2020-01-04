@@ -1,0 +1,13 @@
+.tab {
+  align-items: right;
+  color: white;
+}
+
+.logo {
+  float: left;
+  font-size: 30px;
+}
+
+#hunoza_target {
+  margin-right: 10px;
+}
