@@ -33,29 +33,4 @@ console.log("startDate: " + startDate);
 let dateNowSeconds = parseInt((moment() / 1000));
 console.log("dateNowSeconds: " + dateNowSeconds);
 
-var priceResults = [];
-var volResults = [];
-var dayDate = [];
-
-//Chart data API
-// var settings = {
-//   "async": true,
-//   "crossDomain": true,
-//   "url": "https://apidojo-yahoo-finance-v1.p.rapidapi.com/stock/v2/get-historical-data?frequency=1d&filter=history&period1=" + startDate + "&period2=" + dateNowSeconds + "&symbol=" + { params: req.query },
-//   "method": "GET",
-//   "headers": {
-//     "x-rapidapi-host": "apidojo-yahoo-finance-v1.p.rapidapi.com",
-//     "x-rapidapi-key": process.env.apiKey
-//   }
-// }
-
-// console.log("queryURL: " + settings.url);
-
-// router.get("/stock", (req, res) => {
-//   axios
-//     .get({ settings })
-//     .then(({ data: { results } }) => res.json(results))
-//     .catch(err => res.status(422).json(err));
-// });
-
 module.exports = router;

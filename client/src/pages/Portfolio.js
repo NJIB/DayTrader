@@ -6,12 +6,17 @@ import { Link } from "react-router-dom";
 import { Col, Row, Container } from "../components/Grid";
 import { List, ListItem } from "../components/List";
 import { Input, NotesArea, FormBtn } from "../components/Form";
+import { InputGroup } from 'react-bootstrap';
 
 class Portfolio extends Component {
   state = {
     tickers: [],
     ticker: "",
     quantity: "",
+    transactionprice: "",
+    transactiondate: "",
+    customRadioInline1: null,
+    customRadioInline2: null,
     notes: ""
   };
 
@@ -44,9 +49,21 @@ class Portfolio extends Component {
     event.preventDefault();
     //Check validation on the following line (may need to be different from ticker example)
     if (this.state.ticker && this.state.quantity) {
+      if (document.getElementsByName('rbSell').checked) {
+        console.log("Sell rb checked");
+        this.state.quantity = (this.state.quantity * -1);
+      }
+      else {
+        console.log("Buy rb checked");
+      }
+
+      console.log(this.state.quantity);
+
       API.saveTicker({
         ticker: this.state.ticker,
         quantity: this.state.quantity,
+        transactionprice: this.state.transactionprice,
+        transactiondate: this.state.transactiondate,
         notes: this.state.notes
       })
         .then(res => this.loadStocks())
@@ -71,7 +88,7 @@ class Portfolio extends Component {
                     value={this.state.ticker}
                     onChange={this.handleInputChange}
                     name="ticker"
-                    placeholder="Stock Ticker"
+                    placeholder="Ticker"
                   />
                 </Col>
                 <Col size="md-1">
@@ -80,6 +97,13 @@ class Portfolio extends Component {
                     onChange={this.handleInputChange}
                     name="quantity"
                     placeholder="Qty"
+                  />
+                </Col>
+                <Col size="md-1">
+                  <Input
+                    onChange={this.handleInputChange}
+                    name="transactionprice"
+                    placeholder="Price"
                   />
                 </Col>
                 <Col size="md-2">
@@ -91,19 +115,22 @@ class Portfolio extends Component {
                   />
                 </Col>
                 <Col size="md-1">
-                  <div className="custom-control custom-radio custom-control-inline">
-                    <input type="radio" id="customRadioInline1" name="customRadioInline1" className="custom-control-input" />
+                  {/* <div className="rbBuy custom-control custom-radio custom-control-inline">
+                    <input type="radio" id="customRadioInline1" name="customRadioInline1" className="custom-control-input" value="Buy" />
                     <label className="custom-control-label" for="customRadioInline1">Buy</label>
-                  </div>
+                  </div> */}
+                  <InputGroup>
+                      <InputGroup.Radio aria-label="Buy" />
+                  </InputGroup>
                 </Col>
                 <Col size="md-1">
-                  <div className="custom-control custom-radio custom-control-inline">
+                  <div className="rbSell custom-control custom-radio custom-control-inline">
                     <input type="radio" id="customRadioInline2" name="customRadioInline1" className="custom-control-input" />
                     <label className="custom-control-label" for="customRadioInline2">Sell</label>
                   </div>
 
                 </Col>
-                <Col size="md-4">
+                <Col size="md-3">
                   <NotesArea
                     value={this.state.notes}
                     onChange={this.handleInputChange}
@@ -143,9 +170,9 @@ class Portfolio extends Component {
                 {this.state.tickers.map(ticker => (
                   <ListItem key={ticker._id}>
                     <Link to={"/tickers/" + ticker._id}>
-                        <strong>
-                          {ticker.ticker}
-                        </strong>
+                      <strong>
+                        {ticker.ticker}
+                      </strong>
                     </Link>
 
                     {ticker.quantity}

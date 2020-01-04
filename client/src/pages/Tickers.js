@@ -6,8 +6,10 @@ import { Link } from "react-router-dom";
 import { Col, Row, Container } from "../components/Grid";
 import { List, ListItem } from "../components/List";
 import { Input, NotesArea, FormBtn } from "../components/Form";
-import {tickerChart} from "../components/Charts";
-// import {Bar} from 'react-chartjs-2';
+// import { tickerChart } from "../components/Charts";
+import { mixedChart } from 'react-chartjs-2';
+
+const moment = require("moment");
 
 class Tickers extends Component {
   state = {
@@ -67,17 +69,41 @@ class Tickers extends Component {
         "url": "https://apidojo-yahoo-finance-v1.p.rapidapi.com/stock/v2/get-historical-data?frequency=1d&filter=history&period1=1546405200&period2=1578020649&symbol=IBM",
         "method": "GET",
         "headers": {
-            "x-rapidapi-host": "apidojo-yahoo-finance-v1.p.rapidapi.com",
-            "x-rapidapi-key": "7eb729d91fmshd56769216684858p17fff1jsna4991481e499"
+          "x-rapidapi-host": "apidojo-yahoo-finance-v1.p.rapidapi.com",
+          "x-rapidapi-key": "7eb729d91fmshd56769216684858p17fff1jsna4991481e499"
         }
-    }
+      }
 
-    console.log("queryURL: " + settings.url);
+      console.log("queryURL: " + settings.url);
 
-    const chartResponse = await fetch(settings.url, settings) 
-        console.log(chartResponse.json());
-  }
-};
+      const chartResponse = await fetch(settings.url, settings)
+      console.log(chartResponse.json());
+      console.log("chartResponse: ", chartResponse);
+
+      // Populating the different chart areas
+
+      var priceResults = [];
+      var volResults = [];
+      var dayDate = [];
+      var Chart = [];
+
+      // var ctx = document.getElementById('myChart' + chartsDivRef).getContext('2d');
+      var ctx = document.getElementById('myChart1-1').getContext('2d');
+
+      console.log("ctx: " + ctx);
+      for (var i = (chartResponse.prices.length - 1); i > 0; i--) {
+        priceResults.push(chartResponse.prices[i].close);
+        volResults.push(chartResponse.prices[i].volume / 1000000);
+        dayDate.push(moment((chartResponse.prices[i].date) * 1000).format("MMM Do YY"));
+      }
+
+      // console.log("priceResults: " + priceResults);
+      // console.log("volResults: " + volResults);
+      // console.log("dayDate: " + dayDate);
+
+
+    };
+  };
 
   render() {
     return (
@@ -119,7 +145,47 @@ class Tickers extends Component {
                     <div className="row" id="tickerChartHeader1-1"></div>
                     <div className="row" id="periodButtons1-1"></div>
                     <div className="row" id="tickerChart1-1">
-                      <canvas id="myChart1-1" width="200" height="200"></canvas>
+                      <canvas id="myChart1-1" width="200" height="200">
+                      {/* <mixedChart data={
+        type: 'bar',
+        data: {
+          datasets: [{
+            label: 'Volume (mil.)',
+            //Adding in 2nd axis
+            yAxisID: 'B',
+            backgroundColor: 'darkblue',
+            data: volResults
+          }, {
+            label: 'Stock Price (US$)',
+            //Adding in 2nd axis
+            yAxisID: 'A',
+            backgroundColor: 'green',
+            data: priceResults,
+            type: 'line'
+          }],
+          labels: dayDate
+        },
+        options: {
+          scales: {
+            yAxes: [{
+              id: 'A',
+              type: 'linear',
+              position: 'left',
+              labelString: 'Stock Price (US$)',
+            }, {
+              id: 'B',
+              //   type: 'linear',
+              position: 'right',
+              labelString: 'Volume',
+              ticks: {
+                // max: 1,
+                // min: 0
+              }
+            }]
+          }
+        }
+      }/> */}
+                      </canvas>
                     </div>
                   </div>
                   <div className="col-sm-12 col-md-6 col-lg-4">
