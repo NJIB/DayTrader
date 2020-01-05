@@ -7,15 +7,15 @@ import { Col, Row, Container } from "../components/Grid";
 import { Input, NotesArea, FormBtn } from "../components/Form";
 import { InputGroup } from 'react-bootstrap';
 
-class Portfolio extends Component {
+class Scenarios extends Component {
   state = {
     tickers: [],
     ticker: "",
-    quantity: "",
-    transactionprice: "",
-    transactiondate: "",
-    customRadioInline1: null,
-    customRadioInline2: null,
+    // quantity: "",
+    // transactionprice: "",
+    // transactiondate: "",
+    // customRadioInline1: null,
+    // customRadioInline2: null,
     notes: ""
   };
 
@@ -214,4 +214,4 @@ class Portfolio extends Component {
   }
 }
 
-export default Portfolio;
+export default Scenarios;

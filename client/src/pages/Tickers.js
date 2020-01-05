@@ -4,7 +4,6 @@ import Jumbotron from "../components/Jumbotron";
 import API from "../utils/API";
 import { Link } from "react-router-dom";
 import { Col, Row, Container } from "../components/Grid";
-import { List, ListItem } from "../components/List";
 import { Input, NotesArea, FormBtn } from "../components/Form";
 // import { tickerChart } from "../components/Charts";
 import { mixedChart } from 'react-chartjs-2';
