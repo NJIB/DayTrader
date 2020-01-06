@@ -5,15 +5,33 @@ import API from "../utils/API";
 import { Link } from "react-router-dom";
 import { Col, Row, Container } from "../components/Grid";
 import { Input, NotesArea, FormBtn } from "../components/Form";
-// import { tickerChart } from "../components/Charts";
-import { mixedChart } from 'react-chartjs-2';
+// import { Chart } from "../components/Charts";
+import { Bar, Line, Pie, Mixedchart } from 'react-chartjs-2';
+
 
 const moment = require("moment");
 
 class Tickers extends Component {
   state = {
     tickers: [],
-    tickerSearch: ""
+    tickerSearch: "",
+
+    chartData: {
+      labels: ['A', 'B', 'C', 'D', 'E', 'F'],
+      datasets: [{
+        label: 'Population',
+        data: [
+          617594,
+          181045,
+          153060,
+          106519,
+          105162,
+          95072
+        ],
+        backgroundColor: 'grey'
+      }]
+    }
+
   };
 
   componentDidMount() {
@@ -23,9 +41,10 @@ class Tickers extends Component {
   loadStocks = () => {
     API.getTickers()
       .then(res =>
-        this.setState({ tickers: res.data, ticker: "", quantity: "", notes: "" })
+        // this.setState({ tickers: res.data, ticker: "", quantity: "", notes: "" })
+        this.setState({ tickers: res.data })
       )
-      .catch(err => console.log(err));
+      .catch(err => console.log("getTickers error: ", err));
   };
 
   // deleteTicker = id => {
@@ -99,9 +118,9 @@ class Tickers extends Component {
       var Chart = [];
 
       // var ctx = document.getElementById('myChart' + chartsDivRef).getContext('2d');
-      var ctx = document.getElementById('myChart1-1').getContext('2d');
+      // var ctx = document.getElementById('myChart1-1').getContext('2d');
 
-      console.log("ctx: " + ctx);
+      // console.log("ctx: " + ctx);
       // for (var i = (chartResponse.prices.length - 1); i > 0; i--) {
       //   priceResults.push(chartResponse.prices[i].close);
       //   volResults.push(chartResponse.prices[i].volume / 1000000);
@@ -123,7 +142,7 @@ class Tickers extends Component {
           {/* <Col size="md-6"> */}
           <Col size="md-12">
             <Jumbotron>
-              <h1>Which Stock Tickers Do You Want To Track?</h1>
+              <h3>Which Stock Tickers Do You Want To Track?</h3>
             </Jumbotron>
             <form>
               <Row>
@@ -146,56 +165,28 @@ class Tickers extends Component {
               </Row>
             </form>
           </Col>
-          {/* <Col size="md-6 sm-12"> */}
-          <Col size="md-12 sm-12">
+        </Row>
 
-            <div className="container">
-              <div id="tickerOutput" className="card card-default">
+        <Row>
+          {/* <Col size="md-12 sm-12"> */}
+          <div className="chart">
+            <Bar
+              data={this.state.chartData}
+              width={400}
+              height={250}
+              options={{ maintainAspectRatio: false }}
+            />
+          </div>
+          {/* <Chart /> */}
+
+          {/* <div id="tickerOutput" className="card card-default">
                 <div className="row" id="graphRow1">
                   <div className="col-sm-12 col-md-6 col-lg-4">
                     <div className="row" id="tickerChartHeader1-1"></div>
                     <div className="row" id="periodButtons1-1"></div>
                     <div className="row" id="tickerChart1-1">
                       <canvas id="myChart1-1" width="200" height="200">
-                        {/* <mixedChart data={
-        type: 'bar',
-        data: {
-          datasets: [{
-            label: 'Volume (mil.)',
-            //Adding in 2nd axis
-            yAxisID: 'B',
-            backgroundColor: 'darkblue',
-            data: volResults
-          }, {
-            label: 'Stock Price (US$)',
-            //Adding in 2nd axis
-            yAxisID: 'A',
-            backgroundColor: 'green',
-            data: priceResults,
-            type: 'line'
-          }],
-          labels: dayDate
-        },
-        options: {
-          scales: {
-            yAxes: [{
-              id: 'A',
-              type: 'linear',
-              position: 'left',
-              labelString: 'Stock Price (US$)',
-            }, {
-              id: 'B',
-              //   type: 'linear',
-              position: 'right',
-              labelString: 'Volume',
-              ticks: {
-                // max: 1,
-                // min: 0
-              }
-            }]
-          }
-        }
-      }/> */}
+                        Test
                       </canvas>
                     </div>
                   </div>
@@ -240,8 +231,8 @@ class Tickers extends Component {
               </div>
             </div>
 
-
-          </Col>
+ */}
+          {/* </Col> */}
         </Row>
       </Container>
     );
