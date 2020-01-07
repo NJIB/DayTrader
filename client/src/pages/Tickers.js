@@ -8,7 +8,6 @@ import { Input, NotesArea, FormBtn } from "../components/Form";
 // import { Chart } from "../components/Charts";
 import { Bar, Line, Pie, Mixedchart } from 'react-chartjs-2';
 
-
 const moment = require("moment");
 
 class Tickers extends Component {
@@ -101,14 +100,16 @@ class Tickers extends Component {
         "headers": {
           "x-rapidapi-host": "apidojo-yahoo-finance-v1.p.rapidapi.com",
           "x-rapidapi-key": "7eb729d91fmshd56769216684858p17fff1jsna4991481e499"
+          // "x-rapidapi-key": process.env.apiKey
         }
       }
 
       console.log("queryURL: " + settings.url);
 
       const chartResponse = await fetch(settings.url, settings)
-      console.log(chartResponse.json());
-      console.log("chartResponse: ", chartResponse);
+
+      const responseData = await chartResponse.json();
+      console.log("responseData: ", responseData);
 
       // Populating the different chart areas
 
@@ -121,17 +122,27 @@ class Tickers extends Component {
       // var ctx = document.getElementById('myChart1-1').getContext('2d');
 
       // console.log("ctx: " + ctx);
-      // for (var i = (chartResponse.prices.length - 1); i > 0; i--) {
-      //   priceResults.push(chartResponse.prices[i].close);
-      //   volResults.push(chartResponse.prices[i].volume / 1000000);
-      //   dayDate.push(moment((chartResponse.prices[i].date) * 1000).format("MMM Do YY"));
-      // }
+      for (var i = (responseData.prices.length - 1); i > 0; i--) {
+        priceResults.push(responseData.prices[i].close);
+        volResults.push(responseData.prices[i].volume / 1000000);
+        dayDate.push(moment((responseData.prices[i].date) * 1000).format("MMM Do YY"));
+      }
 
-      // console.log("priceResults: " + priceResults);
-      // console.log("volResults: " + volResults);
-      // console.log("dayDate: " + dayDate);
+      console.log("priceResults: " + priceResults);
+      console.log("volResults: " + volResults);
+      console.log("dayDate: " + dayDate);
 
-
+      const localChartData = {
+        labels:
+          dayDate,
+        datasets: [{
+          label: tickerData,
+          data: priceResults,
+          backgroundColor: 'grey'
+        }]
+      }
+  
+      this.setState({chartData: localChartData});
     };
   };
 
