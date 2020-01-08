@@ -7,6 +7,7 @@ import { Col, Row, Container } from "../components/Grid";
 import { Input, NotesArea, FormBtn } from "../components/Form";
 // import { Chart } from "../components/Charts";
 import { Bar, Line, Pie, Mixedchart } from 'react-chartjs-2';
+import PeriodBtns  from "../components/PeriodBtns";
 
 const moment = require("moment");
 
@@ -181,6 +182,8 @@ class Tickers extends Component {
         <Row>
           {/* <Col size="md-12 sm-12"> */}
           <div className="chart">
+            <PeriodBtns />
+            <DeleteBtn />
             <Bar
               data={this.state.chartData}
               width={400}
