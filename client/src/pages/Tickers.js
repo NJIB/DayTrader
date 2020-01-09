@@ -195,8 +195,6 @@ class Tickers extends Component {
         <Row>
           {/* <Col size="md-12 sm-12"> */}
           <div className="chart">
-            <PeriodBtns />
-            <DeleteChartBtn />
             <Bar
               data={this.state.chartData}
               width={400}
@@ -248,6 +246,8 @@ class Tickers extends Component {
                 // }
               // }}
             />
+            <PeriodBtns />
+            <DeleteChartBtn />
           </div>
           {/* <Chart /> */}
 
