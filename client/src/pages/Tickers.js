@@ -5,9 +5,9 @@ import API from "../utils/API";
 import { Link } from "react-router-dom";
 import { Col, Row, Container } from "../components/Grid";
 import { Input, NotesArea, FormBtn } from "../components/Form";
-// import { Chart } from "../components/Charts";
 import { Bar, Line, Pie, Mixedchart } from 'react-chartjs-2';
-import PeriodBtns  from "../components/PeriodBtns";
+import PeriodBtns from "../components/PeriodBtns";
+import DeleteChartBtn from "../components/DeleteChartBtn";
 
 const moment = require("moment");
 
@@ -17,22 +17,22 @@ class Tickers extends Component {
     tickerSearch: "",
 
     chartData: {
-      labels: ['A', 'B', 'C', 'D', 'E', 'F'],
+      labels: [],
       datasets: [{
-        label: 'Population',
-        data: [
-          617594,
-          181045,
-          153060,
-          106519,
-          105162,
-          95072
-        ],
+        label: '',
+        data: [],
         backgroundColor: 'grey'
       }]
     }
 
   };
+
+  static defaultProps = {
+    displayTitle: true,
+    displayLegend: true,
+    legendPosition: "bottom",
+    maintainAspectRatio: true
+  }
 
   componentDidMount() {
     this.loadStocks();
@@ -117,12 +117,10 @@ class Tickers extends Component {
       var priceResults = [];
       var volResults = [];
       var dayDate = [];
-      var Chart = [];
 
       // var ctx = document.getElementById('myChart' + chartsDivRef).getContext('2d');
       // var ctx = document.getElementById('myChart1-1').getContext('2d');
 
-      // console.log("ctx: " + ctx);
       for (var i = (responseData.prices.length - 1); i > 0; i--) {
         priceResults.push(responseData.prices[i].close);
         volResults.push(responseData.prices[i].volume / 1000000);
@@ -136,14 +134,29 @@ class Tickers extends Component {
       const localChartData = {
         labels:
           dayDate,
-        datasets: [{
-          label: tickerData,
-          data: priceResults,
-          backgroundColor: 'grey'
-        }]
+        datasets: [
+          {
+            label: "Stock Price",
+            type: 'line',
+            // yAxisID: "y-axis-1",
+            data: priceResults,
+            backgroundColor: 'grey',
+            pointRadius: '1px'
+          },
+          {
+            label: "Volume",
+            // yAxisID: "y-axis-2",
+            data: volResults,
+            backgroundColor: 'green'
+          }
+        ],
+        options: {
+          legendPosition: "bottom"
+        }
       }
-  
-      this.setState({chartData: localChartData});
+
+
+      this.setState({ chartData: localChartData });
     };
   };
 
@@ -183,12 +196,57 @@ class Tickers extends Component {
           {/* <Col size="md-12 sm-12"> */}
           <div className="chart">
             <PeriodBtns />
-            <DeleteBtn />
+            <DeleteChartBtn />
             <Bar
               data={this.state.chartData}
               width={400}
               height={250}
-              options={{ maintainAspectRatio: false }}
+              // options={{
+              //   responsive: true,
+              //   title: { display: this.props.displayTitle },
+              //   maintainAspectRatio: this.props.maintainAspectRatio,
+              //   legendPosition: "bottom"
+
+                // scales: {
+                //   xAxes: [
+                //     {
+                //       display: true,
+                //       gridLines: {
+                //         display: false
+                //       },
+                //       labels: {
+                //         show: true
+                //       }
+                //     }
+                //   ],
+                //   yAxes: [
+                //     {
+                //       type: 'linear',
+                //       display: true,
+                //       position: 'left',
+                //       id: 'y-axis-1',
+                //       gridLines: {
+                //         display: false
+                //       },
+                //       labels: {
+                //         show: true
+                //       }
+                //     },
+                //     {
+                //       type: 'linear',
+                //       display: true,
+                //       position: 'right',
+                //       id: 'y-axis-2',
+                //       gridLines: {
+                //         display: false
+                //       },
+                //       labels: {
+                //         show: true
+                //       }
+                //     }
+                //   ]
+                // }
+              // }}
             />
           </div>
           {/* <Chart /> */}

@@ -1,9 +1,9 @@
-.periodBtn {
+.deleteChartBtn {
   height: 30px;
   padding: 0px 10px 0px 10px;
   margin: 5px;
-  background-color: gray;
-  color: black;
+  background-color: red;
+  color: white;
   vertical-align: middle;
 }
 
