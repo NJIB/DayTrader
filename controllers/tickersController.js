@@ -5,7 +5,8 @@ module.exports = {
   findAll: function(req, res) {
     db.Ticker
       .find(req.query)
-      .sort({ date: -1 })
+      // .sort({ date: -1 })
+      .sort({ ticker: 1 })
       .then(dbModel => res.json(dbModel))
       .catch(err => res.status(422).json(err));
   },

@@ -8,6 +8,7 @@ import { Input, NotesArea, FormBtn } from "../components/Form";
 import { Bar, Line, Pie, Mixedchart } from 'react-chartjs-2';
 import PeriodBtns from "../components/PeriodBtns";
 import DeleteChartBtn from "../components/DeleteChartBtn";
+import "./styles/style.css";
 
 const moment = require("moment");
 
@@ -147,7 +148,8 @@ class Tickers extends Component {
             label: "Volume",
             // yAxisID: "y-axis-2",
             data: volResults,
-            backgroundColor: 'green'
+            backgroundColor: 'green',
+            y2axis: true
           }
         ],
         options: {
@@ -163,149 +165,207 @@ class Tickers extends Component {
   render() {
     return (
       <Container fluid className='SearchPane'>
-        <Row>
-          {/* <Col size="md-6"> */}
-          <Col size="md-12">
-            <Jumbotron>
-              <h3>Which Stock Tickers Do You Want To Track?</h3>
-            </Jumbotron>
-            <form>
-              <Row>
-                <Col size="md-2">
-                  <Input
-                    value={this.state.tickerSearch}
-                    onChange={this.handleInputChange}
-                    name="tickerSearch"
-                    placeholder="Stock Ticker"
-                  />
-                </Col>
-                <Col size="md-1">
-                  <FormBtn
-                    disabled={!(this.state.tickerSearch)}
-                    onClick={this.handleFormSubmit}
-                  >
-                    Search
+        <div id="tickerSearch" class="card card-default">
+          <Row>
+            {/* <Col size="md-6"> */}
+            <Col size="md-12">
+              <Jumbotron>
+                <h3>Which Stock Tickers Do You Want To Track?</h3>
+              </Jumbotron>
+              <form>
+                <Row>
+                  <Col size="md-2">
+                    <Input
+                      value={this.state.tickerSearch}
+                      onChange={this.handleInputChange}
+                      name="tickerSearch"
+                      placeholder="Stock Ticker"
+                    />
+                  </Col>
+                  <Col size="md-1">
+                    <FormBtn
+                      disabled={!(this.state.tickerSearch)}
+                      onClick={this.handleFormSubmit}
+                    >
+                      Search
               </FormBtn>
-                </Col>
-              </Row>
-            </form>
-          </Col>
-        </Row>
+                  </Col>
+                </Row>
+              </form>
+            </Col>
+          </Row>
+        </div>
+        <div id="tickerOutput" class="card card-default">
+          <Row>
+            <div class="row" id="graphRow1">
+              <div class="col-sm-12 col-md-6 col-lg-4">
+                <div class="row" id="tickerChartHeader1-1">{this.state.tickerSearch}</div>
+                <div class="row" id="tickerChart1-1">
+                  {/* <canvas id="myChart1-1" width="200" height="200"> */}
+                  <div className="chart">
+                    <Bar
+                      data={this.state.chartData}
+                      width={200}
+                      height={200}
+                    // options={{
+                    //   responsive: true,
+                    //   title: { display: this.props.displayTitle },
+                    //   maintainAspectRatio: this.props.maintainAspectRatio,
+                    //   legendPosition: "bottom"
 
-        <Row>
-          {/* <Col size="md-12 sm-12"> */}
-          <div className="chart">
-            <Bar
-              data={this.state.chartData}
-              width={400}
-              height={250}
-              // options={{
-              //   responsive: true,
-              //   title: { display: this.props.displayTitle },
-              //   maintainAspectRatio: this.props.maintainAspectRatio,
-              //   legendPosition: "bottom"
-
-                // scales: {
-                //   xAxes: [
-                //     {
-                //       display: true,
-                //       gridLines: {
-                //         display: false
-                //       },
-                //       labels: {
-                //         show: true
-                //       }
-                //     }
-                //   ],
-                //   yAxes: [
-                //     {
-                //       type: 'linear',
-                //       display: true,
-                //       position: 'left',
-                //       id: 'y-axis-1',
-                //       gridLines: {
-                //         display: false
-                //       },
-                //       labels: {
-                //         show: true
-                //       }
-                //     },
-                //     {
-                //       type: 'linear',
-                //       display: true,
-                //       position: 'right',
-                //       id: 'y-axis-2',
-                //       gridLines: {
-                //         display: false
-                //       },
-                //       labels: {
-                //         show: true
-                //       }
-                //     }
-                //   ]
-                // }
-              // }}
-            />
-            <PeriodBtns />
-            <DeleteChartBtn />
-          </div>
-          {/* <Chart /> */}
-
-          {/* <div id="tickerOutput" className="card card-default">
-                <div className="row" id="graphRow1">
-                  <div className="col-sm-12 col-md-6 col-lg-4">
-                    <div className="row" id="tickerChartHeader1-1"></div>
-                    <div className="row" id="periodButtons1-1"></div>
-                    <div className="row" id="tickerChart1-1">
-                      <canvas id="myChart1-1" width="200" height="200">
-                        Test
-                      </canvas>
-                    </div>
+                    // scales: {
+                    //   xAxes: [
+                    //     {
+                    //       display: true,
+                    //       gridLines: {
+                    //         display: false
+                    //       },
+                    //       labels: {
+                    //         show: true
+                    //       }
+                    //     }
+                    //   ],
+                    //   yAxes: [
+                    //     {
+                    //       type: 'linear',
+                    //       display: true,
+                    //       position: 'left',
+                    //       id: 'y-axis-1',
+                    //       gridLines: {
+                    //         display: false
+                    //       },
+                    //       labels: {
+                    //         show: true
+                    //       }
+                    //     },
+                    //     {
+                    //       type: 'linear',
+                    //       display: true,
+                    //       position: 'right',
+                    //       id: 'y-axis-2',
+                    //       gridLines: {
+                    //         display: false
+                    //       },
+                    //       labels: {
+                    //         show: true
+                    //       }
+                    //     }
+                    //   ]
+                    // }
+                    // }}
+                    />
+                    <PeriodBtns />
+                    <DeleteChartBtn />
                   </div>
-                  <div className="col-sm-12 col-md-6 col-lg-4">
-                    <div className="row" id="tickerChartHeader1-2"></div>
-                    <div className="row" id="periodButtons1-2"></div>
-                    <div className="row" id="tickerChart1-2">
-                      <canvas id="myChart1-2" width="200" height="200"></canvas>
-                    </div>
-                  </div>
-                  <div className="col-sm-12 col-md-6 col-lg-4">
-                    <div className="row" id="tickerChartHeader1-3"></div>
-                    <div className="row" id="periodButtons1-3"></div>
-                    <div className="row" id="tickerChart1-3">
-                      <canvas id="myChart1-3" width="200" height="200"></canvas>
-                    </div>
-                  </div>
+                  {/* </canvas> */}
                 </div>
-                <div className="row" id="graphRow2">
-                  <div className="col-sm-12 col-md-6 col-lg-4">
-                    <div className="row" id="tickerChartHeader2-1"></div>
-                    <div className="row" id="periodButtons2-1"></div>
-                    <div className="row" id="tickerChart2-1">
-                      <canvas id="myChart1-1" width="200" height="200"></canvas>
-                    </div>
+              </div>
+              <div class="col-sm-12 col-md-6 col-lg-4">
+                <div class="row" id="tickerChartHeader1-2"></div>
+                <div class="row" id="tickerChart1-2">
+                  {/* <canvas id="myChart1-1" width="200" height="200"> */}
+                  <div className="chart">
+                    <Bar
+                      data={this.state.chartData}
+                      width={200}
+                      height={200}
+                    // options={{
+                    //   responsive: true,
+                    //   title: { display: this.props.displayTitle },
+                    //   maintainAspectRatio: this.props.maintainAspectRatio,
+                    //   legendPosition: "bottom"
+
+                    // scales: {
+                    //   xAxes: [
+                    //     {
+                    //       display: true,
+                    //       gridLines: {
+                    //         display: false
+                    //       },
+                    //       labels: {
+                    //         show: true
+                    //       }
+                    //     }
+                    //   ],
+                    //   yAxes: [
+                    //     {
+                    //       type: 'linear',
+                    //       display: true,
+                    //       position: 'left',
+                    //       id: 'y-axis-1',
+                    //       gridLines: {
+                    //         display: false
+                    //       },
+                    //       labels: {
+                    //         show: true
+                    //       }
+                    //     },
+                    //     {
+                    //       type: 'linear',
+                    //       display: true,
+                    //       position: 'right',
+                    //       id: 'y-axis-2',
+                    //       gridLines: {
+                    //         display: false
+                    //       },
+                    //       labels: {
+                    //         show: true
+                    //       }
+                    //     }
+                    //   ]
+                    // }
+                    // }}
+                    />
+                    <PeriodBtns />
+                    <DeleteChartBtn />
                   </div>
-                  <div className="col-sm-12 col-md-6 col-lg-4">
-                    <div className="row" id="tickerChartHeader2-2"></div>
-                    <div className="row" id="periodButtons2-2"></div>
-                    <div className="row" id="tickerChart2-2">
-                      <canvas id="myChart1-2" width="200" height="200"></canvas>
-                    </div>
-                  </div>
-                  <div className="col-sm-12 col-md-6 col-lg-4">
-                    <div className="row" id="tickerChartHeader2-3"></div>
-                    <div className="row" id="periodButtons2-3"></div>
-                    <div className="row" id="tickerChart2-3">
-                      <canvas id="myChart1-3" width="200" height="200"></canvas>
-                    </div>
-                  </div>
+                  {/* </canvas> */}
+                </div>
+              </div>
+
+              {/* <div class="col-sm-12 col-md-6 col-lg-4">
+                <div class="row" id="tickerChartHeader1-2"></div>
+                <div class="row" id="periodButtons1-2"></div>
+                <div class="row" id="tickerChart1-2">
+                  <canvas id="myChart1-2" width="200" height="200"></canvas>
+                </div>
+              </div> */}
+              <div class="col-sm-12 col-md-6 col-lg-4">
+                <div class="row" id="tickerChartHeader1-3"></div>
+                <div class="row" id="periodButtons1-3"></div>
+                <div class="row" id="tickerChart1-3">
+                  <canvas id="myChart1-3" width="200" height="200"></canvas>
+                </div>
+              </div>
+            </div>
+            <div class="row" id="graphRow2">
+              <div class="col-sm-12 col-md-6 col-lg-4">
+                <div class="row" id="tickerChartHeader2-1"></div>
+                <div class="row" id="periodButtons2-1"></div>
+                <div class="row" id="tickerChart2-1">
+                  <canvas id="myChart1-1" width="200" height="200"></canvas>
+                </div>
+              </div>
+              <div class="col-sm-12 col-md-6 col-lg-4">
+                <div class="row" id="tickerChartHeader2-2"></div>
+                <div class="row" id="periodButtons2-2"></div>
+                <div class="row" id="tickerChart2-2">
+                  <canvas id="myChart1-2" width="200" height="200"></canvas>
+                </div>
+              </div>
+              <div class="col-sm-12 col-md-6 col-lg-4">
+                <div class="row" id="tickerChartHeader2-3"></div>
+                <div class="row" id="periodButtons2-3"></div>
+                <div class="row" id="tickerChart2-3">
+                  <canvas id="myChart1-3" width="200" height="200"></canvas>
                 </div>
               </div>
             </div>
 
- */}
-          {/* </Col> */}
-        </Row>
+
+
+          </Row>
+        </div>
       </Container>
     );
   }

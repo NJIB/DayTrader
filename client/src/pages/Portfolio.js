@@ -7,6 +7,8 @@ import { Col, Row, Container } from "../components/Grid";
 import { Input, NotesArea, FormBtn } from "../components/Form";
 import { InputGroup } from 'react-bootstrap';
 
+const moment = require("moment");
+
 class Portfolio extends Component {
   state = {
     tickers: [],
@@ -160,9 +162,10 @@ class Portfolio extends Component {
                 <tr>
                 <th scope={'col'} style={{ width: '20%' }}>Ticker</th>
                   <th scope={'col'} style={{ width: '20%' }}>Quantity</th>
+                  <th scope={'col'} style={{ width: '20%' }}>Trans. Date</th>
                   <th scope={'col'} style={{ width: '20%' }}>Avg. Price</th>
-                  <th scope={'col'} style={{ width: '20%' }}>Compare</th>
-                  <th scope={'col'} style={{ width: '5%' }}>Delete</th>
+                  <th scope={'col'} style={{ width: '10%' }}>Compare</th>
+                  <th scope={'col'} style={{ width: '10%' }}>Delete</th>
                 </tr>
               </thead>
               {/* </table> */}
@@ -184,12 +187,15 @@ class Portfolio extends Component {
                           {ticker.quantity}
                         </td>
                         <td scope={'col'} style={{ width: '20%' }}>
-                          {"Avg. price calc"}
+                          {moment(ticker.transactiondate).format("MM/DD/YYYY")}
                         </td>
                         <td scope={'col'} style={{ width: '20%' }}>
+                          {"Avg. price calc"}
+                        </td>
+                        <td scope={'col'} style={{ width: '10%' }}>
                           {"Compare checkbox"}
                         </td>
-                        <td scope={'col'} style={{ width: '5%' }, {textAlign: "center"}}>
+                        <td scope={'col'} style={{ width: '10%' }, {textAlign: "center"}}>
                           <DeleteBtn onClick={() => this.deleteTicker(ticker._id)} />
                         </td>
                         </tr>
