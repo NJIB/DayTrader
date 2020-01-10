@@ -1,6 +1,5 @@
 import React from "react";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
-
 import Tickers from "./pages/Tickers";
 import Portfolio from "./pages/Portfolio";
 import Detail from "./pages/Detail";

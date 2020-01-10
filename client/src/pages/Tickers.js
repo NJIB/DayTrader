@@ -12,6 +12,14 @@ import "./styles/style.css";
 
 const moment = require("moment");
 
+let tickerData = "";
+let marketDataPulled = false;
+let chartsLog = ["1-1", "1-2", "1-3", "2-1", "2-2", "2-3"];
+let chartsCounter = 0;
+let requestType = "";  //Distinguishes between new button and period switch
+let chartsDivNum = ""; // Tracks the chartsDivRef for each set of period buttons
+
+
 class Tickers extends Component {
   state = {
     tickers: [],
@@ -167,14 +175,11 @@ class Tickers extends Component {
       <Container fluid className='SearchPane'>
         <div id="tickerSearch" class="card card-default">
           <Row>
-            {/* <Col size="md-6"> */}
-            <Col size="md-12">
-              <Jumbotron>
-                <h3>Which Stock Tickers Do You Want To Track?</h3>
-              </Jumbotron>
+            <Col size="md-7">
+              <h4>Which Stock Tickers Do You Want To Track?</h4>
               <form>
                 <Row>
-                  <Col size="md-2">
+                  <Col size="md-6">
                     <Input
                       value={this.state.tickerSearch}
                       onChange={this.handleInputChange}
@@ -182,23 +187,28 @@ class Tickers extends Component {
                       placeholder="Stock Ticker"
                     />
                   </Col>
-                  <Col size="md-1">
+                  <Col size="md-2">
                     <FormBtn
                       disabled={!(this.state.tickerSearch)}
                       onClick={this.handleFormSubmit}
                     >
                       Search
-              </FormBtn>
+                    </FormBtn>
                   </Col>
                 </Row>
               </form>
+            </Col>
+            <Col size="md-5">
+            <div id="marketInfo" class="card card-default">
+              <h5>(Market ticker goes here...)</h5>
+            </div>  
             </Col>
           </Row>
         </div>
         <div id="tickerOutput" class="card card-default">
           <Row>
             <div class="row" id="graphRow1">
-              <div class="col-sm-12 col-md-6 col-lg-4">
+              <div class="col-sm-12 col-md-6 col-lg-6">
                 <div class="row" id="tickerChartHeader1-1">{this.state.tickerSearch}</div>
                 <div class="row" id="tickerChart1-1">
                   {/* <canvas id="myChart1-1" width="200" height="200"> */}
@@ -260,8 +270,8 @@ class Tickers extends Component {
                   {/* </canvas> */}
                 </div>
               </div>
-              <div class="col-sm-12 col-md-6 col-lg-4">
-                <div class="row" id="tickerChartHeader1-2"></div>
+              <div class="col-sm-12 col-md-6 col-lg-6">
+                <div class="row" id="tickerChartHeader1-2">{this.state.tickerSearch}</div>
                 <div class="row" id="tickerChart1-2">
                   {/* <canvas id="myChart1-1" width="200" height="200"> */}
                   <div className="chart">

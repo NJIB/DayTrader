@@ -1,5 +1,4 @@
 import React from "react";
-import { Nav } from 'react-bootstrap';
 import { Col, Row, Container } from "../Grid";
 import { Tabs } from "../Tabs";
 import "./style.css";

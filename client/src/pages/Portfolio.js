@@ -156,11 +156,11 @@ class Portfolio extends Component {
             </Jumbotron>
 
             <table className={'table'} style={{ width: '100%' }}>
-            {/* <table responsive> */}
-            {/* <thead style={{ width: '100%' }}> */}
-            <thead>
+              {/* <table responsive> */}
+              {/* <thead style={{ width: '100%' }}> */}
+              <thead>
                 <tr>
-                <th scope={'col'} style={{ width: '20%' }}>Ticker</th>
+                  <th scope={'col'} style={{ width: '20%' }}>Ticker</th>
                   <th scope={'col'} style={{ width: '20%' }}>Quantity</th>
                   <th scope={'col'} style={{ width: '20%' }}>Trans. Date</th>
                   <th scope={'col'} style={{ width: '20%' }}>Avg. Price</th>
@@ -170,43 +170,47 @@ class Portfolio extends Component {
               </thead>
               {/* </table> */}
               <tbody>
-                {this.state.tickers.length ? 
+                {this.state.tickers.length ?
                   // // <List>
                   // <tr>
-                    this.state.tickers.map(ticker => (
-                      // <ListItem key={ticker._id}>
-                      <tr>
-                        <td scope={'col'} style={{ width: '20%' }}>
-                          <Link to={"/tickers/" + ticker._id}>
-                            <strong>
-                              {ticker.ticker}
-                            </strong>
-                          </Link>
-                        </td>
-                        <td scope={'col'} style={{ width: '20%' }}>
-                          {ticker.quantity}
-                        </td>
-                        <td scope={'col'} style={{ width: '20%' }}>
-                          {moment(ticker.transactiondate).format("MM/DD/YYYY")}
-                        </td>
-                        <td scope={'col'} style={{ width: '20%' }}>
-                          {"Avg. price calc"}
-                        </td>
-                        <td scope={'col'} style={{ width: '10%' }}>
-                          {"Compare checkbox"}
-                        </td>
-                        <td scope={'col'} style={{ width: '10%' }, {textAlign: "center"}}>
-                          <DeleteBtn onClick={() => this.deleteTicker(ticker._id)} />
-                        </td>
-                        </tr>
-                      // </ListItem>
+                  this.state.tickers.map(ticker => (
+                    // <ListItem key={ticker._id}>
+                    <tr>
+                      <td scope={'col'} style={{ width: '20%' }}>
+                        <Link to={"/tickers/" + ticker._id}>
+                          <strong>
+                            {ticker.ticker}
+                          </strong>
+                        </Link>
+                      </td>
+                      <td scope={'col'} style={{ width: '20%' }}>
+                        {ticker.quantity}
+                      </td>
+                      <td scope={'col'} style={{ width: '20%' }}>
+                        {moment(ticker.transactiondate).format("MM/DD/YYYY")}
+                      </td>
+                      <td scope={'col'} style={{ width: '20%' }}>
+                        {"Avg. price calc"}
+                      </td>
+                      <td scope={'col'} style={{ width: '10%' }}>
+                        <InputGroup className="mb-3">
+                          {/* <InputGroup.Prepend> */}
+                          <InputGroup.Checkbox aria-label="Checkbox for following text input" />
+                          {/* </InputGroup.Prepend> */}
+                        </InputGroup>
+                      </td>
+                      <td scope={'col'} style={{ width: '10%' }, { textAlign: "center" }}>
+                        <DeleteBtn onClick={() => this.deleteTicker(ticker._id)} />
+                      </td>
+                    </tr>
+                    // </ListItem>
 
-                    ))
+                  ))
                   // </tr>
 
                   // </List>
 
-                 : (
+                  : (
                     <h2>No Results to Display</h2>
                   )}
               </tbody>
