@@ -24,7 +24,11 @@ class Tickers extends Component {
   state = {
     tickers: [],
     tickerSearch: "",
-
+    usMarketData: {
+      SNPChange: 0,
+      DJIChange: 0,
+      NasdaqChange: 0,
+    },
     chartData: {
       labels: [],
       datasets: [{
@@ -45,6 +49,7 @@ class Tickers extends Component {
 
   componentDidMount() {
     this.loadStocks();
+    this.getMarketData();
   }
 
   loadStocks = () => {
@@ -83,8 +88,6 @@ class Tickers extends Component {
 
   handleFormSubmit = async event => {
     event.preventDefault();
-    console.log("START");
-    console.log("this: ", this);
     //Check validation on the following line (may need to be different from ticker example)
     if (this.state.tickerSearch) {
       let tickerData = this.state.tickerSearch;
@@ -165,10 +168,57 @@ class Tickers extends Component {
         }
       }
 
-
       this.setState({ chartData: localChartData });
     };
   };
+
+  getMarketData = async event => {
+
+    const dateStamp = moment();
+    console.log("dateStamp: ", dateStamp);
+
+    //Market summary data API
+    var marketSummary = {
+      "async": true,
+      "crossDomain": true,
+      "url": "https://apidojo-yahoo-finance-v1.p.rapidapi.com/market/get-summary?region=US&lang=en",
+      "method": "GET",
+      "headers": {
+        "x-rapidapi-host": "apidojo-yahoo-finance-v1.p.rapidapi.com",
+        "x-rapidapi-key": "7eb729d91fmshd56769216684858p17fff1jsna4991481e499"
+      }
+    }
+
+    console.log("url: " + marketSummary.url);
+
+    const mktSummResponse = await fetch(marketSummary.url, marketSummary)
+
+    const mktSummOutput = await mktSummResponse.json();
+    console.log("mktSummOutput: ", mktSummOutput);
+
+    const snpChange = mktSummOutput.marketSummaryResponse.result[0].regularMarketChange.fmt;
+    const djiChange = mktSummOutput.marketSummaryResponse.result[1].regularMarketChange.fmt;
+    const nasChange = mktSummOutput.marketSummaryResponse.result[2].regularMarketChange.fmt;
+    const ftseChange = mktSummOutput.marketSummaryResponse.result[14].regularMarketChange.fmt;
+
+    const marketData = {
+      SNPChange: snpChange,
+      DJIChange: djiChange,
+      NasdaqChange: nasChange,
+      FTSEChange: ftseChange
+    }
+
+    marketData.SNPChange = snpChange;
+    marketData.DJIChange = djiChange;
+    marketData.NasdaqChange = nasChange;
+    marketData.FTSEChange = ftseChange;    
+
+    this.setState({ usMarketData: marketData });
+    console.log("usMarketData: ", this.state);
+
+  }
+
+
 
   render() {
     return (
@@ -179,7 +229,7 @@ class Tickers extends Component {
               <h4>Which Stock Tickers Do You Want To Track?</h4>
               <form>
                 <Row>
-                  <Col size="md-6">
+                  <Col size="lg-8 md-8">
                     <Input
                       value={this.state.tickerSearch}
                       onChange={this.handleInputChange}
@@ -187,7 +237,7 @@ class Tickers extends Component {
                       placeholder="Stock Ticker"
                     />
                   </Col>
-                  <Col size="md-2">
+                  <Col size="lg-2 md-2">
                     <FormBtn
                       disabled={!(this.state.tickerSearch)}
                       onClick={this.handleFormSubmit}
@@ -199,9 +249,13 @@ class Tickers extends Component {
               </form>
             </Col>
             <Col size="md-5">
-            <div id="marketInfo" class="card card-default">
-              <h5>(Market ticker goes here...)</h5>
-            </div>  
+              <div id="marketInfo" class="card card-default">
+                <h4>Today's markets:</h4>
+              <h5>{ ("DJI: " + this.state.usMarketData.DJIChange) }</h5>
+              <h5>{ ("SNP: " + this.state.usMarketData.SNPChange) }</h5>
+              <h5>{ ("Nasdaq: " + this.state.usMarketData.NasdaqChange) }</h5>
+              <h5>{ ("FTSE: " + this.state.usMarketData.FTSEChange) }</h5>
+              </div>
             </Col>
           </Row>
         </div>
@@ -332,14 +386,6 @@ class Tickers extends Component {
                   {/* </canvas> */}
                 </div>
               </div>
-
-              {/* <div class="col-sm-12 col-md-6 col-lg-4">
-                <div class="row" id="tickerChartHeader1-2"></div>
-                <div class="row" id="periodButtons1-2"></div>
-                <div class="row" id="tickerChart1-2">
-                  <canvas id="myChart1-2" width="200" height="200"></canvas>
-                </div>
-              </div> */}
               <div class="col-sm-12 col-md-6 col-lg-4">
                 <div class="row" id="tickerChartHeader1-3"></div>
                 <div class="row" id="periodButtons1-3"></div>
