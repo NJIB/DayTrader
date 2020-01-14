@@ -3,21 +3,56 @@ import { Link } from "react-router-dom";
 import { Col, Row, Container } from "../components/Grid";
 import Jumbotron from "../components/Jumbotron";
 import API from "../utils/API";
+import Tickers from "../pages/Tickers"
+
+const axios = require("axios");
+const cheerio = require('cheerio');
+
+var tickerId;
 
 class Detail extends Component {
   state = {
-    ticker: {}
+    ticker: {},
+    news: {}
   };
-  // Add code to get the ticker with an _id equal to the id in the route param
-  // e.g. http://localhost:3000/tickers/:id
-  // The ticker id for this route can be accessed using this.props.match.params.id
 
   componentDidMount() {
+    console.log("Tickers:" + Tickers);
+
     API.getTicker(this.props.match.params.id)
       .then(res => this.setState({ ticker: res.data }))
       .catch(err => console.log(err));
+
+      console.log(this);
+      this.getTickerNews(this.state.ticker.ticker);
   }
 
+  getTickerNews = async event => {
+
+    //Ticker News API
+    var tickerNews = {
+      "async": true,
+      "crossDomain": true,
+      // "url": "https://apidojo-yahoo-finance-v1.p.rapidapi.com/stock/get-news?region=US&lang=en&category=" + tickerData,
+      "url": "https://apidojo-yahoo-finance-v1.p.rapidapi.com/stock/get-news?region=US&lang=en&category=SQ",
+      "method": "GET",
+      "headers": {
+        "x-rapidapi-host": "apidojo-yahoo-finance-v1.p.rapidapi.com",
+        "x-rapidapi-key": "7eb729d91fmshd56769216684858p17fff1jsna4991481e499"
+      }
+    }
+
+    console.log("url: " + tickerNews.url);
+
+    const tickerNewsResponse = await fetch(tickerNews.url, tickerNews)
+
+    const tickerNewsOutput = await tickerNewsResponse.json();
+    console.log("tickerNewsOutput: ", tickerNewsOutput);
+
+    this.setState({ news: tickerNewsOutput });
+    console.log("this.state: ", this.state);
+
+  }
 
   render() {
     return (
@@ -27,16 +62,23 @@ class Detail extends Component {
             <Jumbotron>
               <h1>
                 {this.state.ticker.ticker}
-                {this.state.ticker.quantity}
               </h1>
             </Jumbotron>
           </Col>
         </Row>
+
         <Row>
-          <Col size="md-10 md-offset-1">
+          <Col size="md-6 md-offset-1" class="card card-default">
             <article>
               <h1>Notes</h1>
               <p>{this.state.ticker.notes}</p>
+            </article>
+          </Col>
+          <Col size="md-6 md-offset-1" class="card card-default">
+            <article>
+              <h1>Ticker News</h1>
+              <p>{"(Placeholder ticker news)"}</p>
+              {/* <p>{this.state.tickerNews.tickerNewsData}</p> */}
             </article>
           </Col>
         </Row>

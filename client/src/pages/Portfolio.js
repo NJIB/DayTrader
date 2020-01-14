@@ -117,14 +117,18 @@ class Portfolio extends Component {
                 </Col>
                 <Col size="md-1">
                   <InputGroup>
-                    <InputGroup.Radio aria-label="Buy" id="rbBuy" />
-                    <label>Buy</label>
+                    <InputGroup.Prepend>
+                      <InputGroup.Radio aria-label="Buy" id="rbBuy" />
+                      <label>Buy</label>
+                    </InputGroup.Prepend>
                   </InputGroup>
                 </Col>
                 <Col size="md-1">
                   <InputGroup>
-                    <InputGroup.Radio aria-label="Sell" id="rbSell" />
-                    <label>Sell</label>
+                    <InputGroup.Prepend>
+                      <InputGroup.Radio aria-label="Sell" id="rbSell" />
+                      <label>Sell</label>
+                    </InputGroup.Prepend>
                   </InputGroup>
                 </Col>
                 <Col size="md-3">

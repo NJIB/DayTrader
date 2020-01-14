@@ -2,7 +2,6 @@ const router = require("express").Router();
 const tickersController = require("../../controllers/tickersController");
 const moment = require("moment");
 
-
 // Matches with "/api/tickers"
 router.route("/")
   .get(tickersController.findAll)

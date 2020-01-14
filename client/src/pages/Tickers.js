@@ -25,9 +25,21 @@ class Tickers extends Component {
     tickers: [],
     tickerSearch: "",
     usMarketData: {
-      SNPChange: 0,
-      DJIChange: 0,
-      NasdaqChange: 0,
+      SNP: {
+        SNPPrice: 0,
+        SNPChange: 0,
+        SNPChangePercent: 0
+      },
+      DJI: {
+        DJIPrice: 0,
+        DJIChange: 0,
+        DJIChangePercent: 0
+      },
+      Nasdaq: {
+        NasdaqPrice: 0,
+        NasdaqChange: 0,
+        NasdaqChangePercent: 0
+      }
     },
     chartData: {
       labels: [],
@@ -196,22 +208,23 @@ class Tickers extends Component {
     const mktSummOutput = await mktSummResponse.json();
     console.log("mktSummOutput: ", mktSummOutput);
 
-    const snpChange = mktSummOutput.marketSummaryResponse.result[0].regularMarketChange.fmt;
-    const djiChange = mktSummOutput.marketSummaryResponse.result[1].regularMarketChange.fmt;
-    const nasChange = mktSummOutput.marketSummaryResponse.result[2].regularMarketChange.fmt;
-    const ftseChange = mktSummOutput.marketSummaryResponse.result[14].regularMarketChange.fmt;
-
     const marketData = {
-      SNPChange: snpChange,
-      DJIChange: djiChange,
-      NasdaqChange: nasChange,
-      FTSEChange: ftseChange
+      SNP: {
+        SNPPrice: mktSummOutput.marketSummaryResponse.result[0].regularMarketPrice.fmt,
+        SNPChange: mktSummOutput.marketSummaryResponse.result[0].regularMarketChange.fmt,
+        SNPChangePercent: mktSummOutput.marketSummaryResponse.result[0].regularMarketChangePercent.fmt,
+      },
+      DJI: {
+        DJIPrice: mktSummOutput.marketSummaryResponse.result[1].regularMarketPrice.fmt,
+        DJIChange: mktSummOutput.marketSummaryResponse.result[1].regularMarketChange.fmt,
+        DJIChangePercent: mktSummOutput.marketSummaryResponse.result[1].regularMarketChangePercent.fmt,
+      },
+      Nasdaq: {
+        NasdaqPrice: mktSummOutput.marketSummaryResponse.result[2].regularMarketPrice.fmt,
+        NasdaqChange: mktSummOutput.marketSummaryResponse.result[2].regularMarketChange.fmt,
+        NasdaqChangePercent: mktSummOutput.marketSummaryResponse.result[2].regularMarketChangePercent.fmt,
+      }
     }
-
-    marketData.SNPChange = snpChange;
-    marketData.DJIChange = djiChange;
-    marketData.NasdaqChange = nasChange;
-    marketData.FTSEChange = ftseChange;    
 
     this.setState({ usMarketData: marketData });
     console.log("usMarketData: ", this.state);
@@ -225,7 +238,7 @@ class Tickers extends Component {
       <Container fluid className='SearchPane'>
         <div id="tickerSearch" class="card card-default">
           <Row>
-            <Col size="md-7">
+            <Col size="md-6">
               <h4>Which Stock Tickers Do You Want To Track?</h4>
               <form>
                 <Row>
@@ -248,13 +261,69 @@ class Tickers extends Component {
                 </Row>
               </form>
             </Col>
-            <Col size="md-5">
+            <Col size="md-6">
               <div id="marketInfo" class="card card-default">
                 <h4>Today's markets:</h4>
-              <h5>{ ("DJI: " + this.state.usMarketData.DJIChange) }</h5>
-              <h5>{ ("SNP: " + this.state.usMarketData.SNPChange) }</h5>
-              <h5>{ ("Nasdaq: " + this.state.usMarketData.NasdaqChange) }</h5>
-              <h5>{ ("FTSE: " + this.state.usMarketData.FTSEChange) }</h5>
+
+                <Row>
+                  <Col size="3">
+                  </ Col>
+                  <Col size="3">
+                  <h6>{"Price"}</h6>
+                  </ Col>
+                  <Col size="3">
+                  <h6>{"Change"}</h6>
+                  </ Col>
+                  <Col size="3">
+                  <h6>{"% Change"}</h6>
+                  </ Col>
+                </Row>
+
+                <Row>
+                  <Col size="3">
+                    <h6>{"DJI: "}</h6>
+                  </ Col>
+                  <Col size="3">
+                  <h7>{(this.state.usMarketData.DJI.DJIPrice)}</h7>
+                  </ Col>
+                  <Col size="3">
+                  <h7>{(this.state.usMarketData.DJI.DJIChange)}</h7>
+                  </ Col>
+                  <Col size="3">
+                  <h7>{(this.state.usMarketData.DJI.DJIChangePercent)}</h7>
+                  </ Col>
+                </Row>
+
+                <Row>
+                  <Col size="3">
+                    <h6>{"S&P: "}</h6>
+                  </ Col>
+                  <Col size="3">
+                  <h7>{(this.state.usMarketData.SNP.SNPPrice)}</h7>
+                  </ Col>
+                  <Col size="3">
+                  <h7>{(this.state.usMarketData.SNP.SNPChange)}</h7>
+                  </ Col>
+                  <Col size="3">
+                  <h7>{(this.state.usMarketData.SNP.SNPChangePercent)}</h7>
+                  </ Col>
+                </Row>
+
+                <Row>
+                  <Col size="3">
+                    <h6>{"Nasdaq: "}</h6>
+                  </ Col>
+                  <Col size="3">
+                  <h7>{(this.state.usMarketData.Nasdaq.NasdaqPrice)}</h7>
+                  </ Col>
+                  <Col size="3">
+                  <h7>{(this.state.usMarketData.Nasdaq.NasdaqChange)}</h7>
+                  </ Col>
+                  <Col size="3">
+                  <h7>{(this.state.usMarketData.Nasdaq.NasdaqChangePercent)}</h7>
+                  </ Col>
+                </Row>
+
               </div>
             </Col>
           </Row>

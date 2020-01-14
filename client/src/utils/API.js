@@ -15,12 +15,6 @@ export default {
   },
   // Saves a ticker to the database
   saveTicker: function(tickerData) {
-    return axios.post("/api/tickers", tickerData);
-  }
-  ,
-  //NJIB added - to be spliced in
-    getTickerInfo: function(query) {
-      // return axios.get("/api/tickers", { params: { q: query } });
-      return axios.get("/api/tickers");
+    return axios.post("/api/tickers" + tickerData);
   } 
 };
