@@ -3,12 +3,11 @@ import { Link } from "react-router-dom";
 import { Col, Row, Container } from "../components/Grid";
 import Jumbotron from "../components/Jumbotron";
 import API from "../utils/API";
-import Tickers from "../pages/Tickers"
+import { List, ListItem } from "../components/List";
+
 
 const axios = require("axios");
 const cheerio = require('cheerio');
-
-var tickerId;
 
 class Detail extends Component {
   state = {
@@ -17,14 +16,11 @@ class Detail extends Component {
   };
 
   componentDidMount() {
-    console.log("Tickers:" + Tickers);
-
     API.getTicker(this.props.match.params.id)
       .then(res => this.setState({ ticker: res.data }))
       .catch(err => console.log(err));
 
-      console.log(this);
-      this.getTickerNews(this.state.ticker.ticker);
+    this.getTickerNews();
   }
 
   getTickerNews = async event => {
@@ -33,7 +29,6 @@ class Detail extends Component {
     var tickerNews = {
       "async": true,
       "crossDomain": true,
-      // "url": "https://apidojo-yahoo-finance-v1.p.rapidapi.com/stock/get-news?region=US&lang=en&category=" + tickerData,
       "url": "https://apidojo-yahoo-finance-v1.p.rapidapi.com/stock/get-news?region=US&lang=en&category=SQ",
       "method": "GET",
       "headers": {
@@ -47,10 +42,22 @@ class Detail extends Component {
     const tickerNewsResponse = await fetch(tickerNews.url, tickerNews)
 
     const tickerNewsOutput = await tickerNewsResponse.json();
-    console.log("tickerNewsOutput: ", tickerNewsOutput);
 
     this.setState({ news: tickerNewsOutput });
+    // console.log("this.state.news.items.result.length: ", this.state.news.items.result.length);
     console.log("this.state: ", this.state);
+
+    // NJIB test
+    this.state.news.items.result.map(story => {
+      console.log(story.title);
+      console.log(story.link);
+    });
+
+    //NJIB test
+    // this.state.news.items.result.forEach(story => {
+    //   console.log(story.title)
+    // });
+
 
   }
 
@@ -78,7 +85,22 @@ class Detail extends Component {
             <article>
               <h1>Ticker News</h1>
               <p>{"(Placeholder ticker news)"}</p>
-              {/* <p>{this.state.tickerNews.tickerNewsData}</p> */}
+              {/* {this.state.news.items.result.length ? ( */}
+              <List>
+                {/* {this.state.news.items.result.map(story => (
+                    <ListItem>
+                      <strong>
+                      <a href={story.link}>
+                        {story.title}
+                      </a>  
+                      </strong>
+                    </ListItem>
+                  ))} */}
+              </List>
+              {/* ) : (
+                  <p>No News Items to Display</p>
+                )} */}
+
             </article>
           </Col>
         </Row>

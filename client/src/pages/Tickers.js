@@ -19,7 +19,6 @@ let chartsCounter = 0;
 let requestType = "";  //Distinguishes between new button and period switch
 let chartsDivNum = ""; // Tracks the chartsDivRef for each set of period buttons
 
-
 class Tickers extends Component {
   state = {
     tickers: [],
@@ -227,11 +226,9 @@ class Tickers extends Component {
     }
 
     this.setState({ usMarketData: marketData });
-    console.log("usMarketData: ", this.state);
+    console.log("this.state: ", this.state);
 
   }
-
-
 
   render() {
     return (
@@ -323,7 +320,6 @@ class Tickers extends Component {
                   <h7>{(this.state.usMarketData.Nasdaq.NasdaqChangePercent)}</h7>
                   </ Col>
                 </Row>
-
               </div>
             </Col>
           </Row>
@@ -486,9 +482,6 @@ class Tickers extends Component {
                 </div>
               </div>
             </div>
-
-
-
           </Row>
         </div>
       </Container>
