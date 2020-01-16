@@ -20,9 +20,9 @@ export function Tabs(props) {
         <Nav.Item>
           <Nav.Link eventKey="detail" href="/detail">Detail</Nav.Link>
         </Nav.Item>
-        {/* <Nav.Item>
+        <Nav.Item>
           <Nav.Link eventKey="scenarios" href="/scenarios">Scenarios</Nav.Link>
-        </Nav.Item> */}
+        </Nav.Item>
       </Nav>
     </span>
   );

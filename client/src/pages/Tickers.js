@@ -24,6 +24,7 @@ class Tickers extends Component {
     tickers: [],
     tickerSearch: "",
     usMarketData: {
+      dateStamp: "",
       SNP: {
         SNPPrice: 0,
         SNPChange: 0,
@@ -143,7 +144,7 @@ class Tickers extends Component {
 
       const localChartData = {
         chartDivRefData: {
-          // tickerSearch: tickerData,
+          tickerSearch: tickerData,
           chartDivRef: chartDivRef
         },
         labels:
@@ -199,6 +200,7 @@ class Tickers extends Component {
     console.log("mktSummOutput: ", mktSummOutput);
 
     const marketData = {
+      dateStamp: mktSummOutput.marketSummaryResponse.result[0].regularMarketTime.fmt,
       SNP: {
         SNPPrice: mktSummOutput.marketSummaryResponse.result[0].regularMarketPrice.fmt,
         SNPChange: mktSummOutput.marketSummaryResponse.result[0].regularMarketChange.fmt,
@@ -251,7 +253,7 @@ class Tickers extends Component {
             </Col>
             <Col size="md-6">
               <div id="marketInfo" class="card card-default">
-                <h4>Today's markets:</h4>
+                <h4>Today's markets as of  {this.state.usMarketData.dateStamp}</h4>
 
                 <Row>
                   <Col size="3">

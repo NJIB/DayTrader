@@ -12,24 +12,29 @@ const cheerio = require('cheerio');
 class Detail extends Component {
   state = {
     ticker: {},
-    news: {}
+    news: {
+      items: {
+        result: []
+      }
+    }
   };
 
-  componentDidMount() {
-    API.getTicker(this.props.match.params.id)
-      .then(res => this.setState({ ticker: res.data }))
-      .catch(err => console.log(err));
+  async componentDidMount() {
 
-    this.getTickerNews();
+const result = await API.getTicker(this.props.match.params.id)
+
+this.setState({ticker: result.data})
+ 
+    this.getTickerNews(result.data.ticker);
   }
 
-  getTickerNews = async event => {
+  getTickerNews = async ticker => {
 
     //Ticker News API
     var tickerNews = {
       "async": true,
       "crossDomain": true,
-      "url": "https://apidojo-yahoo-finance-v1.p.rapidapi.com/stock/get-news?region=US&lang=en&category=SQ",
+      "url": `https://apidojo-yahoo-finance-v1.p.rapidapi.com/stock/get-news?region=US&lang=en&category=${ticker}`,
       "method": "GET",
       "headers": {
         "x-rapidapi-host": "apidojo-yahoo-finance-v1.p.rapidapi.com",
@@ -42,6 +47,7 @@ class Detail extends Component {
     const tickerNewsResponse = await fetch(tickerNews.url, tickerNews)
 
     const tickerNewsOutput = await tickerNewsResponse.json();
+    console.log(tickerNewsOutput)
 
     this.setState({ news: tickerNewsOutput });
     // console.log("this.state.news.items.result.length: ", this.state.news.items.result.length);
@@ -85,21 +91,19 @@ class Detail extends Component {
             <article>
               <h1>Ticker News</h1>
               <p>{"(Placeholder ticker news)"}</p>
-              {/* {this.state.news.items.result.length ? ( */}
+              {this.state.news.items.result.length ? (
               <List>
-                {/* {this.state.news.items.result.map(story => (
+                {this.state.news.items && this.state.news.items.result.map(story => (
                     <ListItem>
-                      <strong>
                       <a href={story.link}>
                         {story.title}
                       </a>  
-                      </strong>
                     </ListItem>
-                  ))} */}
+                  ))}
               </List>
-              {/* ) : (
+              ) : (
                   <p>No News Items to Display</p>
-                )} */}
+                )}
 
             </article>
           </Col>
