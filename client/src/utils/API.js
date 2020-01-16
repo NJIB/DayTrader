@@ -15,6 +15,7 @@ export default {
   },
   // Saves a ticker to the database
   saveTicker: function(tickerData) {
-    return axios.post("/api/tickers" + tickerData);
+    console.log("tickerData:" + tickerData);
+    return axios.post("/api/tickers", tickerData);
   } 
 };

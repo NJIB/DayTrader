@@ -41,14 +41,17 @@ class Tickers extends Component {
       }
     },
     chartData: {
+      chartDivRefData: {
+        chartDivRef: "",
+        // tickerSearch: ""
+      },
       labels: [],
       datasets: [{
         label: '',
         data: [],
         backgroundColor: 'grey'
       }]
-    }
-
+    },
   };
 
   static defaultProps = {
@@ -59,18 +62,8 @@ class Tickers extends Component {
   }
 
   componentDidMount() {
-    this.loadStocks();
     this.getMarketData();
   }
-
-  loadStocks = () => {
-    API.getTickers()
-      .then(res =>
-        // this.setState({ tickers: res.data, ticker: "", quantity: "", notes: "" })
-        this.setState({ tickers: res.data })
-      )
-      .catch(err => console.log("getTickers error: ", err));
-  };
 
   // deleteTicker = id => {
   //   API.deleteTicker(id)
@@ -84,18 +77,6 @@ class Tickers extends Component {
       [name]: value
     });
   };
-
-  // handleFormSubmit = event => {
-  //   event.preventDefault();
-  //   //Check validation on the following line (may need to be different from ticker example)
-  //   if (this.state.ticker && this.state.quantity) {
-  //     API.getTickerInfo({
-  //       ticker: this.state.tickerSearch
-  //     })
-  //       .then(res => this.loadStocks())
-  //       .catch(err => console.log(err));
-  //   }
-  // };
 
   handleFormSubmit = async event => {
     event.preventDefault();
@@ -137,9 +118,13 @@ class Tickers extends Component {
 
       // Populating the different chart areas
 
-      var priceResults = [];
-      var volResults = [];
-      var dayDate = [];
+      chartsCounter++;
+      console.log("chartsCounter: " + chartsCounter);
+      let chartDivRef = ("ChartDivRef" + chartsLog[chartsCounter - 1]);
+
+      let priceResults = [];
+      let volResults = [];
+      let dayDate = [];
 
       // var ctx = document.getElementById('myChart' + chartsDivRef).getContext('2d');
       // var ctx = document.getElementById('myChart1-1').getContext('2d');
@@ -150,11 +135,17 @@ class Tickers extends Component {
         dayDate.push(moment((responseData.prices[i].date) * 1000).format("MMM Do YY"));
       }
 
-      console.log("priceResults: " + priceResults);
-      console.log("volResults: " + volResults);
-      console.log("dayDate: " + dayDate);
+      // console.log("priceResults: " + priceResults);
+      // console.log("volResults: " + volResults);
+      // console.log("dayDate: " + dayDate);
+
+      console.log("chartDivRef: " + chartDivRef);
 
       const localChartData = {
+        chartDivRefData: {
+          // tickerSearch: tickerData,
+          chartDivRef: chartDivRef
+        },
         labels:
           dayDate,
         datasets: [
@@ -266,13 +257,13 @@ class Tickers extends Component {
                   <Col size="3">
                   </ Col>
                   <Col size="3">
-                  <h6>{"Price"}</h6>
+                    <h6>{"Price"}</h6>
                   </ Col>
                   <Col size="3">
-                  <h6>{"Change"}</h6>
+                    <h6>{"Change"}</h6>
                   </ Col>
                   <Col size="3">
-                  <h6>{"% Change"}</h6>
+                    <h6>{"% Change"}</h6>
                   </ Col>
                 </Row>
 
@@ -281,13 +272,13 @@ class Tickers extends Component {
                     <h6>{"DJI: "}</h6>
                   </ Col>
                   <Col size="3">
-                  <h7>{(this.state.usMarketData.DJI.DJIPrice)}</h7>
+                    <h7>{(this.state.usMarketData.DJI.DJIPrice)}</h7>
                   </ Col>
                   <Col size="3">
-                  <h7>{(this.state.usMarketData.DJI.DJIChange)}</h7>
+                    <h7>{(this.state.usMarketData.DJI.DJIChange)}</h7>
                   </ Col>
                   <Col size="3">
-                  <h7>{(this.state.usMarketData.DJI.DJIChangePercent)}</h7>
+                    <h7>{(this.state.usMarketData.DJI.DJIChangePercent)}</h7>
                   </ Col>
                 </Row>
 
@@ -296,13 +287,13 @@ class Tickers extends Component {
                     <h6>{"S&P: "}</h6>
                   </ Col>
                   <Col size="3">
-                  <h7>{(this.state.usMarketData.SNP.SNPPrice)}</h7>
+                    <h7>{(this.state.usMarketData.SNP.SNPPrice)}</h7>
                   </ Col>
                   <Col size="3">
-                  <h7>{(this.state.usMarketData.SNP.SNPChange)}</h7>
+                    <h7>{(this.state.usMarketData.SNP.SNPChange)}</h7>
                   </ Col>
                   <Col size="3">
-                  <h7>{(this.state.usMarketData.SNP.SNPChangePercent)}</h7>
+                    <h7>{(this.state.usMarketData.SNP.SNPChangePercent)}</h7>
                   </ Col>
                 </Row>
 
@@ -311,13 +302,13 @@ class Tickers extends Component {
                     <h6>{"Nasdaq: "}</h6>
                   </ Col>
                   <Col size="3">
-                  <h7>{(this.state.usMarketData.Nasdaq.NasdaqPrice)}</h7>
+                    <h7>{(this.state.usMarketData.Nasdaq.NasdaqPrice)}</h7>
                   </ Col>
                   <Col size="3">
-                  <h7>{(this.state.usMarketData.Nasdaq.NasdaqChange)}</h7>
+                    <h7>{(this.state.usMarketData.Nasdaq.NasdaqChange)}</h7>
                   </ Col>
                   <Col size="3">
-                  <h7>{(this.state.usMarketData.Nasdaq.NasdaqChangePercent)}</h7>
+                    <h7>{(this.state.usMarketData.Nasdaq.NasdaqChangePercent)}</h7>
                   </ Col>
                 </Row>
               </div>
@@ -328,7 +319,7 @@ class Tickers extends Component {
           <Row>
             <div class="row" id="graphRow1">
               <div class="col-sm-12 col-md-6 col-lg-6">
-                <div class="row" id="tickerChartHeader1-1">{this.state.tickerSearch}</div>
+                <div class="row" id="tickerChartHeader1-1">{this.state.chartData.chartDivRefData.tickerSearch}</div>
                 <div class="row" id="tickerChart1-1">
                   {/* <canvas id="myChart1-1" width="200" height="200"> */}
                   <div className="chart">
