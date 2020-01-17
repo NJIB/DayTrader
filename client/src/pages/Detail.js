@@ -5,6 +5,7 @@ import Jumbotron from "../components/Jumbotron";
 import API from "../utils/API";
 import { List, ListItem } from "../components/List";
 
+import "./styles/style.css";
 
 const axios = require("axios");
 const cheerio = require('cheerio');
@@ -20,16 +21,12 @@ class Detail extends Component {
   };
 
   async componentDidMount() {
-
-const result = await API.getTicker(this.props.match.params.id)
-
-this.setState({ticker: result.data})
- 
+    const result = await API.getTicker(this.props.match.params.id)
+    this.setState({ ticker: result.data })
     this.getTickerNews(result.data.ticker);
   }
 
   getTickerNews = async ticker => {
-
     //Ticker News API
     var tickerNews = {
       "async": true,
@@ -54,10 +51,10 @@ this.setState({ticker: result.data})
     console.log("this.state: ", this.state);
 
     // NJIB test
-    this.state.news.items.result.map(story => {
-      console.log(story.title);
-      console.log(story.link);
-    });
+    // this.state.news.items.result.map(story => {
+    //   console.log(story.title);
+    //   console.log(story.link);
+    // });
 
     //NJIB test
     // this.state.news.items.result.forEach(story => {
@@ -83,24 +80,23 @@ this.setState({ticker: result.data})
         <Row>
           <Col size="md-6 md-offset-1" class="card card-default">
             <article>
-              <h1>Notes</h1>
+              <h3>Notes</h3>
               <p>{this.state.ticker.notes}</p>
             </article>
           </Col>
           <Col size="md-6 md-offset-1" class="card card-default">
             <article>
-              <h1>Ticker News</h1>
-              <p>{"(Placeholder ticker news)"}</p>
+              <h3>Ticker News</h3>
               {this.state.news.items.result.length ? (
-              <List>
-                {this.state.news.items && this.state.news.items.result.map(story => (
+                <List>
+                  {this.state.news.items && this.state.news.items.result.map(story => (
                     <ListItem>
-                      <a href={story.link}>
-                        {story.title}
-                      </a>  
+                      <a href={story.link} target="_blank"  className="headlines">
+                        {story.title} ({story.publisher})
+                      </a>
                     </ListItem>
                   ))}
-              </List>
+                </List>
               ) : (
                   <p>No News Items to Display</p>
                 )}

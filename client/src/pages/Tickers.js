@@ -41,18 +41,20 @@ class Tickers extends Component {
         NasdaqChangePercent: 0
       }
     },
-    chartData: {
-      chartDivRefData: {
-        chartDivRef: "",
-        // tickerSearch: ""
-      },
-      labels: [],
-      datasets: [{
-        label: '',
-        data: [],
-        backgroundColor: 'grey'
-      }]
-    },
+    chartData: [
+      //   {
+      //   chartDivRefData: {
+      //     chartDivRef: "",
+      //     tickerSearch: ""
+      //   },
+      //   labels: [],
+      //   datasets: [{
+      //     label: '',
+      //     data: [],
+      //     backgroundColor: 'grey'
+      //   }]
+      // }
+    ],
   };
 
   static defaultProps = {
@@ -81,6 +83,7 @@ class Tickers extends Component {
 
   handleFormSubmit = async event => {
     event.preventDefault();
+    const { chartData } = this.state;
     //Check validation on the following line (may need to be different from ticker example)
     if (this.state.tickerSearch) {
       let tickerData = this.state.tickerSearch;
@@ -111,9 +114,7 @@ class Tickers extends Component {
       }
 
       console.log("queryURL: " + settings.url);
-
       const chartResponse = await fetch(settings.url, settings)
-
       const responseData = await chartResponse.json();
       console.log("responseData: ", responseData);
 
@@ -122,7 +123,6 @@ class Tickers extends Component {
       chartsCounter++;
       console.log("chartsCounter: " + chartsCounter);
       let chartDivRef = ("ChartDivRef" + chartsLog[chartsCounter - 1]);
-
       let priceResults = [];
       let volResults = [];
       let dayDate = [];
@@ -144,8 +144,8 @@ class Tickers extends Component {
 
       const localChartData = {
         chartDivRefData: {
-          tickerSearch: tickerData,
-          chartDivRef: chartDivRef
+          chartDivRef: chartDivRef,
+          tickerSearch: tickerData
         },
         labels:
           dayDate,
@@ -162,7 +162,7 @@ class Tickers extends Component {
             label: "Volume",
             // yAxisID: "y-axis-2",
             data: volResults,
-            backgroundColor: 'green',
+            backgroundColor: 'white',
             y2axis: true
           }
         ],
@@ -171,7 +171,10 @@ class Tickers extends Component {
         }
       }
 
-      this.setState({ chartData: localChartData });
+      chartData.push(localChartData);
+
+      this.setState({ chartData });
+      console.log("this.state: ", this.state)
     };
   };
 
@@ -317,166 +320,72 @@ class Tickers extends Component {
             </Col>
           </Row>
         </div>
-        <div id="tickerOutput" class="card card-default">
-          <Row>
-            <div class="row" id="graphRow1">
-              <div class="col-sm-12 col-md-6 col-lg-6">
-                <div class="row" id="tickerChartHeader1-1">{this.state.chartData.chartDivRefData.tickerSearch}</div>
-                <div class="row" id="tickerChart1-1">
-                  {/* <canvas id="myChart1-1" width="200" height="200"> */}
-                  <div className="chart">
-                    <Bar
-                      data={this.state.chartData}
-                      width={200}
-                      height={200}
-                    // options={{
-                    //   responsive: true,
-                    //   title: { display: this.props.displayTitle },
-                    //   maintainAspectRatio: this.props.maintainAspectRatio,
-                    //   legendPosition: "bottom"
+        <Row>
+          {this.state.chartData.length ? (
+            this.state.chartData.map(chartRender => (
+              <div id="tickerOutput" class="card card-default">
+                <span>{chartRender.chartDivRefData.tickerSearch}</span>
+                {/* <canvas id="myChart1-1" width="200" height="200"> */}
+                <div className="chart">
+                  <Bar
+                    data={chartRender}
+                    width={200}
+                    height={200}
+                  // options={{
+                  //   responsive: true,
+                  //   title: { display: this.props.displayTitle },
+                  //   maintainAspectRatio: this.props.maintainAspectRatio,
+                  //   legendPosition: "bottom"
 
-                    // scales: {
-                    //   xAxes: [
-                    //     {
-                    //       display: true,
-                    //       gridLines: {
-                    //         display: false
-                    //       },
-                    //       labels: {
-                    //         show: true
-                    //       }
-                    //     }
-                    //   ],
-                    //   yAxes: [
-                    //     {
-                    //       type: 'linear',
-                    //       display: true,
-                    //       position: 'left',
-                    //       id: 'y-axis-1',
-                    //       gridLines: {
-                    //         display: false
-                    //       },
-                    //       labels: {
-                    //         show: true
-                    //       }
-                    //     },
-                    //     {
-                    //       type: 'linear',
-                    //       display: true,
-                    //       position: 'right',
-                    //       id: 'y-axis-2',
-                    //       gridLines: {
-                    //         display: false
-                    //       },
-                    //       labels: {
-                    //         show: true
-                    //       }
-                    //     }
-                    //   ]
-                    // }
-                    // }}
-                    />
-                    <PeriodBtns />
-                    <DeleteChartBtn />
-                  </div>
-                  {/* </canvas> */}
+                  // scales: {
+                  //   xAxes: [
+                  //     {
+                  //       display: true,
+                  //       gridLines: {
+                  //         display: false
+                  //       },
+                  //       labels: {
+                  //         show: true
+                  //       }
+                  //     }
+                  //   ],
+                  //   yAxes: [
+                  //     {
+                  //       type: 'linear',
+                  //       display: true,
+                  //       position: 'left',
+                  //       id: 'y-axis-1',
+                  //       gridLines: {
+                  //         display: false
+                  //       },
+                  //       labels: {
+                  //         show: true
+                  //       }
+                  //     },
+                  //     {
+                  //       type: 'linear',
+                  //       display: true,
+                  //       position: 'right',
+                  //       id: 'y-axis-2',
+                  //       gridLines: {
+                  //         display: false
+                  //       },
+                  //       labels: {
+                  //         show: true
+                  //       }
+                  //     }
+                  //   ]
+                  // }
+                  // }}
+                  />
+                  <PeriodBtns />
+                  <DeleteChartBtn />
                 </div>
+                {/* </canvas> */}
               </div>
-              <div class="col-sm-12 col-md-6 col-lg-6">
-                <div class="row" id="tickerChartHeader1-2">{this.state.tickerSearch}</div>
-                <div class="row" id="tickerChart1-2">
-                  {/* <canvas id="myChart1-1" width="200" height="200"> */}
-                  <div className="chart">
-                    <Bar
-                      data={this.state.chartData}
-                      width={200}
-                      height={200}
-                    // options={{
-                    //   responsive: true,
-                    //   title: { display: this.props.displayTitle },
-                    //   maintainAspectRatio: this.props.maintainAspectRatio,
-                    //   legendPosition: "bottom"
-
-                    // scales: {
-                    //   xAxes: [
-                    //     {
-                    //       display: true,
-                    //       gridLines: {
-                    //         display: false
-                    //       },
-                    //       labels: {
-                    //         show: true
-                    //       }
-                    //     }
-                    //   ],
-                    //   yAxes: [
-                    //     {
-                    //       type: 'linear',
-                    //       display: true,
-                    //       position: 'left',
-                    //       id: 'y-axis-1',
-                    //       gridLines: {
-                    //         display: false
-                    //       },
-                    //       labels: {
-                    //         show: true
-                    //       }
-                    //     },
-                    //     {
-                    //       type: 'linear',
-                    //       display: true,
-                    //       position: 'right',
-                    //       id: 'y-axis-2',
-                    //       gridLines: {
-                    //         display: false
-                    //       },
-                    //       labels: {
-                    //         show: true
-                    //       }
-                    //     }
-                    //   ]
-                    // }
-                    // }}
-                    />
-                    <PeriodBtns />
-                    <DeleteChartBtn />
-                  </div>
-                  {/* </canvas> */}
-                </div>
-              </div>
-              <div class="col-sm-12 col-md-6 col-lg-4">
-                <div class="row" id="tickerChartHeader1-3"></div>
-                <div class="row" id="periodButtons1-3"></div>
-                <div class="row" id="tickerChart1-3">
-                  <canvas id="myChart1-3" width="200" height="200"></canvas>
-                </div>
-              </div>
-            </div>
-            <div class="row" id="graphRow2">
-              <div class="col-sm-12 col-md-6 col-lg-4">
-                <div class="row" id="tickerChartHeader2-1"></div>
-                <div class="row" id="periodButtons2-1"></div>
-                <div class="row" id="tickerChart2-1">
-                  <canvas id="myChart1-1" width="200" height="200"></canvas>
-                </div>
-              </div>
-              <div class="col-sm-12 col-md-6 col-lg-4">
-                <div class="row" id="tickerChartHeader2-2"></div>
-                <div class="row" id="periodButtons2-2"></div>
-                <div class="row" id="tickerChart2-2">
-                  <canvas id="myChart1-2" width="200" height="200"></canvas>
-                </div>
-              </div>
-              <div class="col-sm-12 col-md-6 col-lg-4">
-                <div class="row" id="tickerChartHeader2-3"></div>
-                <div class="row" id="periodButtons2-3"></div>
-                <div class="row" id="tickerChart2-3">
-                  <canvas id="myChart1-3" width="200" height="200"></canvas>
-                </div>
-              </div>
-            </div>
-          </Row>
-        </div>
+            ))) :
+            (<span>Awaiting Chart Data</span>)}
+        </Row>
       </Container>
     );
   }
