@@ -78,13 +78,13 @@ class Detail extends Component {
         </Row>
 
         <Row>
-          <Col size="md-6 md-offset-1" class="card card-default">
+          <Col size="md-6 md-offset-1" className="card card-default">
             <article>
               <h3>Notes</h3>
               <p>{this.state.ticker.notes}</p>
             </article>
           </Col>
-          <Col size="md-6 md-offset-1" class="card card-default">
+          <Col size="md-6 md-offset-1" className="card card-default">
             <article>
               <h3>Ticker News</h3>
               {this.state.news.items.result.length ? (

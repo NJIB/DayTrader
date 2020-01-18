@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import DeleteBtn from "../components/DeleteBtn";
-import Jumbotron from "../components/Jumbotron";
 import API from "../utils/API";
 import { Link } from "react-router-dom";
 import { Col, Row, Container } from "../components/Grid";
@@ -24,37 +23,26 @@ class Tickers extends Component {
     tickers: [],
     tickerSearch: "",
     usMarketData: {
-      dateStamp: "",
+      dateStamp: "Tuesday, December 18, 1973",
       SNP: {
-        SNPPrice: 0,
-        SNPChange: 0,
-        SNPChangePercent: 0
+        SNPPrice: "550",
+        SNPChange: "+50",
+        SNPChangePercent: "+10%"
       },
       DJI: {
-        DJIPrice: 0,
-        DJIChange: 0,
-        DJIChangePercent: 0
+        DJIPrice: "33000",
+        DJIChange: "+3000",
+        DJIChangePercent: "+10%"
       },
       Nasdaq: {
-        NasdaqPrice: 0,
-        NasdaqChange: 0,
-        NasdaqChangePercent: 0
+        NasdaqPrice: "3300",
+        NasdaqChange: "300",
+        NasdaqChangePercent: "+10%"
       }
     },
-    chartData: [
-      //   {
-      //   chartDivRefData: {
-      //     chartDivRef: "",
-      //     tickerSearch: ""
-      //   },
-      //   labels: [],
-      //   datasets: [{
-      //     label: '',
-      //     data: [],
-      //     backgroundColor: 'grey'
-      //   }]
-      // }
-    ],
+    dateStamp: "",   
+    chartData: [],
+    exchangeData: [],
   };
 
   static defaultProps = {
@@ -127,9 +115,6 @@ class Tickers extends Component {
       let volResults = [];
       let dayDate = [];
 
-      // var ctx = document.getElementById('myChart' + chartsDivRef).getContext('2d');
-      // var ctx = document.getElementById('myChart1-1').getContext('2d');
-
       for (var i = (responseData.prices.length - 1); i > 0; i--) {
         priceResults.push(responseData.prices[i].close);
         volResults.push(responseData.prices[i].volume / 1000000);
@@ -196,32 +181,24 @@ class Tickers extends Component {
     }
 
     console.log("url: " + marketSummary.url);
-
     const mktSummResponse = await fetch(marketSummary.url, marketSummary)
-
     const mktSummOutput = await mktSummResponse.json();
     console.log("mktSummOutput: ", mktSummOutput);
 
-    const marketData = {
-      dateStamp: mktSummOutput.marketSummaryResponse.result[0].regularMarketTime.fmt,
-      SNP: {
-        SNPPrice: mktSummOutput.marketSummaryResponse.result[0].regularMarketPrice.fmt,
-        SNPChange: mktSummOutput.marketSummaryResponse.result[0].regularMarketChange.fmt,
-        SNPChangePercent: mktSummOutput.marketSummaryResponse.result[0].regularMarketChangePercent.fmt,
-      },
-      DJI: {
-        DJIPrice: mktSummOutput.marketSummaryResponse.result[1].regularMarketPrice.fmt,
-        DJIChange: mktSummOutput.marketSummaryResponse.result[1].regularMarketChange.fmt,
-        DJIChangePercent: mktSummOutput.marketSummaryResponse.result[1].regularMarketChangePercent.fmt,
-      },
-      Nasdaq: {
-        NasdaqPrice: mktSummOutput.marketSummaryResponse.result[2].regularMarketPrice.fmt,
-        NasdaqChange: mktSummOutput.marketSummaryResponse.result[2].regularMarketChange.fmt,
-        NasdaqChangePercent: mktSummOutput.marketSummaryResponse.result[2].regularMarketChangePercent.fmt,
-      }
-    }
+    const {exchangeData} = this.state;
 
-    this.setState({ usMarketData: marketData });
+    mktSummOutput.marketSummaryResponse.result.forEach(exchange => {
+      const localExchangeData = {
+      exchange: exchange.fullExchangeName,
+      currentPrice: exchange.regularMarketPrice.fmt,
+      priceChange: exchange.regularMarketChange.fmt,
+      priceChangePercent: exchange.regularMarketChangePercent.fmt
+      }
+      console.log(localExchangeData);
+      exchangeData.push(localExchangeData);
+    });
+
+    this.setState({ exchangeData });
     console.log("this.state: ", this.state);
 
   }
@@ -229,7 +206,7 @@ class Tickers extends Component {
   render() {
     return (
       <Container fluid className='SearchPane'>
-        <div id="tickerSearch" class="card card-default">
+        <div id="tickerSearch" className="card card-default">
           <Row>
             <Col size="md-6">
               <h4>Which Stock Tickers Do You Want To Track?</h4>
@@ -255,7 +232,7 @@ class Tickers extends Component {
               </form>
             </Col>
             <Col size="md-6">
-              <div id="marketInfo" class="card card-default">
+              <div id="marketInfo" className="card card-default">
                 <h4>Today's markets as of  {this.state.usMarketData.dateStamp}</h4>
 
                 <Row>
@@ -320,12 +297,12 @@ class Tickers extends Component {
             </Col>
           </Row>
         </div>
+
         <Row>
           {this.state.chartData.length ? (
             this.state.chartData.map(chartRender => (
-              <div id="tickerOutput" class="card card-default">
+              <div id="tickerOutput" className="card card-default">
                 <span>{chartRender.chartDivRefData.tickerSearch}</span>
-                {/* <canvas id="myChart1-1" width="200" height="200"> */}
                 <div className="chart">
                   <Bar
                     data={chartRender}
@@ -381,7 +358,6 @@ class Tickers extends Component {
                   <PeriodBtns />
                   <DeleteChartBtn />
                 </div>
-                {/* </canvas> */}
               </div>
             ))) :
             (<span>Awaiting Chart Data</span>)}
