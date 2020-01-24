@@ -16,8 +16,8 @@ class Portfolio extends Component {
     quantity: "",
     transactionprice: "",
     transactiondate: "",
-    customRadioInline1: null,
-    customRadioInline2: null,
+    customRadioInline: "Buy",
+    
     notes: ""
   };
 
@@ -47,19 +47,25 @@ class Portfolio extends Component {
     });
   };
 
+  // Handle button click
   handleFormSubmit = event => {
     event.preventDefault();
-    //Check validation on the following line (may need to be different from ticker example)
     if (this.state.ticker && this.state.quantity) {
       if (document.getElementById('rbSell').checked) {
         console.log("Sell rb checked");
         this.state.quantity = (this.state.quantity * -1);
       }
-      else {
-        console.log("Buy rb checked");
-      }
+      else { console.log("Buy rb checked"); }
 
-      console.log(this.state.quantity);
+      const tickerInput = this.state.ticker;
+      console.log("tickerInput: ", tickerInput);
+
+      // Loop through state and see if ticker already exists
+      this.state.tickers.forEach(occurence => {
+          if (occurence.ticker === tickerInput){
+            console.log("Existing record found!")
+        }
+      })
 
       // Save record to the Tickers table
       API.saveTicker({
@@ -72,6 +78,8 @@ class Portfolio extends Component {
         .then(res => this.loadStocks())
         .catch(err => console.log(err));
 
+        // Get TickerSummary details for this ticker
+      
         // Save record to the TickerSummary table
         API.saveTickerSummary({
           ticker: this.state.ticker,
@@ -132,18 +140,18 @@ class Portfolio extends Component {
                 </Col>
                 <Col size="md-1">
                   <InputGroup>
-                    <InputGroup.Prepend>
-                      <InputGroup.Radio aria-label="Buy" id="rbBuy" />
+                    {/* <InputGroup.Prepend> */}
+                      <InputGroup.Radio checked={this.state.customRadioInline ==="Buy" ? true: false} onChange={ () => this.setState({customRadioInline: "Buy"})}aria-label="Buy" id="rbBuy" />
                       <label>Buy</label>
-                    </InputGroup.Prepend>
-                  </InputGroup>
-                </Col>
-                <Col size="md-1">
-                  <InputGroup>
-                    <InputGroup.Prepend>
-                      <InputGroup.Radio aria-label="Sell" id="rbSell" />
+                    {/* </InputGroup.Prepend> */}
+                  {/* </InputGroup> */}
+                {/* </Col> */}
+                {/* <Col size="md-1"> */}
+                  {/* <InputGroup> */}
+                    {/* <InputGroup.Prepend> */}
+                      <InputGroup.Radio  checked={this.state.customRadioInline ==="Sell" ? true: false} onChange={ () => this.setState({customRadioInline: "Sell"})} aria-label="Sell" id="rbSell" />
                       <label>Sell</label>
-                    </InputGroup.Prepend>
+                    {/* </InputGroup.Prepend> */}
                   </InputGroup>
                 </Col>
                 <Col size="md-3">
