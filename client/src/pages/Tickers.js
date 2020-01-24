@@ -22,24 +22,24 @@ class Tickers extends Component {
   state = {
     tickers: [],
     tickerSearch: "",
-    usMarketData: {
-      dateStamp: "Tuesday, December 18, 1973",
-      SNP: {
-        SNPPrice: "550",
-        SNPChange: "+50",
-        SNPChangePercent: "+10%"
-      },
-      DJI: {
-        DJIPrice: "33000",
-        DJIChange: "+3000",
-        DJIChangePercent: "+10%"
-      },
-      Nasdaq: {
-        NasdaqPrice: "3300",
-        NasdaqChange: "300",
-        NasdaqChangePercent: "+10%"
-      }
-    },
+    // usMarketData: {
+    //   dateStamp: "Tuesday, December 18, 1973",
+    //   SNP: {
+    //     SNPPrice: "550",
+    //     SNPChange: "+50",
+    //     SNPChangePercent: "+10%"
+    //   },
+    //   DJI: {
+    //     DJIPrice: "33000",
+    //     DJIChange: "+3000",
+    //     DJIChangePercent: "+10%"
+    //   },
+    //   Nasdaq: {
+    //     NasdaqPrice: "3300",
+    //     NasdaqChange: "300",
+    //     NasdaqChangePercent: "+10%"
+    //   }
+    // },
     dateStamp: "",   
     chartData: [],
     exchangeData: [],
@@ -194,7 +194,7 @@ class Tickers extends Component {
       priceChange: exchange.regularMarketChange.fmt,
       priceChangePercent: exchange.regularMarketChangePercent.fmt
       }
-      console.log(localExchangeData);
+      console.log("localExchangeData: ", localExchangeData);
       exchangeData.push(localExchangeData);
     });
 
@@ -233,7 +233,7 @@ class Tickers extends Component {
             </Col>
             <Col size="md-6">
               <div id="marketInfo" className="card card-default">
-                <h4>Today's markets as of  {this.state.usMarketData.dateStamp}</h4>
+                <h4>Today's markets as of  {this.state.dateStamp}</h4>
 
                 <Row>
                   <Col size="3">
@@ -254,13 +254,13 @@ class Tickers extends Component {
                     <h6>{"DJI: "}</h6>
                   </ Col>
                   <Col size="3">
-                    <h7>{(this.state.usMarketData.DJI.DJIPrice)}</h7>
+                    <h7>{(this.state.exchangeData.currentPrice)}</h7>
                   </ Col>
                   <Col size="3">
-                    <h7>{(this.state.usMarketData.DJI.DJIChange)}</h7>
+                    <h7>{(this.state.exchangeData.priceChange)}</h7>
                   </ Col>
                   <Col size="3">
-                    <h7>{(this.state.usMarketData.DJI.DJIChangePercent)}</h7>
+                    <h7>{(this.state.exchangeData.priceChangePercent)}</h7>
                   </ Col>
                 </Row>
 
@@ -269,13 +269,13 @@ class Tickers extends Component {
                     <h6>{"S&P: "}</h6>
                   </ Col>
                   <Col size="3">
-                    <h7>{(this.state.usMarketData.SNP.SNPPrice)}</h7>
+                    <h7>{(this.state.exchangeData.currentPrice)}</h7>
                   </ Col>
                   <Col size="3">
-                    <h7>{(this.state.usMarketData.SNP.SNPChange)}</h7>
+                    <h7>{(this.state.exchangeData.priceChange)}</h7>
                   </ Col>
                   <Col size="3">
-                    <h7>{(this.state.usMarketData.SNP.SNPChangePercent)}</h7>
+                    <h7>{(this.state.exchangeData.priceChangePercent)}</h7>
                   </ Col>
                 </Row>
 
@@ -284,13 +284,13 @@ class Tickers extends Component {
                     <h6>{"Nasdaq: "}</h6>
                   </ Col>
                   <Col size="3">
-                    <h7>{(this.state.usMarketData.Nasdaq.NasdaqPrice)}</h7>
+                    <h7>{(this.state.exchangeData.currentPrice)}</h7>
                   </ Col>
                   <Col size="3">
-                    <h7>{(this.state.usMarketData.Nasdaq.NasdaqChange)}</h7>
+                    <h7>{(this.state.exchangeData.priceChange)}</h7>
                   </ Col>
                   <Col size="3">
-                    <h7>{(this.state.usMarketData.Nasdaq.NasdaqChangePercent)}</h7>
+                    <h7>{(this.state.exchangeData.priceChangePercent)}</h7>
                   </ Col>
                 </Row>
               </div>

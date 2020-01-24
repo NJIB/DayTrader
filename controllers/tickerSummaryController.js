@@ -1,9 +1,9 @@
 const db = require("../models");
 
-// Defining methods for the tickersController
+// Defining methods for the tickerSummaryController
 module.exports = {
   findAll: function(req, res) {
-    db.Ticker
+    db.TickerSummary
       .find(req.query)
       // .sort({ date: -1 })
       .sort({ ticker: 1 })
@@ -11,37 +11,30 @@ module.exports = {
       .catch(err => res.status(422).json(err));
   },
   findById: function(req, res) {
-    db.Ticker
+    db.TickerSummary
       .findById(req.params.id)
       .then(dbModel => res.json(dbModel))
       .catch(err => res.status(422).json(err));
   },
   create: function(req, res) {
-    db.Ticker
+    db.TickerSummary
       .create(req.body)
       .then(dbModel => res.json(dbModel))
       .catch(err => res.status(422).json(err));
   },
   update: function(req, res) {
-    db.Ticker
+    db.TickerSummary
       .findOneAndUpdate({ _id: req.params.id }, req.body)
       .then(dbModel => res.json(dbModel))
       .catch(err => res.status(422).json(err));
   },
   remove: function(req, res) {
-    db.Ticker
+    db.TickerSummary
       .findById({ _id: req.params.id })
       .then(dbModel => dbModel.remove())
       .then(dbModel => res.json(dbModel))
       .catch(err => res.status(422).json(err));
   }
-  // ,
-  // getTickerInfo: function(req, res) {
-  //   axios
-  //   .get("http://www.recipepuppy.com/api/", { params: req.query })
-  //   .then(({ data: { results } }) => res.json(results))
-  //   .catch(err => res.status(422).json(err));
-  // }
 };
 
 

@@ -1,3 +1,4 @@
 module.exports = {
-  Ticker: require("./ticker")
+  Ticker: require("./ticker"),
+  TickerSummary: require("./tickersummary")
 };

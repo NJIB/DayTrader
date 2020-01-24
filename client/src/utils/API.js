@@ -17,5 +17,11 @@ export default {
   saveTicker: function(tickerData) {
     console.log("tickerData:" + tickerData);
     return axios.post("/api/tickers", tickerData);
-  } 
+  },
+    // Add this record to the TickerSummary to the database
+    saveTickerSummary: function(tickerData) {
+      console.log("Save to TickerSummary");
+      return axios.post("/api/tickersummary", tickerData);
+    } 
+  
 };

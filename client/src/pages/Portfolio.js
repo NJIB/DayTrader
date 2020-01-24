@@ -23,6 +23,7 @@ class Portfolio extends Component {
 
   componentDidMount() {
     this.loadStocks();
+    console.log("this: ", this);
   }
 
   loadStocks = () => {
@@ -60,6 +61,7 @@ class Portfolio extends Component {
 
       console.log(this.state.quantity);
 
+      // Save record to the Tickers table
       API.saveTicker({
         ticker: this.state.ticker,
         quantity: this.state.quantity,
@@ -69,6 +71,19 @@ class Portfolio extends Component {
       })
         .then(res => this.loadStocks())
         .catch(err => console.log(err));
+
+        // Save record to the TickerSummary table
+        API.saveTickerSummary({
+          ticker: this.state.ticker,
+          //Need to SUM the quantity
+          quantity: this.state.quantity,
+          cost: this.state.transactionprice,  //NEED TO ADD TO THIS EXISTING (PUT?)
+          averageprice: 0,  //LOGIC TO BE ADDED
+          user: "Nick",  //TO BE UPDATED
+        })
+          .then(res => this.loadStocks())
+          .catch(err => console.log(err));
+    
     }
   };
 
