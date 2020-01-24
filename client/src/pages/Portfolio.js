@@ -17,7 +17,6 @@ class Portfolio extends Component {
     transactionprice: "",
     transactiondate: "",
     customRadioInline: "Buy",
-    
     notes: ""
   };
 
@@ -57,16 +56,6 @@ class Portfolio extends Component {
       }
       else { console.log("Buy rb checked"); }
 
-      const tickerInput = this.state.ticker;
-      console.log("tickerInput: ", tickerInput);
-
-      // Loop through state and see if ticker already exists
-      this.state.tickers.forEach(occurence => {
-          if (occurence.ticker === tickerInput){
-            console.log("Existing record found!")
-        }
-      })
-
       // Save record to the Tickers table
       API.saveTicker({
         ticker: this.state.ticker,
@@ -78,20 +67,49 @@ class Portfolio extends Component {
         .then(res => this.loadStocks())
         .catch(err => console.log(err));
 
-        // Get TickerSummary details for this ticker
-      
-        // Save record to the TickerSummary table
-        API.saveTickerSummary({
-          ticker: this.state.ticker,
-          //Need to SUM the quantity
-          quantity: this.state.quantity,
-          cost: this.state.transactionprice,  //NEED TO ADD TO THIS EXISTING (PUT?)
-          averageprice: 0,  //LOGIC TO BE ADDED
-          user: "Nick",  //TO BE UPDATED
-        })
-          .then(res => this.loadStocks())
-          .catch(err => console.log(err));
-    
+      // Get TickerSummary details for this ticker
+      // This variable holds the input value
+      const tickerInput = this.state.ticker;
+      console.log("tickerInput: ", tickerInput);
+
+      let sharesHeld = this.state.quantity;
+      console.log("sharesHeld: ", sharesHeld);
+
+      let totalCost = (this.state.transactionprice * sharesHeld);
+      console.log("totalCost: ", totalCost);
+
+      // Loop through state and see if ticker already exists
+      this.state.tickers.forEach(occurence => {
+        if (occurence.ticker === tickerInput) {
+          console.log("Existing record found!")
+
+          sharesHeld = sharesHeld + this.state.tickers.quantity;
+          totalCost = (totalCost +(this.state.tickers.quantity * this.state.tickers.transactionprice)); 
+          // Update the TickerSummary via a PUT statement
+
+            API.updateTickerSummary({
+            id: this.state.tickers._id,
+            ticker: this.state.ticker,
+            quantity: sharesHeld,
+            cost: totalCost,  //NEED TO ADD TO THIS EXISTING (PUT?)
+            averageprice: (totalCost / sharesHeld),  //LOGIC TO BE ADDED
+            user: "Nick",  //TO BE UPDATED
+          })
+            .then(res => this.loadStocks())
+            .catch(err => console.log(err));
+        } else {
+          // Otherwise save a new record to the TickerSummary table
+          API.saveTickerSummary({
+            ticker: this.state.ticker,
+            quantity: this.state.quantity,
+            cost: this.state.transactionprice,  //NEED TO ADD TO THIS EXISTING (PUT?)
+            averageprice: 0,  //LOGIC TO BE ADDED
+            user: "Nick",  //TO BE UPDATED
+          })
+            .then(res => this.loadStocks())
+            .catch(err => console.log(err));
+        }
+      })
     }
   };
 
@@ -140,18 +158,18 @@ class Portfolio extends Component {
                 </Col>
                 <Col size="md-1">
                   <InputGroup>
-                    {/* <InputGroup.Prepend> */}
-                      <InputGroup.Radio checked={this.state.customRadioInline ==="Buy" ? true: false} onChange={ () => this.setState({customRadioInline: "Buy"})}aria-label="Buy" id="rbBuy" />
+                    <InputGroup.Prepend>
+                      <InputGroup.Radio checked={this.state.customRadioInline === "Buy" ? true : false} onChange={() => this.setState({ customRadioInline: "Buy" })} aria-label="Buy" id="rbBuy" />
                       <label>Buy</label>
-                    {/* </InputGroup.Prepend> */}
-                  {/* </InputGroup> */}
-                {/* </Col> */}
-                {/* <Col size="md-1"> */}
-                  {/* <InputGroup> */}
-                    {/* <InputGroup.Prepend> */}
-                      <InputGroup.Radio  checked={this.state.customRadioInline ==="Sell" ? true: false} onChange={ () => this.setState({customRadioInline: "Sell"})} aria-label="Sell" id="rbSell" />
+                    </InputGroup.Prepend>
+                  </InputGroup>
+                </Col>
+                <Col size="md-1">
+                  <InputGroup>
+                    <InputGroup.Prepend>
+                      <InputGroup.Radio checked={this.state.customRadioInline === "Sell" ? true : false} onChange={() => this.setState({ customRadioInline: "Sell" })} aria-label="Sell" id="rbSell" />
                       <label>Sell</label>
-                    {/* </InputGroup.Prepend> */}
+                    </InputGroup.Prepend>
                   </InputGroup>
                 </Col>
                 <Col size="md-3">
