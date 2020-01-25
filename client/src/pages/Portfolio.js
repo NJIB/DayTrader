@@ -13,8 +13,8 @@ class Portfolio extends Component {
   state = {
     tickers: [],
     ticker: "",
-    quantity: "",
-    transactionprice: "",
+    quantity: 0,
+    transactionprice: 0,
     transactiondate: "",
     customRadioInline: "Buy",
     notes: ""
@@ -54,8 +54,9 @@ class Portfolio extends Component {
         console.log("Sell rb checked");
         this.state.quantity = (this.state.quantity * -1);
       }
-      else { console.log("Buy rb checked");
-    }
+      else {
+        console.log("Buy rb checked");
+      }
 
       // Save record to the Tickers table
       API.saveTicker({
@@ -74,48 +75,60 @@ class Portfolio extends Component {
       const tickerInput = this.state.ticker;
       console.log("tickerInput: ", tickerInput);
 
-      let sharesHeld = this.state.quantity;
-      console.log("sharesHeld: ", sharesHeld);
+      let quantityInput = this.state.quantity;
+      console.log("quantityInput: ", quantityInput);
 
-      let totalCost = (this.state.transactionprice * sharesHeld);
+      let totalHeld = parseInt(quantityInput);
+
+      let totalCost = (this.state.transactionprice * quantityInput);
       console.log("totalCost: ", totalCost);
 
       let pricePerShare = 0;
 
+      let updateFlag = false;
+
       // Loop through state and see if ticker already exists
       this.state.tickers.forEach(occurence => {
         if (occurence.ticker === tickerInput) {
-          console.log("Existing record found!")
+          console.log("Existing record found!");
+          updateFlag = true;
 
-          sharesHeld = sharesHeld =+ occurence.quantity;
-          totalCost = (totalCost +(occurence.quantity * occurence.transactionprice)); 
-          pricePerShare = (totalCost/sharesHeld);
-          console.log("sharesHeld: ", sharesHeld, " | totalCost: ", totalCost, " \ pricePerShare: ", pricePerShare);
-          
-          // Update the TickerSummary via a PUT statement
-            API.updateTickerSummary({
-            id: this.state.tickers._id,
-            ticker: this.state.ticker,
-            quantity: sharesHeld,
-            cost: totalCost,  //NEED TO ADD TO THIS EXISTING (PUT?)
-            averageprice: (totalCost / sharesHeld),  //LOGIC TO BE ADDED
-            user: "Nick",  //TO BE UPDATED
-          })
-            .then(res => this.loadStocks())
-            .catch(err => console.log(err));
-        } else {
-          // Otherwise save a new record to the TickerSummary table
-          API.saveTickerSummary({
-            ticker: this.state.ticker,
-            quantity: this.state.quantity,
-            cost: this.state.transactionprice,  //NEED TO ADD TO THIS EXISTING (PUT?)
-            averageprice: 0,  //LOGIC TO BE ADDED
-            user: "Nick",  //TO BE UPDATED
-          })
-            .then(res => this.loadStocks())
-            .catch(err => console.log(err));
+          console.log("totalHeld before: ", totalHeld);
+          console.log("occurence.quantity before: ", occurence.quantity);
+          totalHeld = totalHeld += parseInt(occurence.quantity);
+          console.log("totalHeld after: ", totalHeld);
+
+          totalCost = (totalCost + (occurence.quantity * occurence.transactionprice));
+          pricePerShare = (totalCost / totalHeld);
+          console.log("ticker:", occurence.ticker, " | totalHeld: ", totalHeld, " | totalCost: ", totalCost, " | pricePerShare: ", pricePerShare);
         }
       })
+
+      console.log("updateFlag: ", updateFlag);
+      if (updateFlag == true) {
+        // Update the TickerSummary via a PUT statement
+        API.updateTickerSummary({
+          id: this.state.tickers._id,
+          ticker: this.state.ticker,
+          quantity: totalHeld,
+          cost: totalCost,  //NEED TO ADD TO THIS EXISTING (PUT?)
+          averageprice: (totalCost / totalHeld),  //LOGIC TO BE ADDED
+          user: "Nick",  //TO BE UPDATED
+        })
+          .then(res => this.loadStocks())
+          .catch(err => console.log(err));
+      } else {
+        // Otherwise save a new record to the TickerSummary table
+        API.saveTickerSummary({
+          ticker: this.state.ticker,
+          quantity: this.state.quantity,
+          cost: this.state.transactionprice,  //NEED TO ADD TO THIS EXISTING (PUT?)
+          averageprice: 0,  //LOGIC TO BE ADDED
+          user: "Nick",  //TO BE UPDATED
+        })
+          .then(res => this.loadStocks())
+          .catch(err => console.log(err));
+      }
     }
   };
 
@@ -248,11 +261,11 @@ class Portfolio extends Component {
                         ${ticker.transactionprice}
                       </td>
                       {/* <td scope={'col'} style={{ width: '10%' }}> */}
-                        {/* <InputGroup className="mb-3"> */}
-                          {/* <InputGroup.Prepend> */}
-                          {/* <InputGroup.Checkbox aria-label="Checkbox for following text input" /> */}
-                          {/* </InputGroup.Prepend> */}
-                        {/* </InputGroup> */}
+                      {/* <InputGroup className="mb-3"> */}
+                      {/* <InputGroup.Prepend> */}
+                      {/* <InputGroup.Checkbox aria-label="Checkbox for following text input" /> */}
+                      {/* </InputGroup.Prepend> */}
+                      {/* </InputGroup> */}
                       {/* </td> */}
                       <td scope={'col'} style={{ width: '10%' }, { textAlign: "center" }}>
                         <DeleteBtn onClick={() => this.deleteTicker(ticker._id)} />
