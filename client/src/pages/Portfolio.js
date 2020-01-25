@@ -54,11 +54,13 @@ class Portfolio extends Component {
         console.log("Sell rb checked");
         this.state.quantity = (this.state.quantity * -1);
       }
-      else { console.log("Buy rb checked"); }
+      else { console.log("Buy rb checked");
+    }
 
       // Save record to the Tickers table
       API.saveTicker({
         ticker: this.state.ticker,
+        transactionType: this.state.customRadioInline,
         quantity: this.state.quantity,
         transactionprice: this.state.transactionprice,
         transactiondate: this.state.transactiondate,
@@ -78,15 +80,19 @@ class Portfolio extends Component {
       let totalCost = (this.state.transactionprice * sharesHeld);
       console.log("totalCost: ", totalCost);
 
+      let pricePerShare = 0;
+
       // Loop through state and see if ticker already exists
       this.state.tickers.forEach(occurence => {
         if (occurence.ticker === tickerInput) {
           console.log("Existing record found!")
 
-          sharesHeld = sharesHeld + this.state.tickers.quantity;
-          totalCost = (totalCost +(this.state.tickers.quantity * this.state.tickers.transactionprice)); 
+          sharesHeld = sharesHeld =+ occurence.quantity;
+          totalCost = (totalCost +(occurence.quantity * occurence.transactionprice)); 
+          pricePerShare = (totalCost/sharesHeld);
+          console.log("sharesHeld: ", sharesHeld, " | totalCost: ", totalCost, " \ pricePerShare: ", pricePerShare);
+          
           // Update the TickerSummary via a PUT statement
-
             API.updateTickerSummary({
             id: this.state.tickers._id,
             ticker: this.state.ticker,
@@ -206,10 +212,11 @@ class Portfolio extends Component {
               <thead>
                 <tr>
                   <th scope={'col'} style={{ width: '20%' }}>Ticker</th>
-                  <th scope={'col'} style={{ width: '20%' }}>Quantity</th>
-                  <th scope={'col'} style={{ width: '20%' }}>Trans. Date</th>
-                  <th scope={'col'} style={{ width: '20%' }}>Avg. Price</th>
-                  <th scope={'col'} style={{ width: '10%' }}>Compare</th>
+                  <th scope={'col'} style={{ width: '15%' }}>Action</th>
+                  <th scope={'col'} style={{ width: '15%' }}>Quantity</th>
+                  <th scope={'col'} style={{ width: '15%' }}>Trans. Date</th>
+                  <th scope={'col'} style={{ width: '15%' }}>Purch. Price</th>
+                  {/* <th scope={'col'} style={{ width: '10%' }}>Compare</th> */}
                   <th scope={'col'} style={{ width: '10%' }}>Delete</th>
                 </tr>
               </thead>
@@ -228,22 +235,25 @@ class Portfolio extends Component {
                           </strong>
                         </Link>
                       </td>
-                      <td scope={'col'} style={{ width: '20%' }}>
+                      <td scope={'col'} style={{ width: '15%' }}>
+                        {ticker.customRadioInline}
+                      </td>
+                      <td scope={'col'} style={{ width: '15%' }}>
                         {ticker.quantity}
                       </td>
-                      <td scope={'col'} style={{ width: '20%' }}>
+                      <td scope={'col'} style={{ width: '15%' }}>
                         {moment(ticker.transactiondate).format("MM/DD/YYYY")}
                       </td>
-                      <td scope={'col'} style={{ width: '20%' }}>
-                        {"Avg. price calc"}
+                      <td scope={'col'} style={{ width: '15%' }}>
+                        ${ticker.transactionprice}
                       </td>
-                      <td scope={'col'} style={{ width: '10%' }}>
-                        <InputGroup className="mb-3">
+                      {/* <td scope={'col'} style={{ width: '10%' }}> */}
+                        {/* <InputGroup className="mb-3"> */}
                           {/* <InputGroup.Prepend> */}
-                          <InputGroup.Checkbox aria-label="Checkbox for following text input" />
+                          {/* <InputGroup.Checkbox aria-label="Checkbox for following text input" /> */}
                           {/* </InputGroup.Prepend> */}
-                        </InputGroup>
-                      </td>
+                        {/* </InputGroup> */}
+                      {/* </td> */}
                       <td scope={'col'} style={{ width: '10%' }, { textAlign: "center" }}>
                         <DeleteBtn onClick={() => this.deleteTicker(ticker._id)} />
                       </td>

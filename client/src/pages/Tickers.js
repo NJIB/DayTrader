@@ -22,25 +22,6 @@ class Tickers extends Component {
   state = {
     tickers: [],
     tickerSearch: "",
-    // usMarketData: {
-    //   dateStamp: "Tuesday, December 18, 1973",
-    //   SNP: {
-    //     SNPPrice: "550",
-    //     SNPChange: "+50",
-    //     SNPChangePercent: "+10%"
-    //   },
-    //   DJI: {
-    //     DJIPrice: "33000",
-    //     DJIChange: "+3000",
-    //     DJIChangePercent: "+10%"
-    //   },
-    //   Nasdaq: {
-    //     NasdaqPrice: "3300",
-    //     NasdaqChange: "300",
-    //     NasdaqChangePercent: "+10%"
-    //   }
-    // },
-    dateStamp: "",   
     chartData: [],
     exchangeData: [],
   };
@@ -165,9 +146,6 @@ class Tickers extends Component {
 
   getMarketData = async event => {
 
-    const dateStamp = moment();
-    console.log("dateStamp: ", dateStamp);
-
     //Market summary data API
     var marketSummary = {
       "async": true,
@@ -185,17 +163,23 @@ class Tickers extends Component {
     const mktSummOutput = await mktSummResponse.json();
     console.log("mktSummOutput: ", mktSummOutput);
 
-    const {exchangeData} = this.state;
+    const { exchangeData } = this.state;
+    let exchangeCounter = 0;
 
     mktSummOutput.marketSummaryResponse.result.forEach(exchange => {
       const localExchangeData = {
-      exchange: exchange.fullExchangeName,
-      currentPrice: exchange.regularMarketPrice.fmt,
-      priceChange: exchange.regularMarketChange.fmt,
-      priceChangePercent: exchange.regularMarketChangePercent.fmt
+        exchange: exchange.fullExchangeName,
+        currentPrice: exchange.regularMarketPrice.fmt,
+        priceChange: exchange.regularMarketChange.fmt,
+        priceChangePercent: exchange.regularMarketChangePercent.fmt
       }
       console.log("localExchangeData: ", localExchangeData);
+      exchangeCounter++;
+      if (exchangeCounter <= 3) {
       exchangeData.push(localExchangeData);
+      } else {
+        return;
+      }
     });
 
     this.setState({ exchangeData });
@@ -233,71 +217,49 @@ class Tickers extends Component {
             </Col>
             <Col size="md-6">
               <div id="marketInfo" className="card card-default">
-                <h4>Today's markets as of  {this.state.dateStamp}</h4>
+              {/* <h4>Today's markets as of  {this.state.dateStamp}</h4> */}
+              <h4>Today's markets:</h4>
 
-                <Row>
-                  <Col size="3">
-                  </ Col>
-                  <Col size="3">
-                    <h6>{"Price"}</h6>
-                  </ Col>
-                  <Col size="3">
-                    <h6>{"Change"}</h6>
-                  </ Col>
-                  <Col size="3">
-                    <h6>{"% Change"}</h6>
-                  </ Col>
-                </Row>
+                <thead>
+                  <tr>
+                    <th scope={'col'} style={{ width: '35%' }}>Exchange</th>
+                    <th scope={'col'} style={{ width: '20%' }}>Price</th>
+                    <th scope={'col'} style={{ width: '20%' }}>Change</th>
+                    <th scope={'col'} style={{ width: '20%' }}>% Change</th>
+                  </tr>
+                </thead>
 
-                <Row>
-                  <Col size="3">
-                    <h6>{"DJI: "}</h6>
-                  </ Col>
-                  <Col size="3">
-                    <h7>{(this.state.exchangeData.currentPrice)}</h7>
-                  </ Col>
-                  <Col size="3">
-                    <h7>{(this.state.exchangeData.priceChange)}</h7>
-                  </ Col>
-                  <Col size="3">
-                    <h7>{(this.state.exchangeData.priceChangePercent)}</h7>
-                  </ Col>
-                </Row>
+                <tbody>
+                {this.state.exchangeData.length ?
+                    this.state.exchangeData.map(exch => (
+                      <tr>
+                        <td scope={'col'} style={{ width: '40%' }}>
+                          <strong>
+                            {exch.exchange}
+                          </strong>
+                        </td>
+                        <td scope={'col'} style={{ width: '25%' }}>
+                          {exch.currentPrice}
+                        </td>
+                        <td scope={'col'} style={{ width: '25%' }}>
+                          {exch.priceChange}
+                        </td>
+                        <td scope={'col'} style={{ width: '15%' }}>
+                          {exch.priceChangePercent}
+                        </td>
+                      </tr>
+                    ))
+                    : (
+                      <h4>No Results to Display</h4>
+                    )}
 
-                <Row>
-                  <Col size="3">
-                    <h6>{"S&P: "}</h6>
-                  </ Col>
-                  <Col size="3">
-                    <h7>{(this.state.exchangeData.currentPrice)}</h7>
-                  </ Col>
-                  <Col size="3">
-                    <h7>{(this.state.exchangeData.priceChange)}</h7>
-                  </ Col>
-                  <Col size="3">
-                    <h7>{(this.state.exchangeData.priceChangePercent)}</h7>
-                  </ Col>
-                </Row>
-
-                <Row>
-                  <Col size="3">
-                    <h6>{"Nasdaq: "}</h6>
-                  </ Col>
-                  <Col size="3">
-                    <h7>{(this.state.exchangeData.currentPrice)}</h7>
-                  </ Col>
-                  <Col size="3">
-                    <h7>{(this.state.exchangeData.priceChange)}</h7>
-                  </ Col>
-                  <Col size="3">
-                    <h7>{(this.state.exchangeData.priceChangePercent)}</h7>
-                  </ Col>
-                </Row>
+                </tbody>
               </div>
             </Col>
           </Row>
         </div>
 
+        <div id="chartPane" className="card card-default">
         <Row>
           {this.state.chartData.length ? (
             this.state.chartData.map(chartRender => (
@@ -360,8 +322,9 @@ class Tickers extends Component {
                 </div>
               </div>
             ))) :
-            (<span>Awaiting Chart Data</span>)}
+            (<span>Stock charts will be displayed here</span>)}
         </Row>
+        </div>
       </Container>
     );
   }
