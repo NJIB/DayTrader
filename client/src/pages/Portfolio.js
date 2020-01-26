@@ -89,46 +89,62 @@ class Portfolio extends Component {
 
       // Loop through state and see if ticker already exists
       this.state.tickers.forEach(occurence => {
-        if (occurence.ticker === tickerInput) {
-          console.log("Existing record found!");
-          updateFlag = true;
+        switch (updateFlag) {
+          case true:
+            if (occurence.ticker !== tickerInput) {
+              API.updateTickerSummary({
+                id: this.state.tickers._id,
+                ticker: this.state.ticker,
+                quantity: totalHeld,
+                cost: totalCost,  //NEED TO ADD TO THIS EXISTING (PUT?)
+                averageprice: (totalCost / totalHeld),  //LOGIC TO BE ADDED
+                user: "Nick",  //TO BE UPDATED
+              })
+                .then(res => this.loadStocks())
+                .catch(err => console.log(err));
+            } else
+              if (occurence.ticker === tickerInput) {
+                console.log("Existing record found!");
+                updateFlag = true;
 
-          console.log("totalHeld before: ", totalHeld);
-          console.log("occurence.quantity before: ", occurence.quantity);
-          totalHeld = totalHeld += parseInt(occurence.quantity);
-          console.log("totalHeld after: ", totalHeld);
+                console.log("totalHeld before: ", totalHeld);
+                console.log("occurence.quantity before: ", occurence.quantity);
+                totalHeld = totalHeld += parseInt(occurence.quantity);
+                console.log("totalHeld after: ", totalHeld);
 
-          totalCost = (totalCost + (occurence.quantity * occurence.transactionprice));
-          pricePerShare = (totalCost / totalHeld);
-          console.log("ticker:", occurence.ticker, " | totalHeld: ", totalHeld, " | totalCost: ", totalCost, " | pricePerShare: ", pricePerShare);
+                totalCost = (totalCost + (occurence.quantity * occurence.transactionprice));
+                pricePerShare = (totalCost / totalHeld);
+                console.log("ticker:", occurence.ticker, " | totalHeld: ", totalHeld, " | totalCost: ", totalCost, " | pricePerShare: ", pricePerShare);
+              };
+            break;
+          case false:
+            if (occurence.ticker !== tickerInput) {
+              API.saveTickerSummary({
+                ticker: this.state.ticker,
+                quantity: this.state.quantity,
+                cost: this.state.transactionprice,  //NEED TO ADD TO THIS EXISTING (PUT?)
+                averageprice: 0,  //LOGIC TO BE ADDED
+                user: "Nick",  //TO BE UPDATED
+              })
+                .then(res => this.loadStocks())
+                .catch(err => console.log(err));
+            } else
+              if (occurence.ticker === tickerInput) {
+                console.log("Existing record found!");
+                updateFlag = true;
+
+                console.log("totalHeld before: ", totalHeld);
+                console.log("occurence.quantity before: ", occurence.quantity);
+                totalHeld = totalHeld += parseInt(occurence.quantity);
+                console.log("totalHeld after: ", totalHeld);
+
+                totalCost = (totalCost + (occurence.quantity * occurence.transactionprice));
+                pricePerShare = (totalCost / totalHeld);
+                console.log("ticker:", occurence.ticker, " | totalHeld: ", totalHeld, " | totalCost: ", totalCost, " | pricePerShare: ", pricePerShare);
+              };
+            break;
         }
       })
-
-      console.log("updateFlag: ", updateFlag);
-      if (updateFlag == true) {
-        // Update the TickerSummary via a PUT statement
-        API.updateTickerSummary({
-          id: this.state.tickers._id,
-          ticker: this.state.ticker,
-          quantity: totalHeld,
-          cost: totalCost,  //NEED TO ADD TO THIS EXISTING (PUT?)
-          averageprice: (totalCost / totalHeld),  //LOGIC TO BE ADDED
-          user: "Nick",  //TO BE UPDATED
-        })
-          .then(res => this.loadStocks())
-          .catch(err => console.log(err));
-      } else {
-        // Otherwise save a new record to the TickerSummary table
-        API.saveTickerSummary({
-          ticker: this.state.ticker,
-          quantity: this.state.quantity,
-          cost: this.state.transactionprice,  //NEED TO ADD TO THIS EXISTING (PUT?)
-          averageprice: 0,  //LOGIC TO BE ADDED
-          user: "Nick",  //TO BE UPDATED
-        })
-          .then(res => this.loadStocks())
-          .catch(err => console.log(err));
-      }
     }
   };
 
