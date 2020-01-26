@@ -12,6 +12,7 @@ const moment = require("moment");
 class Portfolio extends Component {
   state = {
     tickers: [],
+    tickerSummary: [],
     ticker: "",
     quantity: 0,
     transactionprice: 0,
@@ -22,6 +23,7 @@ class Portfolio extends Component {
 
   componentDidMount() {
     this.loadStocks();
+    this.loadStockSummary();
     console.log("this: ", this);
   }
 
@@ -29,6 +31,14 @@ class Portfolio extends Component {
     API.getTickers()
       .then(res =>
         this.setState({ tickers: res.data, ticker: "", quantity: "", notes: "" })
+      )
+      .catch(err => console.log(err));
+  };
+
+  loadStockSummary = () => {
+    API.getTickerSummary()
+      .then(res =>
+        this.setState({ tickerSummary: res.data })
       )
       .catch(err => console.log(err));
   };
@@ -49,13 +59,18 @@ class Portfolio extends Component {
   // Handle button click
   handleFormSubmit = event => {
     event.preventDefault();
+    let transactiontype;
     if (this.state.ticker && this.state.quantity) {
       if (document.getElementById('rbSell').checked) {
         console.log("Sell rb checked");
         this.state.quantity = (this.state.quantity * -1);
+        transactiontype = "Sold";
+        console.log("Transactiontype: ", transactiontype);
       }
       else {
         console.log("Buy rb checked");
+        transactiontype = "Bought";
+        console.log("Transactiontype: ", transactiontype);
       }
 
       // Save record to the Tickers table
@@ -75,17 +90,40 @@ class Portfolio extends Component {
       const tickerInput = this.state.ticker;
       console.log("tickerInput: ", tickerInput);
 
+      // Capture quantity purchased from input line
       let quantityInput = this.state.quantity;
       console.log("quantityInput: ", quantityInput);
 
-      let totalHeld = parseInt(quantityInput);
+      // Use as counter of total volume held as loop through state object (initializing with input value, as this is not yet in state object)
+      // let totalHeld = parseInt(quantityInput);
+      let totalHeld = 0;
 
+      // Capture cost from input line
       let totalCost = (this.state.transactionprice * quantityInput);
       console.log("totalCost: ", totalCost);
 
+      // Initialize average price var
       let pricePerShare = 0;
 
       let updateFlag = false;
+
+      const portfolioList = this.state;
+      console.log("portfolioList: ", portfolioList);
+
+      const latestInputs = {
+        transactionprice: this.state.transactionprice,
+        transactiondate: this.state.transactiondate,
+        notes: this.state.notes,
+        ticker: tickerInput,
+        quantity: quantityInput
+      }
+      console.log("latestInputs: ", latestInputs);
+
+      portfolioList.tickers.push(latestInputs);
+      console.log("portfolioList: ", portfolioList);
+
+      this.setState({ tickers: portfolioList });
+      console.log("this.state (after update): ", this.state);
 
       // Loop through state and see if ticker already exists
       this.state.tickers.forEach(occurence => {
@@ -98,7 +136,7 @@ class Portfolio extends Component {
                 quantity: totalHeld,
                 cost: totalCost,  //NEED TO ADD TO THIS EXISTING (PUT?)
                 averageprice: (totalCost / totalHeld),  //LOGIC TO BE ADDED
-                user: "Nick",  //TO BE UPDATED
+                // user: "Nick",  //TO BE UPDATED
               })
                 .then(res => this.loadStocks())
                 .catch(err => console.log(err));
@@ -123,8 +161,8 @@ class Portfolio extends Component {
                 ticker: this.state.ticker,
                 quantity: this.state.quantity,
                 cost: this.state.transactionprice,  //NEED TO ADD TO THIS EXISTING (PUT?)
-                averageprice: 0,  //LOGIC TO BE ADDED
-                user: "Nick",  //TO BE UPDATED
+                averageprice: (totalCost / totalHeld),  //LOGIC TO BE ADDED
+                // user: "Nick",  //TO BE UPDATED
               })
                 .then(res => this.loadStocks())
                 .catch(err => console.log(err));

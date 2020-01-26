@@ -57,23 +57,27 @@ class Tickers extends Component {
     if (this.state.tickerSearch) {
       let tickerData = this.state.tickerSearch;
 
-      var startDate = (moment().format("MM")) + "/"
-        + (moment().format("DD")) + "/"
-        + (moment().format("YYYY"));
-
-      // Convert to seconds
-      startDate = parseInt((moment(startDate) / 1000));
-      console.log("startDate: " + startDate);
+      let dateNow = (moment().format("MM")) + "/"
+      + (moment().format("DD")) + "/"
+      + (moment().format("YYYY"));
+      console.log("dateNow: " + dateNow);
 
       let dateNowSeconds = parseInt((moment() / 1000));
       console.log("dateNowSeconds: " + dateNowSeconds);
 
+      let startDateSeconds = (dateNowSeconds - 31557600);
+      console.log("startDateSeconds: " + startDateSeconds);
+
+      console.log("startDate: " 
+        + (moment(1548498915).format("MM")) + "/"
+        + (moment().format("DD")) + "/"
+        + (moment().format("YYYY")));
 
       console.log("****tickerData: ", tickerData, " ****");
       let settings = {
         "async": true,
         "crossDomain": true,
-        "url": "https://apidojo-yahoo-finance-v1.p.rapidapi.com/stock/v2/get-historical-data?frequency=1d&filter=history&period1=1546405200&period2=1578020649&symbol=" + tickerData,
+        "url": "https://apidojo-yahoo-finance-v1.p.rapidapi.com/stock/v2/get-historical-data?frequency=1d&filter=history&period1=" + startDateSeconds + "&period2=" + dateNowSeconds + "&symbol=" + tickerData,
         "method": "GET",
         "headers": {
           "x-rapidapi-host": "apidojo-yahoo-finance-v1.p.rapidapi.com",
@@ -140,6 +144,7 @@ class Tickers extends Component {
       chartData.push(localChartData);
 
       this.setState({ chartData });
+      this.setState({ tickerSearch: "" })
       console.log("this.state: ", this.state)
     };
   };
