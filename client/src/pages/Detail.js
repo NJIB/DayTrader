@@ -16,15 +16,27 @@ class Detail extends Component {
     news: {
       items: {
         result: []
-      }
+      },
+    tickers: [],
+    transactions: []
     }
   };
 
   async componentDidMount() {
-    const result = await API.getTicker(this.props.match.params.id)
-    this.setState({ ticker: result.data })
+    this.loadStocks();
+    const result = await API.getTicker(this.props.match.params.id);
+    this.setState({ ticker: result.data });
     this.getTickerNews(result.data.ticker);
+    this.getTickerTransactions(result.data.ticker);
   }
+
+  loadStocks = () => {
+    API.getTickers()
+      .then(res =>
+        this.setState({ tickers: res.data, ticker: "", quantity: "", notes: "" })
+      )
+      .catch(err => console.log(err));
+  };
 
   getTickerNews = async ticker => {
     //Ticker News API
@@ -39,15 +51,12 @@ class Detail extends Component {
       }
     }
 
-    console.log("url: " + tickerNews.url);
-
     const tickerNewsResponse = await fetch(tickerNews.url, tickerNews)
 
     const tickerNewsOutput = await tickerNewsResponse.json();
     console.log(tickerNewsOutput)
 
     this.setState({ news: tickerNewsOutput });
-    // console.log("this.state.news.items.result.length: ", this.state.news.items.result.length);
     console.log("this.state: ", this.state);
 
     // NJIB test
@@ -60,8 +69,31 @@ class Detail extends Component {
     // this.state.news.items.result.forEach(story => {
     //   console.log(story.title)
     // });
+  }
 
+  getTickerTransactions = async result => {
+    const tickerInput = this.state.ticker.ticker;
+    console.log("tickerInput: ", tickerInput);
 
+    let tickerAllTransactions = [];
+
+    this.state.tickers.forEach(transaction => {
+      if (transaction.ticker === tickerInput){
+        const tickerTransactions = {
+          ticker: transaction.ticker,
+          quantity: transaction.quantity,
+          transactionprice: transaction.transactionprice,
+          transactiondate: transaction.transactiondate,
+          customRadioInline: transaction.customRadioInline,
+          notes: transaction.notes
+          }
+    
+          tickerAllTransactions.push(tickerTransactions);
+      }
+    })
+    this.setState({transactions: tickerAllTransactions});
+    console.log("this (with transactions): ", this);
+    console.log("this.state.transactions.length: ", this.state.transactions.length);
   }
 
   render() {
@@ -78,13 +110,29 @@ class Detail extends Component {
         </Row>
 
         <Row>
-          <Col size="md-6 md-offset-1" className="card card-default">
+          <Col size="md-7 md-offset-1" className="card card-default">
             <article>
-              <h3>Notes</h3>
-              <p>{this.state.ticker.notes}</p>
+              <h3>Your Trades on this Stock:</h3>
+              {/* {this.state.transactions.length ? (
+                 <List>
+                {this.state.transactions.map(trades => (
+                    <ListItem>
+                      <p className="trades">
+                        {trades.transactiondate}
+                        {trades.customRadioInline}
+                        {trades.quantity}
+                        {trades.transactionprice} 
+                      </p>
+                    </ListItem>
+                  ))}
+                </List>
+                ) : (
+                  <p>No Trades to Display</p>
+                )} */}
+
             </article>
           </Col>
-          <Col size="md-6 md-offset-1" className="card card-default">
+          <Col size="md-5 md-offset-1" className="card card-default">
             <article>
               <h3>Ticker News</h3>
               {this.state.news.items.result.length ? (

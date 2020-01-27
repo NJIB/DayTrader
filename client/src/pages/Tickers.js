@@ -65,7 +65,16 @@ class Tickers extends Component {
       let dateNowSeconds = parseInt((moment() / 1000));
       console.log("dateNowSeconds: " + dateNowSeconds);
 
-      let startDateSeconds = (dateNowSeconds - 31557600);
+      const seconds1d = 86400;
+      const seconds5d = 432000;
+      const seconds1m = 2629800;
+      const seconds3m = 7889400;
+      const seconds1y = 31557600;
+      const seconds3y = 94672800;
+      const seconds5y = 157788000;
+      const seconds10y = 315576000;
+
+      let startDateSeconds = (dateNowSeconds - seconds1y);
       console.log("startDateSeconds: " + startDateSeconds);
 
       console.log("startDate: " 
@@ -173,7 +182,7 @@ class Tickers extends Component {
 
     mktSummOutput.marketSummaryResponse.result.forEach(exchange => {
       const localExchangeData = {
-        exchange: exchange.fullExchangeName,
+        exchange: exchange.fullExchangeName.split(" ", 1),
         currentPrice: exchange.regularMarketPrice.fmt,
         priceChange: exchange.regularMarketChange.fmt,
         priceChangePercent: exchange.regularMarketChangePercent.fmt
