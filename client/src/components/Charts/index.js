@@ -23,12 +23,6 @@ import { Bar, Line, Pie, Mixedchart } from 'react-chartjs-2';
     // render() {
         return (
             <div className="chart">
-                {/* <Bar
-                    data={this.state.chartData}
-                    // width={100}
-                    // height={50}
-                    // options={{ maintainAspectRatio: false }}
-                /> */}
                 IMPORTING FROM CHARTS/INDEX.JS
             </div>
         );

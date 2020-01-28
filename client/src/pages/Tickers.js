@@ -5,7 +5,8 @@ import { Link } from "react-router-dom";
 import { Col, Row, Container } from "../components/Grid";
 import { Input, NotesArea, FormBtn } from "../components/Form";
 import { Bar, Line, Pie, Mixedchart } from 'react-chartjs-2';
-import PeriodBtns from "../components/PeriodBtns";
+// import PeriodBtns from "../components/PeriodBtns";
+import { Btn1d } from "../components/PeriodBtns";
 import DeleteChartBtn from "../components/DeleteChartBtn";
 import "./styles/style.css";
 
@@ -50,6 +51,16 @@ class Tickers extends Component {
     });
   };
 
+  handlePeriodBtnClick = async input => {
+    console.log("input: ", input);
+    console.log("this: ", this);
+    console.log("chartRef: ", this.state.chartData["0"].chartDivRefData.chartDivRef);
+
+    const { chartPeriod } = this.state;
+    console.log("chartPeriod: ", chartPeriod);
+
+  }
+
   handleFormSubmit = async event => {
     event.preventDefault();
     const { chartData } = this.state;
@@ -58,8 +69,8 @@ class Tickers extends Component {
       let tickerData = this.state.tickerSearch;
 
       let dateNow = (moment().format("MM")) + "/"
-      + (moment().format("DD")) + "/"
-      + (moment().format("YYYY"));
+        + (moment().format("DD")) + "/"
+        + (moment().format("YYYY"));
       console.log("dateNow: " + dateNow);
 
       let dateNowSeconds = parseInt((moment() / 1000));
@@ -77,8 +88,8 @@ class Tickers extends Component {
       let startDateSeconds = (dateNowSeconds - seconds1y);
       console.log("startDateSeconds: " + startDateSeconds);
 
-      console.log("startDate: " 
-        + (moment(1548498915).format("MM")) + "/"
+      console.log("startDate: "
+        + (moment(startDateSeconds).format("MM")) + "/"
         + (moment().format("DD")) + "/"
         + (moment().format("YYYY")));
 
@@ -190,7 +201,7 @@ class Tickers extends Component {
       console.log("localExchangeData: ", localExchangeData);
       exchangeCounter++;
       if (exchangeCounter <= 3) {
-      exchangeData.push(localExchangeData);
+        exchangeData.push(localExchangeData);
       } else {
         return;
       }
@@ -231,8 +242,8 @@ class Tickers extends Component {
             </Col>
             <Col size="md-6">
               <div id="marketInfo" className="card card-default">
-              {/* <h4>Today's markets as of  {this.state.dateStamp}</h4> */}
-              <h4>Today's markets:</h4>
+                {/* <h4>Today's markets as of  {this.state.dateStamp}</h4> */}
+                <h4>Today's markets:</h4>
 
                 <thead>
                   <tr>
@@ -244,7 +255,7 @@ class Tickers extends Component {
                 </thead>
 
                 <tbody>
-                {this.state.exchangeData.length ?
+                  {this.state.exchangeData.length ?
                     this.state.exchangeData.map(exch => (
                       <tr>
                         <td scope={'col'} style={{ width: '40%' }}>
@@ -274,70 +285,73 @@ class Tickers extends Component {
         </div>
 
         <div id="chartPane" className="card card-default">
-        <Row>
-          {this.state.chartData.length ? (
-            this.state.chartData.map(chartRender => (
-              <div id="tickerOutput" className="card card-default">
-                <span>{chartRender.chartDivRefData.tickerSearch}</span>
-                <div className="chart">
-                  <Bar
-                    data={chartRender}
-                    width={200}
-                    height={200}
-                  // options={{
-                  //   responsive: true,
-                  //   title: { display: this.props.displayTitle },
-                  //   maintainAspectRatio: this.props.maintainAspectRatio,
-                  //   legendPosition: "bottom"
+          <Row>
+            {this.state.chartData.length ? (
+              this.state.chartData.map(chartRender => (
+                <div id="tickerOutput" className="card card-default">
+                  <span>{chartRender.chartDivRefData.tickerSearch}</span>
+                  <div className="chart">
+                    <Bar
+                      data={chartRender}
+                      width={200}
+                      height={200}
+                    // options={{
+                    //   responsive: true,
+                    //   title: { display: this.props.displayTitle },
+                    //   maintainAspectRatio: this.props.maintainAspectRatio,
+                    //   legendPosition: "bottom"
 
-                  // scales: {
-                  //   xAxes: [
-                  //     {
-                  //       display: true,
-                  //       gridLines: {
-                  //         display: false
-                  //       },
-                  //       labels: {
-                  //         show: true
-                  //       }
-                  //     }
-                  //   ],
-                  //   yAxes: [
-                  //     {
-                  //       type: 'linear',
-                  //       display: true,
-                  //       position: 'left',
-                  //       id: 'y-axis-1',
-                  //       gridLines: {
-                  //         display: false
-                  //       },
-                  //       labels: {
-                  //         show: true
-                  //       }
-                  //     },
-                  //     {
-                  //       type: 'linear',
-                  //       display: true,
-                  //       position: 'right',
-                  //       id: 'y-axis-2',
-                  //       gridLines: {
-                  //         display: false
-                  //       },
-                  //       labels: {
-                  //         show: true
-                  //       }
-                  //     }
-                  //   ]
-                  // }
-                  // }}
-                  />
-                  <PeriodBtns />
-                  <DeleteChartBtn />
+                    // scales: {
+                    //   xAxes: [
+                    //     {
+                    //       display: true,
+                    //       gridLines: {
+                    //         display: false
+                    //       },
+                    //       labels: {
+                    //         show: true
+                    //       }
+                    //     }
+                    //   ],
+                    //   yAxes: [
+                    //     {
+                    //       type: 'linear',
+                    //       display: true,
+                    //       position: 'left',
+                    //       id: 'y-axis-1',
+                    //       gridLines: {
+                    //         display: false
+                    //       },
+                    //       labels: {
+                    //         show: true
+                    //       }
+                    //     },
+                    //     {
+                    //       type: 'linear',
+                    //       display: true,
+                    //       position: 'right',
+                    //       id: 'y-axis-2',
+                    //       gridLines: {
+                    //         display: false
+                    //       },
+                    //       labels: {
+                    //         show: true
+                    //       }
+                    //     }
+                    //   ]
+                    // }
+                    // }}
+                    />
+                    {/* <Btn1d
+                      onClick={this.handlePeriodBtnClick("1d")}
+                    /> */}
+                    {/* <PeriodBtns /> */}
+                    <DeleteChartBtn />
+                  </div>
                 </div>
-              </div>
-            ))) :
-            (<span>Stock charts will be displayed here</span>)}
-        </Row>
+              ))) :
+              (<span>Stock charts will be displayed here</span>)}
+          </Row>
         </div>
       </Container>
     );

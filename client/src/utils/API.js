@@ -23,13 +23,15 @@ export default {
     return axios.get("/api/tickerSummary");
   },
   // Add this record to the TickerSummary to the database
-  saveTickerSummary: function (tickerData) {
+  saveTickerSummary: function (tickerSummary) {
     console.log("Save to TickerSummary");
-    return axios.post("/api/tickersummary", tickerData);
+    console.log("tickerSummary: ", tickerSummary);
+    return axios.post("/api/tickersummary", tickerSummary);
   },
   // Add this record to the TickerSummary to the database
   updateTickerSummary: function (tickerData) {
     console.log("Update existing TickerSummary record");
+    console.log("tickerData.id: ", tickerData.id);
     return axios.put("/api/tickersummary/" + tickerData.id, tickerData);
   }
 };
