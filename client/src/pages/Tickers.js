@@ -247,10 +247,10 @@ class Tickers extends Component {
 
                 <thead>
                   <tr>
-                    <th scope={'col'} style={{ width: '35%' }}>Exchange</th>
-                    <th scope={'col'} style={{ width: '20%' }}>Price</th>
-                    <th scope={'col'} style={{ width: '20%' }}>Change</th>
-                    <th scope={'col'} style={{ width: '20%' }}>% Change</th>
+                    <th scope={'col'} style={{ width: '40%', textAlign: 'left' }}>Exchange</th>
+                    <th scope={'col'} style={{ width: '23%', textAlign: 'center' }}>Price</th>
+                    <th scope={'col'} style={{ width: '21%', textAlign: 'center'  }}>Change</th>
+                    <th scope={'col'} style={{ width: '16%', textAlign: 'center'  }}>% Chg.</th>
                   </tr>
                 </thead>
 
@@ -258,18 +258,18 @@ class Tickers extends Component {
                   {this.state.exchangeData.length ?
                     this.state.exchangeData.map(exch => (
                       <tr>
-                        <td scope={'col'} style={{ width: '40%' }}>
+                        <td scope={'col'} style={{ width: '40%', textAlign: 'left' }}>
                           <strong>
                             {exch.exchange}
                           </strong>
                         </td>
-                        <td scope={'col'} style={{ width: '25%' }}>
+                        <td scope={'col'} style={{ width: '20%', textAlign: 'center'  }}>
                           {exch.currentPrice}
                         </td>
-                        <td scope={'col'} style={{ width: '25%' }}>
+                        <td scope={'col'} style={{ width: '20%', textAlign: 'center'  }}>
                           {exch.priceChange}
                         </td>
-                        <td scope={'col'} style={{ width: '15%' }}>
+                        <td scope={'col'} style={{ width: '20%', textAlign: 'center'  }}>
                           {exch.priceChangePercent}
                         </td>
                       </tr>
@@ -291,10 +291,10 @@ class Tickers extends Component {
                 <div id="tickerOutput" className="card card-default">
                   <span>{chartRender.chartDivRefData.tickerSearch}</span>
                   <div className="chart">
-                    <Bar
+                    <Bar className="Bar"
                       data={chartRender}
-                      width={200}
-                      height={200}
+                      width={375}
+                      height={250}
                     // options={{
                     //   responsive: true,
                     //   title: { display: this.props.displayTitle },

@@ -17,6 +17,7 @@ class Portfolio extends Component {
     quantity: 0,
     transactionprice: 0,
     transactiondate: "",
+    transactiontype: "",
     customRadioInline: "Buy",
     notes: "",
     summary: {
@@ -71,19 +72,18 @@ class Portfolio extends Component {
       if (document.getElementById('rbSell').checked) {
         console.log("Sell rb checked");
         this.state.quantity = (this.state.quantity * -1);
-        transactiontype = "Sold";
+        this.state.transactiontype = "Sold";
         console.log("Transactiontype: ", transactiontype);
       }
       else {
         console.log("Buy rb checked");
-        transactiontype = "Bought";
-        console.log("Transactiontype: ", transactiontype);
+        this.state.transactiontype = "Bought";
       }
 
       // Save record to the Tickers table
       API.saveTicker({
         ticker: this.state.ticker,
-        transactionType: this.state.customRadioInline,
+        transactiontype: this.state.transactiontype,
         quantity: this.state.quantity,
         transactionprice: this.state.transactionprice,
         transactiondate: this.state.transactiondate,
@@ -120,6 +120,7 @@ class Portfolio extends Component {
       const latestInputs = {
         transactionprice: this.state.transactionprice,
         transactiondate: this.state.transactiondate,
+        transactiontype: this.state.transactiontype,
         notes: this.state.notes,
         ticker: tickerInput,
         quantity: quantityInput
@@ -147,7 +148,7 @@ class Portfolio extends Component {
             console.log("totalHeld after: ", totalHeld);
 
             totalCost = (totalCost + (occurence.quantity * occurence.transactionprice));
-            pricePerShare = (totalCost / totalHeld);
+            pricePerShare = (totalCost / totalHeld).toFixed(2);
             console.log("ticker:", occurence.ticker, " | totalHeld: ", totalHeld, " | totalCost: ", totalCost, " | pricePerShare: ", pricePerShare);
           }
       })
@@ -155,16 +156,16 @@ class Portfolio extends Component {
         console.log("Creating new summary record");
 
         API.saveTickerSummary({
-          ticker: this.state.ticker,
+          // ticker: this.state.ticker,
+          ticker: tickerInput,
           quantity: this.state.quantity,
           cost: totalCost,
-          averageprice: pricePerShare
+          averageprice: this.state.transactionprices
         })
           .then(res => this.loadStocks())
           .catch(err => console.log(err));
       } else
         if (updateFlag === true) {
-
           const summaryUpdate = {
             ticker: tickerInput,
             quantity: totalHeld,
@@ -233,7 +234,6 @@ class Portfolio extends Component {
                 </Col>
                 <Col size="md-2">
                   <Input
-                    // value={this.state.quantity}
                     onChange={this.handleInputChange}
                     name="transactiondate"
                     placeholder="Date"
@@ -313,7 +313,7 @@ class Portfolio extends Component {
                         </Link>
                       </td>
                       <td scope={'col'} style={{ width: '15%' }}>
-                        {ticker.customRadioInline}
+                        {ticker.transactiontype}
                       </td>
                       <td scope={'col'} style={{ width: '15%' }}>
                         {ticker.quantity}
@@ -331,7 +331,7 @@ class Portfolio extends Component {
                       {/* </InputGroup.Prepend> */}
                       {/* </InputGroup> */}
                       {/* </td> */}
-                      <td scope={'col'} style={{ width: '10%' }, { textAlign: "center" }}>
+                      <td scope={'col'} style={{ width: '10%' }}>
                         <DeleteBtn onClick={() => this.deleteTicker(ticker._id)} />
                       </td>
                     </tr>

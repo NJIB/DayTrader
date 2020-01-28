@@ -22,9 +22,9 @@ function Tabs(props) {
           <Nav.Link id="portfolio" eventKey="portfolio" href="/portfolio" onClick={() => setSelectedLink("portfolio")}>Portfolio</Nav.Link>
         </Nav.Item>
         <Nav.Item>
-          {/* <Nav.Link id="detail" eventKey="detail" href="/detail" onClick={() => setSelectedLink("detail")}>Detail</Nav.Link>
+          <Nav.Link id="detail" eventKey="detail" href="/detail" onClick={() => setSelectedLink("detail")}>Detail</Nav.Link>
         </Nav.Item>
-        <Nav.Item> */}
+        <Nav.Item>
           <Nav.Link id="scenarios" eventKey="scenarios" href="/scenarios" onClick={() => setSelectedLink("scenarios")}>Scenarios</Nav.Link>
         </Nav.Item>
       </Nav>

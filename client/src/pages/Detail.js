@@ -9,6 +9,7 @@ import "./styles/style.css";
 
 const axios = require("axios");
 const cheerio = require('cheerio');
+const moment = require("moment");
 
 class Detail extends Component {
   state = {
@@ -16,17 +17,23 @@ class Detail extends Component {
     news: {
       items: {
         result: []
-      },
+      }
+    },
     tickers: [],
+    tickerSummary: [],
     transactions: []
-    }
   };
 
   async componentDidMount() {
     this.loadStocks();
+    
+    this.loadStockSummary();
+
     const result = await API.getTicker(this.props.match.params.id);
     this.setState({ ticker: result.data });
+
     this.getTickerNews(result.data.ticker);
+
     this.getTickerTransactions(result.data.ticker);
   }
 
@@ -34,6 +41,14 @@ class Detail extends Component {
     API.getTickers()
       .then(res =>
         this.setState({ tickers: res.data, ticker: "", quantity: "", notes: "" })
+      )
+      .catch(err => console.log(err));
+  };
+
+  loadStockSummary = () => {
+    API.getTickerSummary()
+      .then(res =>
+        this.setState({ tickerSummary: res.data })
       )
       .catch(err => console.log(err));
   };
@@ -78,22 +93,20 @@ class Detail extends Component {
     let tickerAllTransactions = [];
 
     this.state.tickers.forEach(transaction => {
-      if (transaction.ticker === tickerInput){
+      if (transaction.ticker === tickerInput) {
         const tickerTransactions = {
           ticker: transaction.ticker,
           quantity: transaction.quantity,
           transactionprice: transaction.transactionprice,
           transactiondate: transaction.transactiondate,
-          customRadioInline: transaction.customRadioInline,
+          transactiontype: transaction.transactiontype,
           notes: transaction.notes
-          }
-    
-          tickerAllTransactions.push(tickerTransactions);
+        }
+
+        tickerAllTransactions.push(tickerTransactions);
       }
     })
-    this.setState({transactions: tickerAllTransactions});
-    console.log("this (with transactions): ", this);
-    console.log("this.state.transactions.length: ", this.state.transactions.length);
+    this.setState({ transactions: tickerAllTransactions });
   }
 
   render() {
@@ -113,33 +126,62 @@ class Detail extends Component {
           <Col size="md-7 md-offset-1" className="card card-default">
             <article>
               <h3>Your Trades on this Stock:</h3>
-              {/* {this.state.transactions.length ? (
-                 <List>
-                {this.state.transactions.map(trades => (
-                    <ListItem>
-                      <p className="trades">
-                        {trades.transactiondate}
-                        {trades.customRadioInline}
-                        {trades.quantity}
-                        {trades.transactionprice} 
-                      </p>
-                    </ListItem>
-                  ))}
-                </List>
-                ) : (
-                  <p>No Trades to Display</p>
-                )} */}
+              <table className={'table'} style={{ width: '100%' }}>
+                <thead>
+                  <tr>
+                    <th scope={'col'} style={{ width: '25%' }}>Trans. Date</th>
+                    <th scope={'col'} style={{ width: '25%' }}>Action</th>
+                    <th scope={'col'} style={{ width: '25%' }}>Quantity</th>
+                    <th scope={'col'} style={{ width: '25%' }}>Purch. Price</th>
+                  </tr>
+                </thead>
+                <tbody>
+
+                  {this.state.transactions.length ?
+                    this.state.transactions.map(transactions => (
+                      <tr>
+                        <td scope={'col'} style={{ width: '25%' }}>
+                          {moment(transactions.transactiondate).format("MM/DD/YYYY")}
+                        </td>
+                        <td scope={'col'} style={{ width: '25%' }}>
+                          {transactions.transactiontype}
+                        </td>
+                        <td scope={'col'} style={{ width: '25%' }}>
+                          {transactions.quantity}
+                        </td>
+                        <td scope={'col'} style={{ width: '25%' }}>
+                          ${transactions.transactionprice}
+                        </td>
+                      </tr>
+                    ))
+                    : (
+                      <h2>No Results to Display</h2>
+                    )}
+                    
+                    {/* <tr>
+                      {this.state.tickerSummary.map(summary => (
+                        summary.ticker = this.state.transactions.ticker ?
+                        <p>Average purchase price: {summary.averageprice}
+                        </p>
+                        : (
+                          <p>No summary data available</p>
+                        )
+                      ))}
+                    </tr> */}
+
+                </tbody>
+              </table>
 
             </article>
           </Col>
           <Col size="md-5 md-offset-1" className="card card-default">
             <article>
-              <h3>Ticker News</h3>
+              <h3>News about {this.state.ticker.ticker}:</h3>
               {this.state.news.items.result.length ? (
                 <List>
                   {this.state.news.items && this.state.news.items.result.map(story => (
                     <ListItem>
-                      <a href={story.link} target="_blank"  className="headlines">
+                      <a href={story.link} target="_blank" className="headlines">
                         {story.title} ({story.publisher})
                       </a>
                     </ListItem>
@@ -154,7 +196,7 @@ class Detail extends Component {
         </Row>
         <Row>
           <Col size="md-2">
-            <Link to="/">← Back to Summary View</Link>
+            <Link to="/portfolio">← Back to Portfolio View</Link>
           </Col>
         </Row>
       </Container>

@@ -4,73 +4,93 @@ import Jumbotron from "../components/Jumbotron";
 import API from "../utils/API";
 import { Link } from "react-router-dom";
 import { Col, Row, Container } from "../components/Grid";
+import { Input, NotesArea, FormBtn } from "../components/Form";
+import { InputGroup } from 'react-bootstrap';
+
+const moment = require("moment");
 
 class Scenarios extends Component {
   state = {
-    tickers: [],
+    ticker: "",
+    tickerSummary: [],
+    scenarioData: []
+    // quantity: 0,
+    // transactionprice: 0,
+    // transactiondate: "",
+    // customRadioInline: "Buy",
+    // notes: "",
+    // summary: {
+    //   ticker: "",
+    //   quantity: 0,
+    //   cost: 0,
+    //   averageprice: 0,
+    //   _id: ""
+    // }
   };
 
   async componentDidMount() {
-    await this.loadStocks();
-    console.log("this.state: ", this.state);
-    // this.getAveragePrices();
+    await this.loadStockSummary();
+    this.getTickerPrices();
   }
 
-  loadStocks = () => {
-    return API.getTickers()
+  loadStockSummary = () => {
+    API.getTickerSummary()
       .then(res =>
-        this.setState({ tickers: res.data, ticker: "", quantity: "", notes: "" })
+        this.setState({ tickerSummary: res.data })
       )
       .catch(err => console.log(err));
   };
 
-  // getAveragePrices = () => {
-  //   console.log("$$$ COLLATING TRANSACTIONS BY TICKER $$$")
+  getTickerPrices = async event => {
 
-  //   //Add together volumes and price records for individual tickers
-  //   // Declare temporary variables to sum inputs
+    const scenarios = this.state;
+    console.log("scenarios: ", scenarios);
 
-  //   //Holds all the totals for setting State
-  //   let averagePrices = this.state;
-  //   console.log("averagePrices: ", averagePrices);
+    console.log("Looping through tickerSummary data");
 
-  //   // //Temporary object for each iteration
-  //   // let stockAveragePrices = this.state;
-  //   // console.log("stockAveragePrices: ", stockAveragePrices);
+    for (var i = 0; i < this.state.tickerSummary.length; i++) {
 
-  //   let quantityCounter = 0;
+      const scenarioItems = {
+        cost: this.state.tickerSummary[i].cost,
+        averageprice: this.state.tickerSummary[i].averageprice,
+        _id: this.state.tickerSummary[i]._id,
+        ticker: this.state.tickerSummary[i].ticker,
+        quantity: this.state.tickerSummary[i].quantity,
+        latestPrice: 0,
+        projectedQuantity: 0,
+        projectedAvgePrice: 0
+      };
 
-  //   this.state.tickers.forEach(tickerSumm => {
-  //     console.log("tickerSumm: ", tickerSumm);
+      console.log("scenarioItems: ", scenarioItems);
+      scenarios.push(scenarioItems);
+      console.log("scenarios: ", scenarios);
 
-  //   //Temporary object for each iteration
-  //   let stockAveragePrices = {
-  //     tickerTotals: [],
-  //   };
-  //   console.log("stockAveragePrices: ", stockAveragePrices);
+      this.setState({ scenarioData: scenarios });
 
-  //     const tickerKey = tickerSumm.ticker;
-  //     console.log("tickerKey: ", tickerKey);
+      console.log("*** Getting ticker prices ***")
 
-  //     if (tickerKey === tickerSumm.ticker) {
-  //       quantityCounter = (quantityCounter + tickerSumm.quantity);
-  //       console.log("quantityCounter: ", quantityCounter);
+      let tickerData = this.state;
+      console.log("****tickerData: ", tickerData, " ****");
 
-  //     } else {
-  //       console.log("Searching for ticker ", tickerKey, " and nothing found!");
-  //     };
+      let settings = {
+        "async": true,
+        "crossDomain": true,
+        "url": "https://apidojo-yahoo-finance-v1.p.rapidapi.com/stock/v2/get-financials?symbol=" + tickerData,
+        "method": "GET",
+        "headers": {
+          "x-rapidapi-host": "apidojo-yahoo-finance-v1.p.rapidapi.com",
+          "x-rapidapi-key": "e3f35368bdmsheaf36be3f76863bp1b27c9jsn06d6a302ff59"
+          // "x-rapidapi-key": process.env.apiKey
+        }
+      }
 
-  //     averagePrices.tickerTotals.push(stockAveragePrices.tickerTotals);
-  //     console.log("averagePrices: ", averagePrices)
+      console.log("queryURL: " + settings.url);
+      const chartResponse = await fetch(settings.url, settings)
+      const responseData = await chartResponse.json();
+      console.log("responseData: ", responseData);
+    };
+  }
 
-  //   });
-  // }
-
-  deleteTicker = id => {
-    API.deleteTicker(id)
-      .then(res => this.loadStocks())
-      .catch(err => console.log(err));
-  };
 
   handleInputChange = event => {
     const { name, value } = event.target;
@@ -79,23 +99,139 @@ class Scenarios extends Component {
     });
   };
 
+  // Handle button click
+  handleFormSubmit = event => {
+    event.preventDefault();
+    // this.state.tickerSummary.forEach(id => {
+    //   console.log("id.ticker: ", id.ticker, " | tickerInput: ", tickerInput)
+    //   if (id.ticker === tickerInput) {
+    //     summaryUpdate._id = id._id;
+    //   }
+    // })
+
+  };
+
 
   render() {
     return (
       // <Container fluid className='SearchPane'>
       <Container fluid>
-        <span>Header inputs (as required)</span>
         <Row>
+          {/* <Col size="md-6"> */}
+          <Col size="md-12">
+            <Jumbotron>
+              <h2>Investment Scenarios</h2>
+            </Jumbotron>
+            <form>
+              <Row>
+                <Col size="md-2">
+                  <Input
+                    value={this.state.ticker}
+                    onChange={this.handleInputChange}
+                    name="ticker"
+                    placeholder="$ Amount to be invested"
+                  />
+                </Col>
+                <Col size="md-3">
+                  <NotesArea
+                    value={this.state.notes}
+                    onChange={this.handleInputChange}
+                    name="notes"
+                    placeholder="Notes (Optional)"
+                  />
+                </Col>
+                <Col size="md-1">
+                  <FormBtn
+                    disabled={!(this.state.quantity && this.state.ticker)}
+                    onClick={this.handleFormSubmit}
+                  >
+                    Submit
+              </FormBtn>
+                </Col>
+              </Row>
+            </form>
+          </Col>
+        </Row>
+
+        <Row>
+          {/* <Col size="md-6 sm-12"> */}
           <Col size="md-12 sm-12">
             <Jumbotron>
-              <h3>Average Prices:</h3>
+              <h3>Average Stock Prices:</h3>
             </Jumbotron>
+
+            <table className={'table'} style={{ width: '100%' }}>
+              {/* <table responsive> */}
+              {/* <thead style={{ width: '100%' }}> */}
+              <thead>
+                <tr>
+                  <th scope={'col'} style={{ width: '15%' }}>Ticker</th>
+                  <th scope={'col'} style={{ width: '15%' }}>Quantity</th>
+                  <th scope={'col'} style={{ width: '15%' }}>Average Price</th>
+                  <th scope={'col'} style={{ width: '15%' }}>Today's Price</th>
+                  <th scope={'col'} style={{ width: '15%' }}>Projected Quantity</th>
+                  <th scope={'col'} style={{ width: '15%' }}>Projected Avge. Price</th>
+                  <th scope={'col'} style={{ width: '10%' }}>Trade</th>
+                </tr>
+              </thead>
+              {/* </table> */}
+              <tbody>
+                {this.state.tickerSummary.length ?
+                  // // <List>
+                  // <tr>
+                  this.state.tickerSummary.map(ticker => (
+                    // <ListItem key={ticker._id}>
+                    <tr>
+                      <td scope={'col'} style={{ width: '15%' }}>
+                        <Link to={"/tickers/" + ticker._id}>
+                          <strong>
+                            {ticker.ticker}
+                          </strong>
+                        </Link>
+                      </td>
+                      <td scope={'col'} style={{ width: '15%' }}>
+                        {ticker.quantity}
+                      </td>
+                      <td scope={'col'} style={{ width: '15%' }}>
+                        ${ticker.averageprice}
+                      </td>
+                      <td scope={'col'} style={{ width: '15%' }}>
+                        ${ticker.latestprice}
+                      </td>
+                      <td scope={'col'} style={{ width: '15%' }}>
+                        {ticker.projectedQuantity}
+                      </td>
+                      <td scope={'col'} style={{ width: '15%' }}>
+                        ${ticker.projectedAvgePrice}
+                      </td>
+                      <td scope={'col'} style={{ width: '15%' }}>
+                        <InputGroup className="mb-3">
+                          <InputGroup.Prepend>
+                            <InputGroup.Checkbox aria-label="Checkbox for following text input" />
+                          </InputGroup.Prepend>
+                        </InputGroup>
+                      </td>
+                    </tr>
+                    // </ListItem>
+
+                  ))
+                  // </tr>
+
+                  // </List>
+
+                  : (
+                    <h2>No Results to Display</h2>
+                  )}
+              </tbody>
+            </table>
+
+
           </Col>
         </Row>
       </Container>
     );
   }
-}
+};
 
 
 export default Scenarios;
