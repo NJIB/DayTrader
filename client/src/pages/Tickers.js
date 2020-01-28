@@ -1,12 +1,9 @@
 import React, { Component } from "react";
-import DeleteBtn from "../components/DeleteBtn";
-import API from "../utils/API";
-import { Link } from "react-router-dom";
 import { Col, Row, Container } from "../components/Grid";
-import { Input, NotesArea, FormBtn } from "../components/Form";
+import { Input, FormBtn } from "../components/Form";
 import { Bar, Line, Pie, Mixedchart } from 'react-chartjs-2';
 // import PeriodBtns from "../components/PeriodBtns";
-import { Btn1d } from "../components/PeriodBtns";
+// import { Btn1d } from "../components/PeriodBtns";
 import DeleteChartBtn from "../components/DeleteChartBtn";
 import "./styles/style.css";
 
@@ -258,18 +255,18 @@ class Tickers extends Component {
                   {this.state.exchangeData.length ?
                     this.state.exchangeData.map(exch => (
                       <tr>
-                        <td scope={'col'} style={{ width: '40%', textAlign: 'left' }}>
+                        <td style={{ width: '40%', textAlign: 'left' }}>
                           <strong>
                             {exch.exchange}
                           </strong>
                         </td>
-                        <td scope={'col'} style={{ width: '20%', textAlign: 'center'  }}>
+                        <td style={{ width: '20%', textAlign: 'center'  }}>
                           {exch.currentPrice}
                         </td>
-                        <td scope={'col'} style={{ width: '20%', textAlign: 'center'  }}>
+                        <td style={{ width: '20%', textAlign: 'center'  }}>
                           {exch.priceChange}
                         </td>
-                        <td scope={'col'} style={{ width: '20%', textAlign: 'center'  }}>
+                        <td style={{ width: '20%', textAlign: 'center'  }}>
                           {exch.priceChangePercent}
                         </td>
                       </tr>

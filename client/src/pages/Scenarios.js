@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import DeleteBtn from "../components/DeleteBtn";
 import Jumbotron from "../components/Jumbotron";
 import API from "../utils/API";
 import { Link } from "react-router-dom";
@@ -7,7 +6,6 @@ import { Col, Row, Container } from "../components/Grid";
 import { Input, NotesArea, FormBtn } from "../components/Form";
 import { InputGroup } from 'react-bootstrap';
 
-const moment = require("moment");
 
 class Scenarios extends Component {
   state = {
@@ -30,6 +28,9 @@ class Scenarios extends Component {
 
   async componentDidMount() {
     await this.loadStockSummary();
+
+    console.log("this: ", this);
+
     this.getTickerPrices();
   }
 
@@ -41,35 +42,37 @@ class Scenarios extends Component {
       .catch(err => console.log(err));
   };
 
-  getTickerPrices = async event => {
+  getTickerPrices = async _ => {
 
-    const scenarios = this.state;
-    console.log("scenarios: ", scenarios);
+    console.log("Looping through tickerSummary data for API call");
 
-    console.log("Looping through tickerSummary data");
+    // const scenarios = this.state;
+    // console.log("scenarios: ", scenarios);   
 
-    for (var i = 0; i < this.state.tickerSummary.length; i++) {
+    console.log("this (in getTickerPrices function): ", this);
 
-      const scenarioItems = {
-        cost: this.state.tickerSummary[i].cost,
-        averageprice: this.state.tickerSummary[i].averageprice,
-        _id: this.state.tickerSummary[i]._id,
-        ticker: this.state.tickerSummary[i].ticker,
-        quantity: this.state.tickerSummary[i].quantity,
-        latestPrice: 0,
-        projectedQuantity: 0,
-        projectedAvgePrice: 0
-      };
+    const promises = await this.state.tickerSummary.map(async tickerKey => {
 
-      console.log("scenarioItems: ", scenarioItems);
-      scenarios.push(scenarioItems);
-      console.log("scenarios: ", scenarios);
+      // const scenarioItems = {
+      //   cost: tickerKey.cost,
+      //   averageprice: tickerKey.averageprice,
+      //   _id: tickerKey._id,
+      //   ticker: tickerKey.ticker,
+      //   quantity: tickerKey.quantity,
+      //   latestPrice: 0,
+      //   projectedQuantity: 0,
+      //   projectedAvgePrice: 0
+      // };
 
-      this.setState({ scenarioData: scenarios });
+      // console.log("scenarioItems: ", scenarioItems);
+      // scenarios.push(scenarioItems);
+      // console.log("scenarios: ", scenarios);
+
+      // this.setState({ scenarioData: scenarios });
 
       console.log("*** Getting ticker prices ***")
 
-      let tickerData = this.state;
+      let tickerData = tickerKey.ticker;
       console.log("****tickerData: ", tickerData, " ****");
 
       let settings = {
@@ -80,17 +83,17 @@ class Scenarios extends Component {
         "headers": {
           "x-rapidapi-host": "apidojo-yahoo-finance-v1.p.rapidapi.com",
           "x-rapidapi-key": "e3f35368bdmsheaf36be3f76863bp1b27c9jsn06d6a302ff59"
-          // "x-rapidapi-key": process.env.apiKey
         }
       }
 
-      console.log("queryURL: " + settings.url);
-      const chartResponse = await fetch(settings.url, settings)
-      const responseData = await chartResponse.json();
-      console.log("responseData: ", responseData);
-    };
-  }
+      const latestPrice = await fetch(settings.url, settings)
+      const latestPriceOutput = await latestPrice.json();
+      return latestPriceOutput
+    })
 
+      const responseData = await Promise.all(promises);
+      console.log("responseData: ", responseData);
+  };
 
   handleInputChange = event => {
     const { name, value } = event.target;

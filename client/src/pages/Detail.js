@@ -140,16 +140,16 @@ class Detail extends Component {
                   {this.state.transactions.length ?
                     this.state.transactions.map(transactions => (
                       <tr>
-                        <td scope={'col'} style={{ width: '25%' }}>
+                        <td style={{ width: '25%' }}>
                           {moment(transactions.transactiondate).format("MM/DD/YYYY")}
                         </td>
-                        <td scope={'col'} style={{ width: '25%' }}>
+                        <td style={{ width: '25%' }}>
                           {transactions.transactiontype}
                         </td>
-                        <td scope={'col'} style={{ width: '25%' }}>
+                        <td style={{ width: '25%' }}>
                           {transactions.quantity}
                         </td>
-                        <td scope={'col'} style={{ width: '25%' }}>
+                        <td style={{ width: '25%' }}>
                           ${transactions.transactionprice}
                         </td>
                       </tr>

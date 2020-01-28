@@ -159,7 +159,7 @@ class Portfolio extends Component {
           // ticker: this.state.ticker,
           ticker: tickerInput,
           quantity: this.state.quantity,
-          cost: totalCost,
+          cost: totalCost.toFixed(2),
           averageprice: this.state.transactionprices
         })
           .then(res => this.loadStocks())
@@ -169,7 +169,7 @@ class Portfolio extends Component {
           const summaryUpdate = {
             ticker: tickerInput,
             quantity: totalHeld,
-            cost: totalCost,
+            cost: totalCost.toFixed(2),
             averageprice: pricePerShare,
             _id: ""
           };
@@ -305,33 +305,33 @@ class Portfolio extends Component {
                   this.state.tickers.map(ticker => (
                     // <ListItem key={ticker._id}>
                     <tr>
-                      <td scope={'col'} style={{ width: '20%' }}>
+                      <td style={{ width: '20%' }}>
                         <Link to={"/tickers/" + ticker._id}>
                           <strong>
                             {ticker.ticker}
                           </strong>
                         </Link>
                       </td>
-                      <td scope={'col'} style={{ width: '15%' }}>
+                      <td style={{ width: '15%' }}>
                         {ticker.transactiontype}
                       </td>
-                      <td scope={'col'} style={{ width: '15%' }}>
+                      <td style={{ width: '15%' }}>
                         {ticker.quantity}
                       </td>
-                      <td scope={'col'} style={{ width: '15%' }}>
+                      <td style={{ width: '15%' }}>
                         {moment(ticker.transactiondate).format("MM/DD/YYYY")}
                       </td>
-                      <td scope={'col'} style={{ width: '15%' }}>
+                      <td style={{ width: '15%' }}>
                         ${ticker.transactionprice}
                       </td>
-                      {/* <td scope={'col'} style={{ width: '10%' }}> */}
+                      {/* <td style={{ width: '10%' }}> */}
                       {/* <InputGroup className="mb-3"> */}
                       {/* <InputGroup.Prepend> */}
                       {/* <InputGroup.Checkbox aria-label="Checkbox for following text input" /> */}
                       {/* </InputGroup.Prepend> */}
                       {/* </InputGroup> */}
                       {/* </td> */}
-                      <td scope={'col'} style={{ width: '10%' }}>
+                      <td style={{ width: '10%' }}>
                         <DeleteBtn onClick={() => this.deleteTicker(ticker._id)} />
                       </td>
                     </tr>
