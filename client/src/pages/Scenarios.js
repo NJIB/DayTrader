@@ -6,7 +6,6 @@ import { Col, Row, Container } from "../components/Grid";
 import { Input, NotesArea, FormBtn } from "../components/Form";
 import { InputGroup } from 'react-bootstrap';
 
-
 class Scenarios extends Component {
   state = {
     ticker: "",
@@ -62,43 +61,40 @@ class Scenarios extends Component {
     const resolvedPriceOutputs = await Promise.all(priceOutputs);
     console.log("resolvedPriceOutputs; ", resolvedPriceOutputs);
 
-//NJIB test
-const scenarios = [];
+    //NJIB test
+    const scenarios = [];
 
-const promises2 = this.state.tickerSummary.map(destination => {
-  const scenario = {
-    cost: 0,
-    quantity: 0,
-    averageprice: 0,
-    _id: "",
-    ticker: "",
-    quantity: 0,
-    date: "",
-    symbol: "",
-    latestprice: 0
-  };
+    const collatedData = this.state.tickerSummary.map(destination => {
+      const scenario = {
+        cost: 0,
+        quantity: 0,
+        averageprice: 0,
+        _id: "",
+        ticker: "",
+        date: "",
+        symbol: "",
+        latestprice: 0
+      };
 
-  scenario.cost = destination.cost;
-  scenario.quantity = destination.quantity;
-  scenario.averageprice = destination.averageprice;
-  scenario._id = destination._id;
-  scenario.ticker = destination.ticker;
-  scenario.date = destination.date;
-  scenarios.push(scenario);
+      scenario.cost = destination.cost;
+      scenario.quantity = destination.quantity;
+      scenario.averageprice = destination.averageprice;
+      scenario._id = destination._id;
+      scenario.ticker = destination.ticker;
+      scenario.date = destination.date;
+      scenarios.push(scenario);
 
-        resolvedPriceOutputs.forEach(latestPriceInfo => {
+      resolvedPriceOutputs.forEach(latestPriceInfo => {
         if (scenario.ticker === latestPriceInfo.price.symbol) {
           scenario.symbol = latestPriceInfo.price.symbol;
           scenario.latestprice = latestPriceInfo.price.regularMarketPrice.fmt;
         }
       });
 
+      return scenario;
+    })
 
-  return scenario;
-})
-
-const collatedData = await Promise.all(promises2);
-console.log("responseData2; ", collatedData);
+    console.log("collatedData; ", collatedData);
 
     // this.setState({ scenarioData: resolvedPriceOutputs });
     this.setState({ scenarioData: collatedData });
@@ -107,6 +103,7 @@ console.log("responseData2; ", collatedData);
 
   handleInputChange = event => {
     const { name, value } = event.target;
+    console.log("name: ", name, " | value: ", value);
     this.setState({
       [name]: value
     });
@@ -121,6 +118,42 @@ console.log("responseData2; ", collatedData);
     //     summaryUpdate._id = id._id;
     //   }
     // })
+
+    const investmentScenario = this.state.scenarioData.map(projected => {
+      const projectedNumbers = this.state.scenarioData;
+      console.log("projectedNumbers (before calcs): ", projectedNumbers);
+
+      let calcValue = this.state.investmentAmount;
+      console.log("calcValue: ", calcValue);
+
+      // NOT CURRENTLY CALCULATING CORRECTLY
+      let newCost = projected.cost += calcValue;
+      console.log("projected.cost: ", projected.cost);
+      console.log("newCost: ", newCost);
+
+      let newQuantity = (projected.quantity += (calcValue += projected.latestprice));
+      console.log("projected.quantity: ", projected.quantity);
+      console.log("projected.latestprice: ", projected.latestprice);
+      console.log("newQuantity: ", newQuantity);
+
+      const projectedNumber = {
+        cost: projected.cost,
+        quantity: projected.quantity,
+        averageprice: projected.averageprice,
+        _id: projected._id,
+        ticker: projected.ticker,
+        date: projected.date,
+        symbol: projected.symbol,
+        latestprice: projected.latestprice,
+        newcost: newCost,
+        newquantity: newQuantity
+      };
+
+      return investmentScenario;
+    });
+
+    console.log("investmentScenario: ", investmentScenario);
+    this.setState({ investmentScenario: investmentScenario });
 
   };
 
@@ -139,9 +172,9 @@ console.log("responseData2; ", collatedData);
               <Row>
                 <Col size="md-2">
                   <Input
-                    value={this.state.ticker}
+                    value={this.state.investment}
                     onChange={this.handleInputChange}
-                    name="ticker"
+                    name="investmentAmount"
                     placeholder="$ Amount to be invested"
                   />
                 </Col>
@@ -155,7 +188,7 @@ console.log("responseData2; ", collatedData);
                 </Col>
                 <Col size="md-1">
                   <FormBtn
-                    disabled={!(this.state.quantity && this.state.ticker)}
+                    disabled={!(this.state.investmentAmount)}
                     onClick={this.handleFormSubmit}
                   >
                     Submit
@@ -189,7 +222,7 @@ console.log("responseData2; ", collatedData);
               </thead>
               {/* </table> */}
               <tbody>
-              {/* {this.state.tickerSummary.length ? */}
+                {/* {this.state.tickerSummary.length ? */}
                 {this.state.scenarioData.length ?
                   // // <List>
                   // <tr>
