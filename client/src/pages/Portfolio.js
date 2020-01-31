@@ -292,8 +292,7 @@ class Portfolio extends Component {
                   <th scope={'col'} style={{ width: '15%' }}>Action</th>
                   <th scope={'col'} style={{ width: '15%' }}>Quantity</th>
                   <th scope={'col'} style={{ width: '15%' }}>Trans. Date</th>
-                  <th scope={'col'} style={{ width: '15%' }}>Purch. Price</th>
-                  {/* <th scope={'col'} style={{ width: '10%' }}>Compare</th> */}
+                  <th scope={'col'} style={{ width: '15%' }}>Trans. Price</th>
                   <th scope={'col'} style={{ width: '10%' }}>Delete</th>
                 </tr>
               </thead>

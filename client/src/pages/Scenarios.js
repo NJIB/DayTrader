@@ -34,41 +34,21 @@ class Scenarios extends Component {
     this.getTickerPrices();
   }
 
-  loadStockSummary = () => {
-    API.getTickerSummary()
-      .then(res =>
+  loadStockSummary = async () => {
+    const res = await API.getTickerSummary();
+      
         this.setState({ tickerSummary: res.data })
-      )
-      .catch(err => console.log(err));
   };
 
   getTickerPrices = async _ => {
 
     console.log("Looping through tickerSummary data for API call");
 
-    // const scenarios = this.state;
-    // console.log("scenarios: ", scenarios);   
+    const scenarios = [];
 
     console.log("this (in getTickerPrices function): ", this);
 
-    const promises = await this.state.tickerSummary.map(async tickerKey => {
-
-      // const scenarioItems = {
-      //   cost: tickerKey.cost,
-      //   averageprice: tickerKey.averageprice,
-      //   _id: tickerKey._id,
-      //   ticker: tickerKey.ticker,
-      //   quantity: tickerKey.quantity,
-      //   latestPrice: 0,
-      //   projectedQuantity: 0,
-      //   projectedAvgePrice: 0
-      // };
-
-      // console.log("scenarioItems: ", scenarioItems);
-      // scenarios.push(scenarioItems);
-      // console.log("scenarios: ", scenarios);
-
-      // this.setState({ scenarioData: scenarios });
+    const promises = this.state.tickerSummary.map( tickerKey => {
 
       console.log("*** Getting ticker prices ***")
 
@@ -86,13 +66,29 @@ class Scenarios extends Component {
         }
       }
 
-      const latestPrice = await fetch(settings.url, settings)
-      const latestPriceOutput = await latestPrice.json();
-      return latestPriceOutput
+      const latestPrice =  fetch(settings.url, settings)
+      // const latestPriceOutput =  latestPrice.json();
+      return latestPrice;
     })
 
-      const responseData = await Promise.all(promises);
-      console.log("responseData: ", responseData);
+    const responseData = await Promise.all(promises);
+
+      const priceOutputs = await responseData.map(async item => {
+      const resolvedItem = await item.json();
+
+      console.log("this: ", this);
+
+      return resolvedItem;
+      })
+
+
+      console.log("priceOutputs; ", priceOutputs);
+
+      const resolvedPriceOutputs = await Promise.all(priceOutputs);
+      console.log("resolvedPriceOutputs; ", resolvedPriceOutputs);
+
+      this.setState({ scenarioData: resolvedPriceOutputs });
+      console.log("this: ", this);
   };
 
   handleInputChange = event => {

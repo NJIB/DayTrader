@@ -290,7 +290,7 @@ class Tickers extends Component {
                   <div className="chart">
                     <Bar className="Bar"
                       data={chartRender}
-                      width={375}
+                      width={350}
                       height={250}
                     // options={{
                     //   responsive: true,
