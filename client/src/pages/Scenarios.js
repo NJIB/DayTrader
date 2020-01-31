@@ -12,18 +12,6 @@ class Scenarios extends Component {
     ticker: "",
     tickerSummary: [],
     scenarioData: []
-    // quantity: 0,
-    // transactionprice: 0,
-    // transactiondate: "",
-    // customRadioInline: "Buy",
-    // notes: "",
-    // summary: {
-    //   ticker: "",
-    //   quantity: 0,
-    //   cost: 0,
-    //   averageprice: 0,
-    //   _id: ""
-    // }
   };
 
   async componentDidMount() {
@@ -36,22 +24,15 @@ class Scenarios extends Component {
 
   loadStockSummary = async () => {
     const res = await API.getTickerSummary();
-      
-        this.setState({ tickerSummary: res.data })
+    this.setState({ tickerSummary: res.data })
   };
 
   getTickerPrices = async _ => {
-
     console.log("Looping through tickerSummary data for API call");
-
-    const scenarios = [];
 
     console.log("this (in getTickerPrices function): ", this);
 
-    const promises = this.state.tickerSummary.map( tickerKey => {
-
-      console.log("*** Getting ticker prices ***")
-
+    const promises = this.state.tickerSummary.map(tickerKey => {
       let tickerData = tickerKey.ticker;
       console.log("****tickerData: ", tickerData, " ****");
 
@@ -66,29 +47,62 @@ class Scenarios extends Component {
         }
       }
 
-      const latestPrice =  fetch(settings.url, settings)
-      // const latestPriceOutput =  latestPrice.json();
+      const latestPrice = fetch(settings.url, settings)
       return latestPrice;
     })
 
     const responseData = await Promise.all(promises);
 
-      const priceOutputs = await responseData.map(async item => {
+    const priceOutputs = await responseData.map(async item => {
       const resolvedItem = await item.json();
-
-      console.log("this: ", this);
-
       return resolvedItem;
-      })
+    })
+
+    console.log("priceOutputs; ", priceOutputs);
+    const resolvedPriceOutputs = await Promise.all(priceOutputs);
+    console.log("resolvedPriceOutputs; ", resolvedPriceOutputs);
+
+//NJIB test
+const scenarios = [];
+
+const promises2 = this.state.tickerSummary.map(destination => {
+  const scenario = {
+    cost: 0,
+    quantity: 0,
+    averageprice: 0,
+    _id: "",
+    ticker: "",
+    quantity: 0,
+    date: "",
+    symbol: "",
+    latestprice: 0
+  };
+
+  scenario.cost = destination.cost;
+  scenario.quantity = destination.quantity;
+  scenario.averageprice = destination.averageprice;
+  scenario._id = destination._id;
+  scenario.ticker = destination.ticker;
+  scenario.date = destination.date;
+  scenarios.push(scenario);
+
+        resolvedPriceOutputs.forEach(latestPriceInfo => {
+        if (scenario.ticker === latestPriceInfo.price.symbol) {
+          scenario.symbol = latestPriceInfo.price.symbol;
+          scenario.latestprice = latestPriceInfo.price.regularMarketPrice.fmt;
+        }
+      });
 
 
-      console.log("priceOutputs; ", priceOutputs);
+  return scenario;
+})
 
-      const resolvedPriceOutputs = await Promise.all(priceOutputs);
-      console.log("resolvedPriceOutputs; ", resolvedPriceOutputs);
+const collatedData = await Promise.all(promises2);
+console.log("responseData2; ", collatedData);
 
-      this.setState({ scenarioData: resolvedPriceOutputs });
-      console.log("this: ", this);
+    // this.setState({ scenarioData: resolvedPriceOutputs });
+    this.setState({ scenarioData: collatedData });
+    console.log("this: ", this);
   };
 
   handleInputChange = event => {
@@ -175,10 +189,11 @@ class Scenarios extends Component {
               </thead>
               {/* </table> */}
               <tbody>
-                {this.state.tickerSummary.length ?
+              {/* {this.state.tickerSummary.length ? */}
+                {this.state.scenarioData.length ?
                   // // <List>
                   // <tr>
-                  this.state.tickerSummary.map(ticker => (
+                  this.state.scenarioData.map(ticker => (
                     // <ListItem key={ticker._id}>
                     <tr>
                       <td scope={'col'} style={{ width: '15%' }}>
