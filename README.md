@@ -1,6 +1,6 @@
 # DayTrader
 
-## DayTrader
+## Overview
 
 Day Trader is an app designed to give amateur investors greater visibility into, and control over their investment portfolio.
 In addition the usual functionality available to investors through their brokerage websites, DayTrader is designed to allow the user to:
