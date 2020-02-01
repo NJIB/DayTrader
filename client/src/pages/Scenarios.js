@@ -9,7 +9,8 @@ class Scenarios extends Component {
   state = {
     ticker: "",
     tickerSummary: [],
-    scenarioData: []
+    scenarioData: [],
+    investmentScenarios: []
   };
   async componentDidMount() {
     await this.loadStockSummary();
@@ -99,8 +100,10 @@ class Scenarios extends Component {
     //   }
     // })
     const investmentScenario = this.state.scenarioData;
+    console.log("investmentScenario: ", investmentScenario);
 
     const investmentOptions = [];
+
     investmentScenario.map(async projected => {
       // const projectedNumbers = this.state.scenarioData;
       // console.log("projectedNumbers (before calcs): ", projectedNumbers);
@@ -118,9 +121,10 @@ class Scenarios extends Component {
       console.log("latestPriceNum: ", latestPriceNum);
       let newQuantity = await Math.round(quantityNum += (calcValue / projected.latestprice));
       console.log("newQuantity: ", newQuantity);
-      // let newAveragePrice = await Math.round(quantityNum += (calcValue / projected.latestprice));
-      // console.log("newQuantity: ", newQuantity);
-      investmentOptions.push({
+      let newAveragePrice = await (newCost / newQuantity).toFixed(2);
+      console.log("newAveragePrice: ", newAveragePrice);
+
+      const investmentOption = {
         cost: projected.cost,
         quantity: projected.quantity,
         averageprice: projected.averageprice,
@@ -130,15 +134,19 @@ class Scenarios extends Component {
         symbol: projected.symbol,
         latestprice: projected.latestprice,
         newcost: newCost,
-        newquantity: newQuantity
-      });
-      console.log("investmentOptions (in map loop): ", investmentOptions);
-      // investmentOptions.push(projectedNumber);
-      // console.log("investmentOptions: ", investmentOptions);
-      return investmentScenario;
-    });
-    this.setState({ investmentScenario: investmentScenario });
+        newquantity: newQuantity,
+        newaverageprice: newAveragePrice
+      };
+      console.log("investmentOption (in map loop): ", investmentOption);
+      investmentOptions.push(investmentOption);
+      console.log("investmentOptions: ", investmentOptions);
+
+      this.setState({ investmentScenarios: investmentOptions });
     console.log("this: ", this);
+
+      // return investmentOptions;
+    });
+    // this.setState({ investmentScenarios: investmentOptions });
   };
 
   render() {
@@ -204,11 +212,13 @@ class Scenarios extends Component {
               {/* </table> */}
               <tbody>
                 {/* {this.state.tickerSummary.length ? */}
-                {this.state.scenarioData.length ?
+                {/* {this.state.scenarioData.length ? */}
+                {this.state.investmentScenarios.length ?
                   // // <List>
                   // <tr>
-                  this.state.scenarioData.map(ticker => (
-                    // <ListItem key={ticker._id}>
+                  // this.state.scenarioData.map(ticker => (
+                    this.state.investmentScenarios.map(ticker => (
+                      // <ListItem key={ticker._id}>
                     <tr>
                       <td scope={'col'} style={{ width: '15%' }}>
                         <Link to={"/tickers/" + ticker._id}>
@@ -227,10 +237,10 @@ class Scenarios extends Component {
                         ${ticker.latestprice}
                       </td>
                       <td scope={'col'} style={{ width: '15%' }}>
-                        {ticker.projectedQuantity}
+                        {ticker.newquantity}
                       </td>
                       <td scope={'col'} style={{ width: '15%' }}>
-                        ${ticker.projectedAvgePrice}
+                        ${ticker.newaverageprice}
                       </td>
                       <td scope={'col'} style={{ width: '15%' }}>
                         <InputGroup className="mb-3">
