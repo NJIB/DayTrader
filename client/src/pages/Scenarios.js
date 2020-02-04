@@ -3,7 +3,7 @@ import Jumbotron from "../components/Jumbotron";
 import API from "../utils/API";
 import { Link } from "react-router-dom";
 import { Col, Row, Container } from "../components/Grid";
-import { Input, NotesArea, FormBtn } from "../components/Form";
+import { Input } from "../components/Form";
 import { InputGroup } from 'react-bootstrap';
 class Scenarios extends Component {
   state = {
@@ -50,7 +50,6 @@ class Scenarios extends Component {
     const resolvedPriceOutputs = await Promise.all(priceOutputs);
     console.log("resolvedPriceOutputs; ", resolvedPriceOutputs);
 
-    //NJIB test
     const scenarios = [];
     const collatedData = this.state.tickerSummary.map(destination => {
       const scenario = {
@@ -79,38 +78,35 @@ class Scenarios extends Component {
       return scenario;
     })
     console.log("collatedData; ", collatedData);
-    //  this.setState({ scenarioData: resolvedPriceOutputs });
     this.setState({ scenarioData: collatedData });
     console.log("this: ", this);
 
-    // NJIB Test 02/03
     const investmentScenario = this.state.scenarioData;
     console.log("investmentScenario: ", investmentScenario);
 
     const investmentOptions = [];
 
     investmentScenario.map(async projected => {
-      // const projectedNumbers = this.state.scenarioData;
-      // console.log("projectedNumbers (before calcs): ", projectedNumbers);
       let calcValue = (await this.state.investmentAmount * 1);
       console.log("calcValue: ", calcValue);
-      // NOT CURRENTLY CALCULATING CORRECTLY
       let costNum = (await projected.cost * 1);
       console.log("costNum: ", costNum);
-      let newCost = await (costNum += (calcValue * 1));
-      console.log("projected.cost: ", projected.cost);
-      console.log("newCost: ", newCost);
+      // let newCost = await (costNum += (calcValue * 1));
+      // console.log("projected.cost: ", projected.cost);
+      // console.log("newCost: ", newCost);
       let quantityNum = (await projected.quantity * 1);
       console.log("quantityNum: ", quantityNum);
       let latestPriceNum = (await projected.latestprice * 1);
       console.log("latestPriceNum: ", latestPriceNum);
       let latestValue = (await projected.latestprice * projected.quantity).toFixed(2);
-      console.log("latestValue: ",projected.latestprice, " * ",projected.quantity, " = ",latestValue);
+      console.log("latestValue: ", projected.latestprice, " * ", projected.quantity, " = ", latestValue);
       console.log("latestValue: ", latestValue);
-      let newQuantity = await Math.round(quantityNum += (calcValue / projected.latestprice));
-      console.log("newQuantity: ", newQuantity);
-      let newAveragePrice = await (newCost / newQuantity).toFixed(2);
-      console.log("newAveragePrice: ", newAveragePrice);
+      let gainLoss = await ((projected.quantity * latestPriceNum) - projected.cost).toFixed(2);
+      console.log("gainLoss: ", gainLoss);
+      // let newQuantity = await Math.round(quantityNum += (calcValue / projected.latestprice));
+      // console.log("newQuantity: ", newQuantity);
+      // let newAveragePrice = await (newCost / newQuantity).toFixed(2);
+      // console.log("newAveragePrice: ", newAveragePrice);
 
       const investmentOption = {
         cost: projected.cost,
@@ -122,9 +118,10 @@ class Scenarios extends Component {
         symbol: projected.symbol,
         latestprice: projected.latestprice,
         latestvalue: latestValue,
-        newcost: newCost,
-        newquantity: newQuantity,
-        newaverageprice: newAveragePrice
+        gainloss: gainLoss,
+        // newcost: newCost,
+        // newquantity: newQuantity,
+        // newaverageprice: newAveragePrice
       };
       console.log("investmentOption (in map loop): ", investmentOption);
       investmentOptions.push(investmentOption);
@@ -133,12 +130,10 @@ class Scenarios extends Component {
       this.setState({ investmentScenarios: investmentOptions });
       console.log("this: ", this);
     });
-
-    // NJIB End Test 02/03
   };
 
   handleInputChange = async event => {
-      const { name, value } = event.target;
+    const { name, value } = event.target;
     // console.log("name: ", name, " | value: ", value);
     await this.setState({
       [name]: value
@@ -152,21 +147,27 @@ class Scenarios extends Component {
     investmentScenario.map(async projected => {
       let calcValue = (this.state.investmentAmount * 1);
       console.log("calcValue: ", calcValue);
-      let costNum = (await projected.cost * 1);
+      let costNum = (projected.cost * 1);
       console.log("costNum: ", costNum);
-      let newCost = await (costNum += (calcValue * 1));
-      console.log("projected.cost: ", projected.cost);
-      console.log("newCost: ", newCost);
-      let quantityNum = (await projected.quantity * 1);
+      let quantityNum = (projected.quantity * 1);
       console.log("quantityNum: ", quantityNum);
-      let latestPriceNum = (await projected.latestprice * 1);
+      let latestPriceNum = (projected.latestprice * 1);
       console.log("latestPriceNum: ", latestPriceNum);
-      let latestValue = (await projected.latestprice * projected.quantity).toFixed(2);
+      let calcValueModulo = (calcValue % latestPriceNum).toFixed(2);
+      console.log("calcValueModulo: ", calcValueModulo);
+      let newCost = (costNum += ((calcValue - calcValueModulo) * 1)).toFixed(2);
+      console.log("newCost: ", newCost);
+      let latestValue = (projected.latestprice * projected.quantity).toFixed(2);
       console.log("latestValue: ", latestValue);
-      let newQuantity = await Math.round(quantityNum += (calcValue / projected.latestprice));
+      let gainLoss = ((projected.quantity * latestPriceNum) - projected.cost).toFixed(2);
+      console.log("gainLoss: ", gainLoss);
+      let newQuantity = (quantityNum += ((calcValue - calcValueModulo) / latestPriceNum) * 1);
       console.log("newQuantity: ", newQuantity);
-      let newAveragePrice = await (newCost / newQuantity).toFixed(2);
+      let newAveragePrice = (newCost / newQuantity).toFixed(2);
       console.log("newAveragePrice: ", newAveragePrice);
+      let avgePriceChg = (newAveragePrice / projected.averageprice).toFixed(2);
+      console.log("avgePriceChg: ", avgePriceChg);
+
 
       const investmentOption = {
         cost: projected.cost,
@@ -178,9 +179,11 @@ class Scenarios extends Component {
         symbol: projected.symbol,
         latestprice: projected.latestprice,
         latestvalue: latestValue,
+        gainloss: gainLoss,
         newcost: newCost,
         newquantity: newQuantity,
-        newaverageprice: newAveragePrice
+        newaverageprice: newAveragePrice,
+        avgepricechg: avgePriceChg
       };
       console.log("investmentOption (in map loop): ", investmentOption);
       investmentOptions.push(investmentOption);
@@ -190,102 +193,25 @@ class Scenarios extends Component {
       console.log("this: ", this);
     });
 
-    // End Test 02/03
-  };
-  // Handle button click
-  handleFormSubmit = async event => {
-    event.preventDefault();
-    // this.state.tickerSummary.forEach(id => {
-    //   console.log("id.ticker: ", id.ticker, " | tickerInput: ", tickerInput)
-    //   if (id.ticker === tickerInput) {
-    //     summaryUpdate._id = id._id;
-    //   }
-    // })
-    const investmentScenario = this.state.scenarioData;
-    console.log("investmentScenario: ", investmentScenario);
-
-    const investmentOptions = [];
-
-    investmentScenario.map(async projected => {
-      // const projectedNumbers = this.state.scenarioData;
-      // console.log("projectedNumbers (before calcs): ", projectedNumbers);
-      let calcValue = (await this.state.investmentAmount * 1);
-      console.log("calcValue: ", calcValue);
-      let costNum = (await projected.cost * 1);
-      console.log("costNum: ", costNum);
-      let newCost = await (costNum += (calcValue * 1));
-      console.log("projected.cost: ", projected.cost);
-      console.log("newCost: ", newCost);
-      let quantityNum = (await projected.quantity * 1);
-      console.log("quantityNum: ", quantityNum);
-      let latestPriceNum = (await projected.latestprice * 1);
-      console.log("latestPriceNum: ", latestPriceNum);
-      let latestValue = (await projected.latestprice * projected.quantity).toFixed(2);
-      console.log("latestValue: ", latestValue);
-     
-      let newQuantity = await Math.round(quantityNum += (calcValue / projected.latestprice));
-      console.log("newQuantity: ", newQuantity);
-      let newAveragePrice = await (newCost / newQuantity).toFixed(2);
-      console.log("newAveragePrice: ", newAveragePrice);
-
-      const investmentOption = {
-        cost: projected.cost,
-        quantity: projected.quantity,
-        averageprice: projected.averageprice,
-        _id: projected._id,
-        ticker: projected.ticker,
-        date: projected.date,
-        symbol: projected.symbol,
-        latestprice: projected.latestprice,
-        latestvalue: latestValue,
-        newcost: newCost,
-        newquantity: newQuantity,
-        newaverageprice: newAveragePrice
-      };
-      console.log("investmentOption (in map loop): ", investmentOption);
-      investmentOptions.push(investmentOption);
-      console.log("investmentOptions: ", investmentOptions);
-
-      this.setState({ investmentScenarios: investmentOptions });
-      console.log("this: ", this);
-    });
   };
 
   render() {
     return (
-      // <Container fluid className='SearchPane'>
       <Container fluid>
         <Row>
-          {/* <Col size="md-6"> */}
           <Col size="md-12">
             <Jumbotron>
               <h2>Investment Scenarios</h2>
             </Jumbotron>
             <form>
               <Row>
-                <Col size="md-2">
+                <Col size="md-4">
                   <Input
                     value={this.state.investment}
                     onChange={this.handleInputChange}
                     name="investmentAmount"
                     placeholder="$ Amount to be invested"
                   />
-                </Col>
-                <Col size="md-3">
-                  <NotesArea
-                    value={this.state.notes}
-                    onChange={this.handleInputChange}
-                    name="notes"
-                    placeholder="Notes (Optional)"
-                  />
-                </Col>
-                <Col size="md-1">
-                  <FormBtn
-                    disabled={!(this.state.investmentAmount)}
-                    onClick={this.handleFormSubmit}
-                  >
-                    Submit
-              </FormBtn>
                 </Col>
               </Row>
             </form>
@@ -294,73 +220,97 @@ class Scenarios extends Component {
         <Row>
           {/* <Col size="md-6 sm-12"> */}
           <Col size="md-12 sm-12">
-            <Jumbotron>
-              <h3>Average Stock Prices:</h3>
-            </Jumbotron>
-            <table className={'table'} style={{ width: '100%' }}>
+            <table responsive className={'table'} style={{ width: '100%' }}>
               {/* <table responsive> */}
               {/* <thead style={{ width: '100%' }}> */}
               <thead>
                 <tr>
-                  <th scope={'col'} style={{ width: '15%' }}>Ticker</th>
+                  {/* <th scope={'col'} style={{ width: '15%' }}>Ticker</th>
                   <th scope={'col'} style={{ width: '15%' }}>Quantity</th>
                   <th scope={'col'} style={{ width: '15%' }}>Average Price</th>
                   <th scope={'col'} style={{ width: '20%' }}>Cost</th>
                   <th scope={'col'} style={{ width: '15%' }}>Today's Price</th>
                   <th scope={'col'} style={{ width: '20%' }}>Today's Value</th>
                   <th scope={'col'} style={{ width: '15%' }}>Gain/Loss</th>
-                  <th scope={'col'} style={{ width: '15%' }}>Projected Quantity</th>
-                  <th scope={'col'} style={{ width: '15%' }}>Projected Avge. Price</th>
-                  <th scope={'col'} style={{ width: '10%' }}>Trade</th>
+                  <th scope={'col'} style={{ width: '15%' }}>Projected Qty.</th>
+                  <th scope={'col'} style={{ width: '15%' }}>Proj. Total Value</th>
+                  <th scope={'col'} style={{ width: '15%' }}>Proj. Avge. Price</th>
+                  <th scope={'col'} style={{ width: '10%' }}>Trade</th> */}
+
+                  <th scope={'col'} >Ticker</th>
+                  <th scope={'col'} >Quantity</th>
+                  <th scope={'col'} >Average Price</th>
+                  <th scope={'col'} >Cost</th>
+                  <th scope={'col'} >Today's Price</th>
+                  <th scope={'col'} >Today's Value</th>
+                  <th scope={'col'} >Gain/Loss</th>
+                  <th scope={'col'} >Proj. Qty.</th>
+                  <th scope={'col'} >Proj. Total Value</th>
+                  <th scope={'col'} >Proj. Avge. Price</th>
+                  <th scope={'col'} >Avge. Price Chg.</th>
+                  <th scope={'col'} >Trade</th>
+
                 </tr>
               </thead>
-              {/* </table> */}
               <tbody>
                 {this.state.investmentScenarios.length ?
                   this.state.investmentScenarios.map(ticker => (
                     <tr>
-                      <td scope={'col'} style={{ width: '15%' }}>
+                      <td scope={'col'} >
                         <Link to={"/tickers/" + ticker._id}>
                           <strong>
                             {ticker.ticker}
                           </strong>
                         </Link>
                       </td>
-                      <td scope={'col'} style={{ width: '15%' }}>
+                      <td scope={'col'} >
                         {ticker.quantity}
                       </td>
-                      <td scope={'col'} style={{ width: '15%' }}>
+                      <td scope={'col'} >
                         ${ticker.averageprice}
                       </td>
-                      <td scope={'col'} style={{ width: '20%' }}>
+                      <td scope={'col'} >
                         ${ticker.cost}
                       </td>
-                      <td scope={'col'} style={{ width: '15%' }}>
+                      <td scope={'col'} >
                         ${ticker.latestprice}
                       </td>
-                      <td scope={'col'} style={{ width: '20%' }}>
+                      <td scope={'col'} >
                         ${ticker.latestvalue}
                       </td>
-                      <td scope={'col'} style={{ width: '15%' }}>
-                        ${ticker.cost}
+                      <td scope={'col'} >
+                        ${ticker.gainloss}
                       </td>
-                      <td scope={'col'} style={{ width: '15%' }}>
+                      <td scope={'col'} >
                         {this.state.investmentAmount ?
                           ticker.newquantity
                           : (
                             <p>***</p>
                           )}
                       </td>
-                      <td scope={'col'} style={{ width: '15%' }}>
-                      {this.state.investmentAmount ?
+                      <td scope={'col'} >
+                        {this.state.investmentAmount ?
+                          <p>${ticker.newcost}</p>
+                          : (
+                            <p>***</p>
+                          )}
+                      </td>
+                      <td scope={'col'} >
+                        {this.state.investmentAmount ?
                           <p>${ticker.newaverageprice}</p>
                           : (
                             <p>***</p>
                           )}
-
-                        {/* ${ticker.newaverageprice} */}
                       </td>
-                      <td scope={'col'} style={{ width: '15%' }}>
+                      <td scope={'col'} >
+                        {this.state.investmentAmount ?
+                          <p>{ticker.avgepricechg}%</p>
+                          : (
+                            <p>***</p>
+                          )}
+                      </td>
+
+                      <td scope={'col'} >
                         <InputGroup className="mb-3">
                           <InputGroup.Prepend>
                             <InputGroup.Checkbox aria-label="Checkbox for following text input" />
