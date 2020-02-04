@@ -104,6 +104,9 @@ class Scenarios extends Component {
       console.log("quantityNum: ", quantityNum);
       let latestPriceNum = (await projected.latestprice * 1);
       console.log("latestPriceNum: ", latestPriceNum);
+      let latestValue = (await projected.latestprice * projected.quantity).toFixed(2);
+      console.log("latestValue: ",projected.latestprice, " * ",projected.quantity, " = ",latestValue);
+      console.log("latestValue: ", latestValue);
       let newQuantity = await Math.round(quantityNum += (calcValue / projected.latestprice));
       console.log("newQuantity: ", newQuantity);
       let newAveragePrice = await (newCost / newQuantity).toFixed(2);
@@ -118,6 +121,7 @@ class Scenarios extends Component {
         date: projected.date,
         symbol: projected.symbol,
         latestprice: projected.latestprice,
+        latestvalue: latestValue,
         newcost: newCost,
         newquantity: newQuantity,
         newaverageprice: newAveragePrice
@@ -133,18 +137,12 @@ class Scenarios extends Component {
     // NJIB End Test 02/03
   };
 
-  handleInputChange = event => {
-    const { name, value } = event.target;
-    console.log("name: ", name, " | value: ", value);
-    this.setState({
+  handleInputChange = async event => {
+      const { name, value } = event.target;
+    // console.log("name: ", name, " | value: ", value);
+    await this.setState({
       [name]: value
     });
-
-    // NJIB Test 02/03
-
-    // let inputValue = (this.state.investmentAmount * 1);
-    // console.log("inputValue: ", inputValue);
-    
 
     const investmentScenario = this.state.scenarioData;
     console.log("investmentScenario: ", investmentScenario);
@@ -152,7 +150,7 @@ class Scenarios extends Component {
     const investmentOptions = [];
 
     investmentScenario.map(async projected => {
-      let calcValue = (await this.state.investmentAmount * 1);
+      let calcValue = (this.state.investmentAmount * 1);
       console.log("calcValue: ", calcValue);
       let costNum = (await projected.cost * 1);
       console.log("costNum: ", costNum);
@@ -163,6 +161,8 @@ class Scenarios extends Component {
       console.log("quantityNum: ", quantityNum);
       let latestPriceNum = (await projected.latestprice * 1);
       console.log("latestPriceNum: ", latestPriceNum);
+      let latestValue = (await projected.latestprice * projected.quantity).toFixed(2);
+      console.log("latestValue: ", latestValue);
       let newQuantity = await Math.round(quantityNum += (calcValue / projected.latestprice));
       console.log("newQuantity: ", newQuantity);
       let newAveragePrice = await (newCost / newQuantity).toFixed(2);
@@ -177,6 +177,7 @@ class Scenarios extends Component {
         date: projected.date,
         symbol: projected.symbol,
         latestprice: projected.latestprice,
+        latestvalue: latestValue,
         newcost: newCost,
         newquantity: newQuantity,
         newaverageprice: newAveragePrice
@@ -219,6 +220,9 @@ class Scenarios extends Component {
       console.log("quantityNum: ", quantityNum);
       let latestPriceNum = (await projected.latestprice * 1);
       console.log("latestPriceNum: ", latestPriceNum);
+      let latestValue = (await projected.latestprice * projected.quantity).toFixed(2);
+      console.log("latestValue: ", latestValue);
+     
       let newQuantity = await Math.round(quantityNum += (calcValue / projected.latestprice));
       console.log("newQuantity: ", newQuantity);
       let newAveragePrice = await (newCost / newQuantity).toFixed(2);
@@ -233,6 +237,7 @@ class Scenarios extends Component {
         date: projected.date,
         symbol: projected.symbol,
         latestprice: projected.latestprice,
+        latestvalue: latestValue,
         newcost: newCost,
         newquantity: newQuantity,
         newaverageprice: newAveragePrice
@@ -300,7 +305,10 @@ class Scenarios extends Component {
                   <th scope={'col'} style={{ width: '15%' }}>Ticker</th>
                   <th scope={'col'} style={{ width: '15%' }}>Quantity</th>
                   <th scope={'col'} style={{ width: '15%' }}>Average Price</th>
+                  <th scope={'col'} style={{ width: '20%' }}>Cost</th>
                   <th scope={'col'} style={{ width: '15%' }}>Today's Price</th>
+                  <th scope={'col'} style={{ width: '20%' }}>Today's Value</th>
+                  <th scope={'col'} style={{ width: '15%' }}>Gain/Loss</th>
                   <th scope={'col'} style={{ width: '15%' }}>Projected Quantity</th>
                   <th scope={'col'} style={{ width: '15%' }}>Projected Avge. Price</th>
                   <th scope={'col'} style={{ width: '10%' }}>Trade</th>
@@ -324,8 +332,17 @@ class Scenarios extends Component {
                       <td scope={'col'} style={{ width: '15%' }}>
                         ${ticker.averageprice}
                       </td>
+                      <td scope={'col'} style={{ width: '20%' }}>
+                        ${ticker.cost}
+                      </td>
                       <td scope={'col'} style={{ width: '15%' }}>
                         ${ticker.latestprice}
+                      </td>
+                      <td scope={'col'} style={{ width: '20%' }}>
+                        ${ticker.latestvalue}
+                      </td>
+                      <td scope={'col'} style={{ width: '15%' }}>
+                        ${ticker.cost}
                       </td>
                       <td scope={'col'} style={{ width: '15%' }}>
                         {this.state.investmentAmount ?
