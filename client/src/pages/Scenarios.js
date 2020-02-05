@@ -91,9 +91,6 @@ class Scenarios extends Component {
       console.log("calcValue: ", calcValue);
       let costNum = (await projected.cost * 1);
       console.log("costNum: ", costNum);
-      // let newCost = await (costNum += (calcValue * 1));
-      // console.log("projected.cost: ", projected.cost);
-      // console.log("newCost: ", newCost);
       let quantityNum = (await projected.quantity * 1);
       console.log("quantityNum: ", quantityNum);
       let latestPriceNum = (await projected.latestprice * 1);
@@ -103,10 +100,6 @@ class Scenarios extends Component {
       console.log("latestValue: ", latestValue);
       let gainLoss = await ((projected.quantity * latestPriceNum) - projected.cost).toFixed(2);
       console.log("gainLoss: ", gainLoss);
-      // let newQuantity = await Math.round(quantityNum += (calcValue / projected.latestprice));
-      // console.log("newQuantity: ", newQuantity);
-      // let newAveragePrice = await (newCost / newQuantity).toFixed(2);
-      // console.log("newAveragePrice: ", newAveragePrice);
 
       const investmentOption = {
         cost: projected.cost,
@@ -119,9 +112,6 @@ class Scenarios extends Component {
         latestprice: projected.latestprice,
         latestvalue: latestValue,
         gainloss: gainLoss,
-        // newcost: newCost,
-        // newquantity: newQuantity,
-        // newaverageprice: newAveragePrice
       };
       console.log("investmentOption (in map loop): ", investmentOption);
       investmentOptions.push(investmentOption);
@@ -134,10 +124,23 @@ class Scenarios extends Component {
 
   handleInputChange = async event => {
     const { name, value } = event.target;
-    // console.log("name: ", name, " | value: ", value);
-    await this.setState({
-      [name]: value
-    });
+    console.log("name: ", name, " | value: ", value);
+
+    if (name === 'investmentAmount') {
+      await this.setState({
+        [name]: value
+      });
+    } else {
+      const scenarioPrice = value;
+      console.log("scenarioPrice: ", value);
+      this.setState({
+        [name]: value
+      });
+    }
+
+    // await this.setState({
+    //   [name]: value
+    // });
 
     const investmentScenario = this.state.scenarioData;
     console.log("investmentScenario: ", investmentScenario);
@@ -145,6 +148,7 @@ class Scenarios extends Component {
     const investmentOptions = [];
 
     investmentScenario.map(async projected => {
+
       let calcValue = (this.state.investmentAmount * 1);
       console.log("calcValue: ", calcValue);
       let costNum = (projected.cost * 1);
@@ -153,6 +157,33 @@ class Scenarios extends Component {
       console.log("quantityNum: ", quantityNum);
       let latestPriceNum = (projected.latestprice * 1);
       console.log("latestPriceNum: ", latestPriceNum);
+
+      // NJIB Test 02/04
+      if (name === projected.symbol) {
+        let scenarioPrice;
+        console.log("scenarioPrice: ", scenarioPrice);
+      } else {
+        let scenarioPriceId = name;
+        console.log("scenarioPriceId: ", scenarioPriceId);
+        let scenarioPrice = value;
+        console.log("scenarioPrice: ", scenarioPrice);
+      }
+
+
+      // this.state.scenarioPrice_+projected.ticker = this.scenarioPrice_;
+      // console.log(scenarioPrice_+projected.ticker);
+      // if () {
+      // let scenarioPriceIdValue = { scenarioPriceId };
+      // console.log("scenarioPriceIdValue: ", scenarioPriceIdValue);
+      // console.log("scenarioPrice: ", calcValue % ('this.state.scenarioPrice_'+projected.ticker));
+      // let calcValueModulo = (calcValue % 'this.state.scenarioPrice_'+projected.ticker);
+      // console.log("calcValueModulo: ", calcValueModulo);  
+      // } else
+      // let calcValueModulo = (calcValue % latestPriceNum).toFixed(2);
+      // console.log("calcValueModulo: ", calcValueModulo);
+      // }
+      // NJIB End Test 02/04
+
       let calcValueModulo = (calcValue % latestPriceNum).toFixed(2);
       console.log("calcValueModulo: ", calcValueModulo);
       let newCost = (costNum += ((calcValue - calcValueModulo) * 1)).toFixed(2);
@@ -161,7 +192,7 @@ class Scenarios extends Component {
       console.log("latestValue: ", latestValue);
       let gainLoss = ((projected.quantity * latestPriceNum) - projected.cost).toFixed(2);
       console.log("gainLoss: ", gainLoss);
-      let newQuantity = (quantityNum += ((calcValue - calcValueModulo) / latestPriceNum) * 1);
+      let newQuantity = (quantityNum += ((calcValue - calcValueModulo) / latestPriceNum) * 1).toFixed(2);
       console.log("newQuantity: ", newQuantity);
       let newAveragePrice = (newCost / newQuantity).toFixed(2);
       console.log("newAveragePrice: ", newAveragePrice);
@@ -178,6 +209,8 @@ class Scenarios extends Component {
         date: projected.date,
         symbol: projected.symbol,
         latestprice: projected.latestprice,
+        // scenariopriceid: scenarioPriceId,
+        // scenarioprice: scenarioPrice,
         latestvalue: latestValue,
         gainloss: gainLoss,
         newcost: newCost,
@@ -242,6 +275,7 @@ class Scenarios extends Component {
                   <th scope={'col'} >Average Price</th>
                   <th scope={'col'} >Cost</th>
                   <th scope={'col'} >Today's Price</th>
+                  <th scope={'col'} >Scenario Price</th>
                   <th scope={'col'} >Today's Value</th>
                   <th scope={'col'} >Gain/Loss</th>
                   <th scope={'col'} >Proj. Qty.</th>
@@ -274,6 +308,16 @@ class Scenarios extends Component {
                       </td>
                       <td scope={'col'} >
                         ${ticker.latestprice}
+                      </td>
+                      <td scope={'col'} >
+                        <Input style={{ width: '100px' }}
+                          value={this.state.scenarioPrice}
+                          // disabled={!(this.state.investmentAmount)}
+                          onChange={this.handleInputChange}
+                          name={ticker.ticker}
+                          // name={"scenarioPrice"}
+                          placeholder="$---"
+                        />
                       </td>
                       <td scope={'col'} >
                         ${ticker.latestvalue}
