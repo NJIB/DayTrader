@@ -29,10 +29,13 @@ class Portfolio extends Component {
     }
   };
 
-  componentDidMount() {
-    this.loadStocks();
-    this.loadStockSummary();
+  async componentDidMount() {
+  // componentDidMount() {
+    await this.loadStocks();
+    await this.loadStockSummary();
     console.log("this: ", this);
+    this.getTickerPrices();
+
   }
 
   loadStocks = () => {
@@ -50,6 +53,110 @@ class Portfolio extends Component {
       )
       .catch(err => console.log(err));
   };
+
+  // NJIB Latest Stock Prices obtained - NOT QUITE WORKING (NOT LOOPING THROUGH ON THE  MAP)
+  getTickerPrices = async _ => {
+    console.log("Looping through tickers data for API call");
+    console.log("this (in getTickerPrices function): ", this);
+    const promises = this.state.tickers.map(tickerKey => {
+      let tickerData = tickerKey.ticker;
+      console.log("****tickerData: ", tickerData, " ****");
+      let settings = {
+        "async": true,
+        "crossDomain": true,
+        "url": "https://apidojo-yahoo-finance-v1.p.rapidapi.com/stock/v2/get-financials?symbol=" + tickerData,
+        "method": "GET",
+        "headers": {
+          "x-rapidapi-host": "apidojo-yahoo-finance-v1.p.rapidapi.com",
+          "x-rapidapi-key": "e3f35368bdmsheaf36be3f76863bp1b27c9jsn06d6a302ff59"
+        }
+      }
+      const latestPrice = fetch(settings.url, settings)
+      return latestPrice;
+    })
+
+    const responseData = await Promise.all(promises);
+    const priceOutputs = await responseData.map(async item => {
+      const resolvedItem = await item.json();
+      return resolvedItem;
+    })
+    console.log("priceOutputs; ", priceOutputs);
+    const resolvedPriceOutputs = await Promise.all(priceOutputs);
+    console.log("resolvedPriceOutputs; ", resolvedPriceOutputs);
+
+    // const scenarios = [];
+    // const collatedData = this.state.tickers.map(destination => {
+    //   const scenario = {
+    //     cost: 0,
+    //     quantity: 0,
+    //     averageprice: 0,
+    //     _id: "",
+    //     ticker: "",
+    //     date: "",
+    //     symbol: "",
+    //     latestprice: 0
+    //   };
+    //   scenario.cost = destination.cost;
+    //   scenario.quantity = destination.quantity;
+    //   scenario.averageprice = destination.averageprice;
+    //   scenario._id = destination._id;
+    //   scenario.ticker = destination.ticker;
+    //   scenario.date = destination.date;
+    //   scenarios.push(scenario);
+    //   resolvedPriceOutputs.forEach(latestPriceInfo => {
+    //     if (scenario.ticker === latestPriceInfo.price.symbol) {
+    //       scenario.symbol = latestPriceInfo.price.symbol;
+    //       scenario.latestprice = latestPriceInfo.price.regularMarketPrice.fmt;
+    //     }
+    //   });
+    //   return scenario;
+    // })
+    // console.log("collatedData; ", collatedData);
+    // this.setState({ scenarioData: collatedData });
+    // console.log("this: ", this);
+
+    // const investmentScenario = this.state.scenarioData;
+    // console.log("investmentScenario: ", investmentScenario);
+
+    // const investmentOptions = [];
+
+    // investmentScenario.map(async projected => {
+    //   let calcValue = (await this.state.investmentAmount * 1);
+    //   console.log("calcValue: ", calcValue);
+    //   let costNum = (await projected.cost * 1);
+    //   console.log("costNum: ", costNum);
+    //   let quantityNum = (await projected.quantity * 1);
+    //   console.log("quantityNum: ", quantityNum);
+    //   let latestPriceNum = (await projected.latestprice * 1);
+    //   console.log("latestPriceNum: ", latestPriceNum);
+    //   let latestValue = (await projected.latestprice * projected.quantity).toFixed(2);
+    //   console.log("latestValue: ", projected.latestprice, " * ", projected.quantity, " = ", latestValue);
+    //   console.log("latestValue: ", latestValue);
+    //   let gainLoss = await ((projected.quantity * latestPriceNum) - projected.cost).toFixed(2);
+    //   console.log("gainLoss: ", gainLoss);
+
+    //   const investmentOption = {
+    //     cost: projected.cost,
+    //     quantity: projected.quantity,
+    //     averageprice: projected.averageprice,
+    //     _id: projected._id,
+    //     ticker: projected.ticker,
+    //     date: projected.date,
+    //     symbol: projected.symbol,
+    //     latestprice: projected.latestprice,
+    //     latestvalue: latestValue,
+    //     gainloss: gainLoss,
+    //   };
+    //   console.log("investmentOption (in map loop): ", investmentOption);
+    //   investmentOptions.push(investmentOption);
+    //   console.log("investmentOptions: ", investmentOptions);
+
+    //   this.setState({ investmentScenarios: investmentOptions });
+    //   console.log("this: ", this);
+    // });
+  };
+
+  // NJIB  End of new code
 
   deleteTicker = id => {
     API.deleteTicker(id)
@@ -175,8 +282,8 @@ class Portfolio extends Component {
           };
 
           this.state.tickerSummary.forEach(id => {
-            console.log("id.ticker: ", id.ticker, " | tickerInput: ", tickerInput)            
-            if (id.ticker === tickerInput){
+            console.log("id.ticker: ", id.ticker, " | tickerInput: ", tickerInput)
+            if (id.ticker === tickerInput) {
               summaryUpdate._id = id._id;
             }
           })
