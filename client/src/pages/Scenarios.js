@@ -17,6 +17,7 @@ class Scenarios extends Component {
     console.log("this: ", this);
     this.getTickerPrices();
   }
+  
   loadStockSummary = async () => {
     const res = await API.getTickerSummary();
     this.setState({ tickerSummary: res.data })

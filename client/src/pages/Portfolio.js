@@ -30,7 +30,7 @@ class Portfolio extends Component {
   };
 
   async componentDidMount() {
-  // componentDidMount() {
+    // componentDidMount() {
     await this.loadStocks();
     await this.loadStockSummary();
     console.log("this: ", this);
@@ -38,13 +38,21 @@ class Portfolio extends Component {
 
   }
 
-  loadStocks = () => {
-    API.getTickers()
-      .then(res =>
-        this.setState({ tickers: res.data, ticker: "", quantity: "", notes: "" })
-      )
-      .catch(err => console.log(err));
+  // NJIB This code would load stocks, but getTickerPrices would not work (would not await)
+  // loadStocks = () => {
+  //   API.getTickers()
+  //     .then(res =>
+  //       this.setState({ tickers: res.data, ticker: "", quantity: "", notes: "" })
+  //     )
+  //     .catch(err => console.log(err));
+  // };
+  // NJIB Function above replaced with the function below - it now works
+
+  loadStocks = async () => {
+    const res = await API.getTickers();
+    this.setState({ tickers: res.data, ticker: "", quantity: "", notes: "" })
   };
+
 
   loadStockSummary = () => {
     API.getTickerSummary()
@@ -58,6 +66,7 @@ class Portfolio extends Component {
   getTickerPrices = async _ => {
     console.log("Looping through tickers data for API call");
     console.log("this (in getTickerPrices function): ", this);
+
     const promises = this.state.tickers.map(tickerKey => {
       let tickerData = tickerKey.ticker;
       console.log("****tickerData: ", tickerData, " ****");
@@ -84,77 +93,42 @@ class Portfolio extends Component {
     const resolvedPriceOutputs = await Promise.all(priceOutputs);
     console.log("resolvedPriceOutputs; ", resolvedPriceOutputs);
 
-    // const scenarios = [];
-    // const collatedData = this.state.tickers.map(destination => {
-    //   const scenario = {
-    //     cost: 0,
-    //     quantity: 0,
-    //     averageprice: 0,
-    //     _id: "",
-    //     ticker: "",
-    //     date: "",
-    //     symbol: "",
-    //     latestprice: 0
-    //   };
-    //   scenario.cost = destination.cost;
-    //   scenario.quantity = destination.quantity;
-    //   scenario.averageprice = destination.averageprice;
-    //   scenario._id = destination._id;
-    //   scenario.ticker = destination.ticker;
-    //   scenario.date = destination.date;
-    //   scenarios.push(scenario);
-    //   resolvedPriceOutputs.forEach(latestPriceInfo => {
-    //     if (scenario.ticker === latestPriceInfo.price.symbol) {
-    //       scenario.symbol = latestPriceInfo.price.symbol;
-    //       scenario.latestprice = latestPriceInfo.price.regularMarketPrice.fmt;
-    //     }
-    //   });
-    //   return scenario;
-    // })
-    // console.log("collatedData; ", collatedData);
-    // this.setState({ scenarioData: collatedData });
-    // console.log("this: ", this);
+    const latestPrices = [];
+    const collatedData = this.state.tickers.map(destination => {
+      const latestPrice = {
+        ticker: "",
+        actiontype: "",
+        quantity: 0,
+        transactiondate: "",
+        transactionprice: 0,
+        latestprice: 0,
+        gainlossnum: 0,
+        gainlosspct: 0
+      };
+      latestPrice.ticker = destination.ticker;
+      latestPrice.transactiontype = destination.transactiontype;
+      latestPrice.quantity = destination.quantity;
+      latestPrice.transactiondate = destination.transactiondate;
+      latestPrice.transactionprice = destination.transactionprice;
+      latestPrices.push(latestPrice);
+      resolvedPriceOutputs.forEach(latestPriceInfo => {
+        if (latestPrice.ticker === latestPriceInfo.price.symbol) {
+          latestPrice.latestprice = latestPriceInfo.price.regularMarketPrice.fmt;
+          latestPrice.gainlossnum = (latestPriceInfo.price.regularMarketPrice.fmt - destination.transactionprice).toFixed(2);
+          console.log("gainlossnum: ", latestPrice.gainlossnum);
+          latestPrice.gainlosspct = (((latestPriceInfo.price.regularMarketPrice.fmt / destination.transactionprice)-1)*100).toFixed(2);
+          console.log("gainlosspct: ", latestPrice.gainlosspct);
 
-    // const investmentScenario = this.state.scenarioData;
-    // console.log("investmentScenario: ", investmentScenario);
+        }
+      });
+      return latestPrice;
+    })
+    console.log("collatedData; ", collatedData);
+    this.setState({ tickers: collatedData });
+    console.log("this: ", this);
 
-    // const investmentOptions = [];
 
-    // investmentScenario.map(async projected => {
-    //   let calcValue = (await this.state.investmentAmount * 1);
-    //   console.log("calcValue: ", calcValue);
-    //   let costNum = (await projected.cost * 1);
-    //   console.log("costNum: ", costNum);
-    //   let quantityNum = (await projected.quantity * 1);
-    //   console.log("quantityNum: ", quantityNum);
-    //   let latestPriceNum = (await projected.latestprice * 1);
-    //   console.log("latestPriceNum: ", latestPriceNum);
-    //   let latestValue = (await projected.latestprice * projected.quantity).toFixed(2);
-    //   console.log("latestValue: ", projected.latestprice, " * ", projected.quantity, " = ", latestValue);
-    //   console.log("latestValue: ", latestValue);
-    //   let gainLoss = await ((projected.quantity * latestPriceNum) - projected.cost).toFixed(2);
-    //   console.log("gainLoss: ", gainLoss);
-
-    //   const investmentOption = {
-    //     cost: projected.cost,
-    //     quantity: projected.quantity,
-    //     averageprice: projected.averageprice,
-    //     _id: projected._id,
-    //     ticker: projected.ticker,
-    //     date: projected.date,
-    //     symbol: projected.symbol,
-    //     latestprice: projected.latestprice,
-    //     latestvalue: latestValue,
-    //     gainloss: gainLoss,
-    //   };
-    //   console.log("investmentOption (in map loop): ", investmentOption);
-    //   investmentOptions.push(investmentOption);
-    //   console.log("investmentOptions: ", investmentOptions);
-
-    //   this.setState({ investmentScenarios: investmentOptions });
-    //   console.log("this: ", this);
-    // });
-  };
+};
 
   // NJIB  End of new code
 
@@ -400,6 +374,8 @@ class Portfolio extends Component {
                   <th scope={'col'} style={{ width: '15%' }}>Quantity</th>
                   <th scope={'col'} style={{ width: '15%' }}>Trans. Date</th>
                   <th scope={'col'} style={{ width: '15%' }}>Trans. Price</th>
+                  <th scope={'col'} style={{ width: '15%' }}>Latest Price</th>
+                  <th scope={'col'} style={{ width: '15%' }}>Gain/Loss</th>
                   <th scope={'col'} style={{ width: '10%' }}>Delete</th>
                 </tr>
               </thead>
@@ -430,6 +406,13 @@ class Portfolio extends Component {
                       <td style={{ width: '15%' }}>
                         ${ticker.transactionprice}
                       </td>
+                      <td style={{ width: '15%' }}>
+                        ${ticker.latestprice}
+                      </td>
+                      <td style={{ width: '15%' }}>
+                        {ticker.gainlosspct}%
+                      </td>
+
                       {/* <td style={{ width: '10%' }}> */}
                       {/* <InputGroup className="mb-3"> */}
                       {/* <InputGroup.Prepend> */}

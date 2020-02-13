@@ -7,6 +7,9 @@ const tickerSchema = new Schema({
   transactiontype: { type: String, required: true },
   transactionprice: {type: String, default: 1},
   transactiondate: {type: Date, default: null},
+  latestprice: {type: String, default: 1},
+  gainlossnum: {type: String, default: 1},
+  gainlosspct: {type: String, default: 1},
   notes: {type: String, default: null },
   date: { type: Date, default: Date.now }
 });
