@@ -7,8 +7,8 @@ import { List, ListItem } from "../components/List";
 
 import "./styles/style.css";
 
-const axios = require("axios");
-const cheerio = require('cheerio');
+// const axios = require("axios");
+// const cheerio = require('cheerio');
 const moment = require("moment");
 
 class Detail extends Component {
@@ -181,7 +181,7 @@ class Detail extends Component {
                 <List>
                   {this.state.news.items && this.state.news.items.result.map(story => (
                     <ListItem>
-                      <a href={story.link} target="_blank" className="headlines">
+                      <a href={story.link} target="_blank" rel="noopener noreferrer" className="headlines">
                         {story.title} ({story.publisher})
                       </a>
                     </ListItem>

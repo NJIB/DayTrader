@@ -1,5 +1,6 @@
 import React from "react";
-import { Col, Row, Container } from "../Grid";
+// import { Col, Row, Container } from "../Grid";
+import { Col } from "../Grid";
 import Tabs from "../Tabs";
 import "./style.css";
 

@@ -272,19 +272,19 @@ class Scenarios extends Component {
                   <th scope={'col'} style={{ width: '15%' }}>Proj. Avge. Price</th>
                   <th scope={'col'} style={{ width: '10%' }}>Trade</th> */}
 
-                  <th scope={'col'} >Ticker</th>
-                  <th scope={'col'} >Quantity</th>
-                  <th scope={'col'} >Average Price</th>
-                  <th scope={'col'} >Cost</th>
-                  <th scope={'col'} >Today's Price</th>
-                  {/* <th scope={'col'} >Scenario Price</th> */}
-                  <th scope={'col'} >Today's Value</th>
-                  <th scope={'col'} >Gain/Loss</th>
-                  <th scope={'col'} >Proj. Qty.</th>
-                  <th scope={'col'} >Proj. Total Value</th>
-                  <th scope={'col'} >Proj. Avge. Price</th>
-                  <th scope={'col'} >Avge. Price Chg.</th>
-                  <th scope={'col'} >Trade</th>
+                  <th>Ticker</th>
+                  <th>Quantity</th>
+                  <th>Average Price</th>
+                  <th>Cost</th>
+                  <th>Today's Price</th>
+                  {/* <th>Scenario Price</th> */}
+                  <th>Today's Value</th>
+                  <th>Gain/Loss</th>
+                  <th>Proj. Qty.</th>
+                  <th>Proj. Total Value</th>
+                  <th>Proj. Avge. Price</th>
+                  <th>Avge. Price Chg.</th>
+                  <th>Trade</th>
 
                 </tr>
               </thead>
@@ -292,26 +292,26 @@ class Scenarios extends Component {
                 {this.state.investmentScenarios.length ?
                   this.state.investmentScenarios.map(ticker => (
                     <tr>
-                      <td scope={'col'} >
+                      <td>
                         <Link to={"/tickers/" + ticker._id}>
                           <strong>
                             {ticker.ticker}
                           </strong>
                         </Link>
                       </td>
-                      <td scope={'col'} >
+                      <td>
                         {ticker.quantity}
                       </td>
-                      <td scope={'col'} >
+                      <td>
                         ${ticker.averageprice}
                       </td>
-                      <td scope={'col'} >
+                      <td>
                         ${ticker.cost}
                       </td>
-                      <td scope={'col'} >
+                      <td>
                         ${ticker.latestprice}
                       </td>
-                      {/* <td scope={'col'} >
+                      {/* <td>
                         <Input style={{ width: '100px' }}
                           value={this.state.scenarioPrice} */}
                           {/* disabled={!(this.state.investmentAmount)} */}
@@ -321,34 +321,34 @@ class Scenarios extends Component {
                           placeholder="$---"
                         />
                       </td> */}
-                      <td scope={'col'} >
+                      <td>
                         ${ticker.latestvalue}
                       </td>
-                      <td scope={'col'} >
+                      <td>
                         ${ticker.gainloss}
                       </td>
-                      <td scope={'col'} >
+                      <td>
                         {this.state.investmentAmount ?
                           ticker.newquantity
                           : (
                             <p>***</p>
                           )}
                       </td>
-                      <td scope={'col'} >
+                      <td>
                         {this.state.investmentAmount ?
                           <p>${ticker.newcost}</p>
                           : (
                             <p>***</p>
                           )}
                       </td>
-                      <td scope={'col'} >
+                      <td>
                         {this.state.investmentAmount ?
                           <p>${ticker.newaverageprice}</p>
                           : (
                             <p>***</p>
                           )}
                       </td>
-                      <td scope={'col'} >
+                      <td>
                         {this.state.investmentAmount ?
                           <p>{ticker.avgepricechg}%</p>
                           : (
@@ -356,7 +356,7 @@ class Scenarios extends Component {
                           )}
                       </td>
 
-                      <td scope={'col'} >
+                      <td>
                         <InputGroup className="mb-3">
                           <InputGroup.Prepend>
                             <InputGroup.Checkbox aria-label="Checkbox for following text input" />

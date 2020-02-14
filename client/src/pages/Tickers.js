@@ -1,7 +1,8 @@
 import React, { Component } from "react";
 import { Col, Row, Container } from "../components/Grid";
 import { Input, FormBtn } from "../components/Form";
-import { Bar, Line, Pie, Mixedchart } from 'react-chartjs-2';
+import { Bar } from 'react-chartjs-2';
+// import { Bar, Line, Pie, Mixedchart } from 'react-chartjs-2';
 // import PeriodBtns from "../components/PeriodBtns";
 // import { Btn1d } from "../components/PeriodBtns";
 import DeleteChartBtn from "../components/DeleteChartBtn";
@@ -9,13 +10,8 @@ import "./styles/style.css";
 
 const moment = require("moment");
 
-let tickerData = "";
-let marketDataPulled = false;
 let chartsLog = ["1-1", "1-2", "1-3", "2-1", "2-2", "2-3"];
 let chartsCounter = 0;
-let requestType = "";  //Distinguishes between new button and period switch
-let chartsDivNum = ""; // Tracks the chartsDivRef for each set of period buttons
-
 class Tickers extends Component {
   state = {
     tickers: [],
@@ -73,22 +69,22 @@ class Tickers extends Component {
       let dateNowSeconds = parseInt((moment() / 1000));
       console.log("dateNowSeconds: " + dateNowSeconds);
 
-      const seconds1d = 86400;
-      const seconds5d = 432000;
-      const seconds1m = 2629800;
-      const seconds3m = 7889400;
+      // const seconds1d = 86400;
+      // const seconds5d = 432000;
+      // const seconds1m = 2629800;
+      // const seconds3m = 7889400;
       const seconds1y = 31557600;
-      const seconds3y = 94672800;
-      const seconds5y = 157788000;
-      const seconds10y = 315576000;
+      // const seconds3y = 94672800;
+      // const seconds5y = 157788000;
+      // const seconds10y = 315576000;
 
       let startDateSeconds = (dateNowSeconds - seconds1y);
       console.log("startDateSeconds: " + startDateSeconds);
 
-      console.log("startDate: "
-        + (moment(startDateSeconds).format("MM")) + "/"
-        + (moment().format("DD")) + "/"
-        + (moment().format("YYYY")));
+      // console.log("startDate: "
+      //   + (moment(startDateSeconds).format("MM")) + "/"
+      //   + (moment().format("DD")) + "/"
+      //   + (moment().format("YYYY")));
 
       console.log("****tickerData: ", tickerData, " ****");
       let settings = {
