@@ -4,7 +4,7 @@ import { Input, FormBtn } from "../components/Form";
 import { Bar } from 'react-chartjs-2';
 // import { Bar, Line, Pie, Mixedchart } from 'react-chartjs-2';
 // import PeriodBtns from "../components/PeriodBtns";
-// import { Btn1d } from "../components/PeriodBtns";
+import { Btn1d } from "../components/PeriodBtns";
 import DeleteChartBtn from "../components/DeleteChartBtn";
 import "./styles/style.css";
 
@@ -44,14 +44,19 @@ class Tickers extends Component {
     });
   };
 
-  handlePeriodBtnClick = async input => {
-    console.log("input: ", input);
+  handlePeriodBtnClick = async _ => {
     console.log("this: ", this);
     console.log("chartRef: ", this.state.chartData["0"].chartDivRefData.chartDivRef);
-
     const { chartPeriod } = this.state;
     console.log("chartPeriod: ", chartPeriod);
+  }
 
+  handleDeleteBtnClick = async _ => {
+    console.log("DELETE BUTTON CLICKED!")
+    console.log("chartRef: ", this.state.chartData["0"].chartDivRefData.chartDivRef);
+
+    const chartToDelete = this.state;
+    console.log("this.state.chartData: ", this.state.chartData);
   }
 
   handleFormSubmit = async event => {
@@ -339,7 +344,9 @@ class Tickers extends Component {
                       onClick={this.handlePeriodBtnClick("1d")}
                     /> */}
                     {/* <PeriodBtns /> */}
-                    <DeleteChartBtn />
+                    <DeleteChartBtn 
+                    // onClick={this.handleDeleteBtnClick()}
+                    />
                   </div>
                 </div>
               ))) :
