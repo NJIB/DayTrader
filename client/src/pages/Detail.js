@@ -139,7 +139,7 @@ class Detail extends Component {
 
                   {this.state.transactions.length ?
                     this.state.transactions.map(transactions => (
-                      <tr>
+                      <tr key={ transactions._id }>
                         <td style={{ width: '25%' }}>
                           {moment(transactions.transactiondate).format("MM/DD/YYYY")}
                         </td>
@@ -155,7 +155,8 @@ class Detail extends Component {
                       </tr>
                     ))
                     : (
-                      <h2>No Results to Display</h2>
+                      <tr>
+                      </tr>
                     )}
                     
                     {/* <tr>

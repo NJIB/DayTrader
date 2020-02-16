@@ -117,11 +117,23 @@ class Tickers extends Component {
       let priceResults = [];
       let volResults = [];
       let dayDate = [];
+      let latestPrice = "";
+      let latestPriceChangeNum = "";
+      let latestPriceChangePct = "";
 
       for (var i = (responseData.prices.length - 1); i > 0; i--) {
         priceResults.push(responseData.prices[i].close);
         volResults.push(responseData.prices[i].volume / 1000000);
         dayDate.push(moment((responseData.prices[i].date) * 1000).format("MMM Do YY"));
+
+        if (i === (responseData.prices.length - 1)) {
+          latestPrice = (responseData.prices[i].close).toFixed(2);
+        };
+
+        if (i === (responseData.prices.length - 2)) {
+          latestPriceChangeNum = (latestPrice - responseData.prices[i].close).toFixed(2);
+          latestPriceChangePct = (latestPriceChangeNum / responseData.prices[i].close).toFixed(2);
+        };
       }
 
       // console.log("priceResults: " + priceResults);
@@ -133,7 +145,10 @@ class Tickers extends Component {
       const localChartData = {
         chartDivRefData: {
           chartDivRef: chartDivRef,
-          tickerSearch: tickerData
+          tickerSearch: tickerData,
+          latestPrice: latestPrice,
+          latestPriceChangeNum: latestPriceChangeNum,
+          latestPriceChangePct: latestPriceChangePct
         },
         labels:
           dayDate,
@@ -247,8 +262,8 @@ class Tickers extends Component {
                   <tr>
                     <th scope={'col'} style={{ width: '40%', textAlign: 'left' }}>Exchange</th>
                     <th scope={'col'} style={{ width: '23%', textAlign: 'center' }}>Price</th>
-                    <th scope={'col'} style={{ width: '21%', textAlign: 'center'  }}>Change</th>
-                    <th scope={'col'} style={{ width: '16%', textAlign: 'center'  }}>% Chg.</th>
+                    <th scope={'col'} style={{ width: '21%', textAlign: 'center' }}>Change</th>
+                    <th scope={'col'} style={{ width: '16%', textAlign: 'center' }}>% Chg.</th>
                   </tr>
                 </thead>
 
@@ -261,13 +276,13 @@ class Tickers extends Component {
                             {exch.exchange}
                           </strong>
                         </td>
-                        <td style={{ width: '20%', textAlign: 'center'  }}>
+                        <td style={{ width: '20%', textAlign: 'center' }}>
                           {exch.currentPrice}
                         </td>
-                        <td style={{ width: '20%', textAlign: 'center'  }}>
+                        <td style={{ width: '20%', textAlign: 'center' }}>
                           {exch.priceChange}
                         </td>
-                        <td style={{ width: '20%', textAlign: 'center'  }}>
+                        <td style={{ width: '20%', textAlign: 'center' }}>
                           {exch.priceChangePercent}
                         </td>
                       </tr>
@@ -287,7 +302,22 @@ class Tickers extends Component {
             {this.state.chartData.length ? (
               this.state.chartData.map(chartRender => (
                 <div id="tickerOutput" className="card card-default">
-                  <span>{chartRender.chartDivRefData.tickerSearch}</span>
+                  <Row>
+                    <Col size="md-3">
+                      <b>
+                        <span>{chartRender.chartDivRefData.tickerSearch}</span>
+                      </b>
+                    </Col>
+                    <Col size="md-3">
+                      <span>${chartRender.chartDivRefData.latestPrice}</span>
+                    </Col>
+                    <Col size="md-3">
+                      <span>${chartRender.chartDivRefData.latestPriceChangeNum}</span>
+                    </Col>
+                    <Col size="md-3">
+                      <span>{chartRender.chartDivRefData.latestPriceChangePct}%</span>
+                    </Col>
+                  </Row>
                   <div className="chart">
                     <Bar className="Bar"
                       data={chartRender}
@@ -344,7 +374,7 @@ class Tickers extends Component {
                       onClick={this.handlePeriodBtnClick("1d")}
                     /> */}
                     {/* <PeriodBtns /> */}
-                    <DeleteChartBtn 
+                    <DeleteChartBtn
                     // onClick={this.handleDeleteBtnClick()}
                     />
                   </div>
