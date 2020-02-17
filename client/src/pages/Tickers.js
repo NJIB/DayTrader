@@ -12,6 +12,8 @@ const moment = require("moment");
 
 let chartsLog = ["1-1", "1-2", "1-3", "2-1", "2-2", "2-3"];
 let chartsCounter = 0;
+let recordsCounter = 0;
+
 class Tickers extends Component {
   state = {
     tickers: [],
@@ -118,6 +120,8 @@ class Tickers extends Component {
       let volResults = [];
       let dayDate = [];
       let latestPrice = "";
+      let priorDayPrice = "";
+      let latestPriceDate = "";
       let latestPriceChangeNum = "";
       let latestPriceChangePct = "";
 
@@ -125,15 +129,23 @@ class Tickers extends Component {
         priceResults.push(responseData.prices[i].close);
         volResults.push(responseData.prices[i].volume / 1000000);
         dayDate.push(moment((responseData.prices[i].date) * 1000).format("MMM Do YY"));
+        console.log("responseData.prices[i].date: ", moment((responseData.prices[i].date) * 1000).format("MMM Do YYYY"));
+        recordsCounter++;
+        console.log("recordsCounter: ", recordsCounter);
+        console.log("responseData.prices.length: ", responseData.prices.length);
 
-        if (i === (responseData.prices.length - 1)) {
+        if (recordsCounter === (responseData.prices.length - 2)) {
+          priorDayPrice = (responseData.prices[i].close).toFixed(2);
+        };
+
+        if (recordsCounter === (responseData.prices.length - 1)) {
           latestPrice = (responseData.prices[i].close).toFixed(2);
+          latestPriceDate = (moment((responseData.prices[i].date) * 1000).format("MMM Do YYYY"));
+          latestPriceChangeNum = (latestPrice - priorDayPrice).toFixed(2);
+          latestPriceChangePct = (latestPrice / priorDayPrice).toFixed(2);
+          recordsCounter = 0;
         };
 
-        if (i === (responseData.prices.length - 2)) {
-          latestPriceChangeNum = (latestPrice - responseData.prices[i].close).toFixed(2);
-          latestPriceChangePct = (latestPriceChangeNum / responseData.prices[i].close).toFixed(2);
-        };
       }
 
       // console.log("priceResults: " + priceResults);
@@ -147,6 +159,7 @@ class Tickers extends Component {
           chartDivRef: chartDivRef,
           tickerSearch: tickerData,
           latestPrice: latestPrice,
+          latestPriceDate: latestPriceDate,
           latestPriceChangeNum: latestPriceChangeNum,
           latestPriceChangePct: latestPriceChangePct
         },
@@ -303,25 +316,48 @@ class Tickers extends Component {
               this.state.chartData.map(chartRender => (
                 <div id="tickerOutput" className="card card-default">
                   <Row>
-                    <Col size="md-3">
+                    <Col size="md-4">
                       <b>
                         <span>{chartRender.chartDivRefData.tickerSearch}</span>
                       </b>
                     </Col>
-                    <Col size="md-3">
-                      <span>${chartRender.chartDivRefData.latestPrice}</span>
+                    <Col size="md-8">
+                      <p id='asOfDate'> ( as of {chartRender.chartDivRefData.latestPriceDate} )</p>
                     </Col>
-                    <Col size="md-3">
-                      <span>${chartRender.chartDivRefData.latestPriceChangeNum}</span>
+                  </Row>
+                  <Row>
+                    <Col size="md-4">
+                      <span>Price: ${chartRender.chartDivRefData.latestPrice}</span>
                     </Col>
-                    <Col size="md-3">
-                      <span>{chartRender.chartDivRefData.latestPriceChangePct}%</span>
+                    <Col size="md-4">
+                      {chartRender.chartDivRefData.latestPriceChangeNum > 0 ?
+                        <span>Change: +${chartRender.chartDivRefData.latestPriceChangeNum}</span>
+                        :
+                        <span>Change: -${chartRender.chartDivRefData.latestPriceChangeNum}</span>
+                      }
                     </Col>
+                    <Col size="md-4">
+                      {chartRender.chartDivRefData.latestPriceChangePct > 0 ?
+                        <span>Change: +{chartRender.chartDivRefData.latestPriceChangePct}%</span>
+                        :
+                        <span>Change: -{chartRender.chartDivRefData.latestPriceChangePct}%</span>
+                      }
+                    </Col>
+                  </Row>
+                  <Row>
+                    <svg style={{
+                      height: "0.25",
+                      // width:"400",
+                      width: "100%",
+                      backgroundColor: "darkgrey",
+                      margin: "10px"
+                    }}>
+                    </svg>
                   </Row>
                   <div className="chart">
                     <Bar className="Bar"
                       data={chartRender}
-                      width={350}
+                      width={420}
                       height={250}
                     // options={{
                     //   responsive: true,
