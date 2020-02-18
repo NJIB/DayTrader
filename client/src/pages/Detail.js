@@ -4,6 +4,8 @@ import { Col, Row, Container } from "../components/Grid";
 import Jumbotron from "../components/Jumbotron";
 import API from "../utils/API";
 import { List, ListItem } from "../components/List";
+import { defaults } from 'react-chartjs-2';
+import { Bar } from 'react-chartjs-2';
 
 import "./styles/style.css";
 
@@ -174,6 +176,16 @@ class Detail extends Component {
               </table>
 
             </article>
+            <Row>
+
+            </Row>
+            <div className="chart">
+                    <Bar className="Bar"
+                      data={this.state.tickers.ticker}
+                      width={420}
+                      height={250}
+                    />
+            </div>
           </Col>
           <Col size="md-5 md-offset-1" className="card card-default">
             <article>
