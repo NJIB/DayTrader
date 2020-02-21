@@ -5,7 +5,7 @@ import Jumbotron from "../components/Jumbotron";
 import API from "../utils/API";
 import { List, ListItem } from "../components/List";
 import { defaults } from 'react-chartjs-2';
-import { Bar } from 'react-chartjs-2';
+import { Bar, Bubble, Line } from 'react-chartjs-2';
 
 import "./styles/style.css";
 
@@ -109,6 +109,63 @@ class Detail extends Component {
       }
     })
     this.setState({ transactions: tickerAllTransactions });
+    console.log("this.state.transactions: ", this.state.transactions)
+  
+  // NJIB 02/20/2020 Populating chartdata
+
+  const localChartData = {
+    labels:
+      ["1", "2", "3", "4", "5"],
+    datasets: [
+      {
+        label: "Stock Price",
+        type: 'bubble',
+        // yAxisID: "A",
+        yAxesGroup: "A",
+        data: [10, 20, 30, 40, 50],
+        // backgroundColor: 'grey',
+        pointRadius: '10px',
+        y1axis: true
+      },
+      {
+        label: "Volume",
+        type: 'line',
+        // yAxisID: "B",
+        yAxesGroup: "B",
+        data: [2, 4, 6, 8, 10],
+        // backgroundColor: 'white',
+        y2axis: true
+      }
+    ],
+    options: {
+      scales: {
+        yAxes: [
+          {
+            id: 'A',
+            type: 'linear',
+            position: 'left',
+          },
+          {
+            id: 'B',
+            type: 'linear',
+            position: 'right',
+            ticks: {
+            // min: 0,
+            // max: 1
+            },
+          }
+        ]
+      },
+      legendPosition: "bottom"
+    }
+  }
+
+  // chartData.push(localChartData);
+
+  this.setState({ localChartData });
+  console.log("this: ", this);
+
+  // NJIB 02/20/2020 End populating chartdata
   }
 
   render() {
@@ -181,7 +238,7 @@ class Detail extends Component {
             </Row>
             <div className="chart">
                     <Bar className="Bar"
-                      data={this.state.tickers.ticker}
+                      data={this.state.localChartData}
                       width={420}
                       height={250}
                     />

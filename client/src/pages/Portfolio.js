@@ -241,7 +241,7 @@ class Portfolio extends Component {
           ticker: tickerInput,
           quantity: this.state.quantity,
           cost: totalCost.toFixed(2),
-          averageprice: this.state.transactionprices
+          averageprice: this.state.transactionprice
         })
           .then(res => this.loadStocks())
           .catch(err => console.log(err));

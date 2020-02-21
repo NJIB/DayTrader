@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { Col, Row, Container } from "../components/Grid";
 import { Input, FormBtn } from "../components/Form";
 import { defaults } from 'react-chartjs-2';
-import { Bar } from 'react-chartjs-2';
+import { Bar, Line } from 'react-chartjs-2';
 // import { Bar, Line, Pie, Mixedchart } from 'react-chartjs-2';
 // import PeriodBtns from "../components/PeriodBtns";
 import { Btn1d } from "../components/PeriodBtns";
@@ -355,6 +355,7 @@ class Tickers extends Component {
       },
       {
         label: "Volume",
+        type: 'bar',
         // yAxisID: "B",
         yAxesGroup: "B",
         data: volResults,
