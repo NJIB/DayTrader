@@ -67,9 +67,13 @@ class Portfolio extends Component {
     console.log("Looping through tickers data for API call");
     console.log("this (in getTickerPrices function): ", this);
 
+    const latestPrices = [];
+    console.log("latestPrices: ", latestPrices);
+
     const promises = this.state.tickers.map(tickerKey => {
       let tickerData = tickerKey.ticker;
-      console.log("****tickerData: ", tickerData, " ****");
+      console.log("****tickerData: ", tickerData, " ****"); 
+ 
       let settings = {
         "async": true,
         "crossDomain": true,
@@ -80,20 +84,24 @@ class Portfolio extends Component {
           "x-rapidapi-key": "e3f35368bdmsheaf36be3f76863bp1b27c9jsn06d6a302ff59"
         }
       }
+
       const latestPrice = fetch(settings.url, settings)
       return latestPrice;
     })
 
     const responseData = await Promise.all(promises);
-    const priceOutputs = await responseData.map(async item => {
-      const resolvedItem = await item.json();
+    console.log("responseData: ", responseData);
+
+    const priceOutputs = responseData.map(async item => {
+      // const priceOutputs =await responseData.map(async item => {
+        const resolvedItem = await item.json();
+      console.log("resolvedItem: ", resolvedItem);
       return resolvedItem;
     })
     console.log("priceOutputs; ", priceOutputs);
     const resolvedPriceOutputs = await Promise.all(priceOutputs);
     console.log("resolvedPriceOutputs; ", resolvedPriceOutputs);
 
-    const latestPrices = [];
     const collatedData = this.state.tickers.map(destination => {
       const latestPrice = {
         ticker: "",
@@ -110,7 +118,10 @@ class Portfolio extends Component {
       latestPrice.quantity = destination.quantity;
       latestPrice.transactiondate = destination.transactiondate;
       latestPrice.transactionprice = destination.transactionprice;
+
       latestPrices.push(latestPrice);
+      console.log("latestPrices added to: ", latestPrices);
+
       resolvedPriceOutputs.forEach(latestPriceInfo => {
         if (latestPrice.ticker === latestPriceInfo.price.symbol) {
           latestPrice.latestprice = latestPriceInfo.price.regularMarketPrice.fmt;
@@ -126,7 +137,6 @@ class Portfolio extends Component {
     console.log("collatedData; ", collatedData);
     this.setState({ tickers: collatedData });
     console.log("this: ", this);
-
 
 };
 

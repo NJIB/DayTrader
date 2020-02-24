@@ -62,7 +62,24 @@ class Tickers extends Component {
     });
 
     console.log("DELETE BUTTON CLICKED!")
+    const chartToDelete = chartRef.target.id;
     console.log("chartRef.target.id: ", chartRef.target.id);
+    console.log("chartToDelete: ", chartToDelete);
+    console.log("this.state: ", this.state);
+
+    // Loop through to find the matching ChartRef, then delete and reload page
+    for (var i = 0; i < this.state.chartData.length; i++) {
+      if (this.state.chartData[i].chartDivRefData.chartDivRef === chartToDelete) {
+        for (var j = i; j < this.state.chartData.length - 1; j++) {
+        this.state.chartData[j] = this.state.chartData[(j+1)];
+        }
+        console.log (chartToDelete, " deleted");
+        this.state.chartData.length = (this.state.chartData.length - 1);
+      }
+    }
+    this.setState({ chartData: this.state.chartData});
+    console.log("this.state: ", this.state);
+    //
   }
 
   handleFormSubmit = async event => {

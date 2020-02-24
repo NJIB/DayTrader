@@ -23,12 +23,13 @@ class Detail extends Component {
     },
     tickers: [],
     tickerSummary: [],
-    transactions: []
+    transactions: [],
+    chartData: []
   };
 
   async componentDidMount() {
     this.loadStocks();
-    
+
     this.loadStockSummary();
 
     const result = await API.getTicker(this.props.match.params.id);
@@ -92,6 +93,7 @@ class Detail extends Component {
     const tickerInput = this.state.ticker.ticker;
     console.log("tickerInput: ", tickerInput);
 
+    let chartData = [];
     let tickerAllTransactions = [];
 
     this.state.tickers.forEach(transaction => {
@@ -104,76 +106,81 @@ class Detail extends Component {
           transactiontype: transaction.transactiontype,
           notes: transaction.notes
         }
-
         tickerAllTransactions.push(tickerTransactions);
+
+        // NJIB 02/20/2020 Populating chartdata
+
+        const localChartData = {
+          labels:
+            // ["1", "2", "3", "4", "5"],
+            moment(transaction.transactiondate).format("MM/DD/YYYY"),
+          datasets: [
+            {
+              label: "Stock Price",
+              type: 'scatter',
+              // yAxisID: "A",
+              yAxesGroup: "A",
+              data: transaction.transactionprice,
+              // backgroundColor: 'grey',
+              y1axis: true,
+              pointBorderColor: 'red',
+              pointBackgroundColor: 'pink',
+              pointBorderWidth: 1,
+              pointHoverRadius: 5,
+              // pointHoverBackgroundColor: 'rgba(75,192,192,1)',
+              // pointHoverBorderColor: 'rgba(220,220,220,1)',
+              // pointHoverBorderWidth: 2,
+              pointRadius: 5,
+              // pointHitRadius: 10
+            },
+            {
+              label: "Volume",
+              type: 'line',
+              // yAxisID: "B",
+              yAxesGroup: "B",
+              data: transaction.quantity,
+              pointBackgroundColor: 'red',
+              pointRadius: 5,
+              // backgroundColor: 'red',
+              y2axis: true
+            }
+          ],
+          options: {
+            scales: {
+              yAxes: [
+                {
+                  id: 'A',
+                  type: 'linear',
+                  position: 'left',
+                },
+                {
+                  id: 'B',
+                  type: 'linear',
+                  position: 'right',
+                  ticks: {
+                    // min: 0,
+                    // max: 1
+                  },
+                }
+              ]
+            },
+            legendPosition: "bottom"
+          }
+        }
+
+        chartData.push(localChartData);
+        console.log("chartData: ", chartData);
+
+
       }
     })
     this.setState({ transactions: tickerAllTransactions });
     console.log("this.state.transactions: ", this.state.transactions)
-  
-  // NJIB 02/20/2020 Populating chartdata
 
-  const localChartData = {
-    labels:
-      ["1", "2", "3", "4", "5"],
-    datasets: [
-      {
-        label: "Stock Price",
-        type: 'bubble',
-        // yAxisID: "A",
-        yAxesGroup: "A",
-        data: [10, 20, 30, 40, 50],
-        // backgroundColor: 'grey',
-        y1axis: true,
-        pointBorderColor: 'rgba(75,192,192,1)',
-      pointBackgroundColor: '#fff',
-      pointBorderWidth: 1,
-      pointHoverRadius: 5,
-      pointHoverBackgroundColor: 'rgba(75,192,192,1)',
-      pointHoverBorderColor: 'rgba(220,220,220,1)',
-      pointHoverBorderWidth: 2,
-      pointRadius: 1,
-      pointHitRadius: 10
-      },
-      {
-        label: "Volume",
-        type: 'line',
-        // yAxisID: "B",
-        yAxesGroup: "B",
-        data: [2, 4, 6, 8, 10],
-        // backgroundColor: 'white',
-        y2axis: true
-      }
-    ],
-    options: {
-      scales: {
-        yAxes: [
-          {
-            id: 'A',
-            type: 'linear',
-            position: 'left',
-          },
-          {
-            id: 'B',
-            type: 'linear',
-            position: 'right',
-            ticks: {
-            // min: 0,
-            // max: 1
-            },
-          }
-        ]
-      },
-      legendPosition: "bottom"
-    }
-  }
+    this.setState({ chartData });
+    console.log("this.state.chartData: ", this.state.chartData);
 
-  // chartData.push(localChartData);
-
-  this.setState({ localChartData });
-  console.log("this: ", this);
-
-  // NJIB 02/20/2020 End populating chartdata
+    // NJIB 02/20/2020 End populating chartdata
   }
 
   render() {
@@ -206,7 +213,7 @@ class Detail extends Component {
 
                   {this.state.transactions.length ?
                     this.state.transactions.map(transactions => (
-                      <tr key={ transactions._id }>
+                      <tr key={transactions._id}>
                         <td style={{ width: '25%' }}>
                           {moment(transactions.transactiondate).format("MM/DD/YYYY")}
                         </td>
@@ -225,8 +232,8 @@ class Detail extends Component {
                       <tr>
                       </tr>
                     )}
-                    
-                    {/* <tr>
+
+                  {/* <tr>
                       {this.state.tickerSummary.map(summary => (
                         summary.ticker = this.state.transactions.ticker ?
                         <p>Average purchase price: {summary.averageprice}
@@ -245,11 +252,11 @@ class Detail extends Component {
 
             </Row>
             <div className="chart">
-                    <Bar className="Bar"
-                      data={this.state.localChartData}
-                      width={420}
-                      height={250}
-                    />
+              <Bar className="Bar"
+                data={this.state.chartData}
+                width={420}
+                height={250}
+              />
             </div>
           </Col>
           <Col size="md-5 md-offset-1" className="card card-default">
