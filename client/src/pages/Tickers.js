@@ -5,7 +5,7 @@ import { defaults } from 'react-chartjs-2';
 import { Bar, Line } from 'react-chartjs-2';
 // import { Bar, Line, Pie, Mixedchart } from 'react-chartjs-2';
 // import PeriodBtns from "../components/PeriodBtns";
-import { Btn1d } from "../components/PeriodBtns";
+import { Btn1d, Btn5d } from "../components/PeriodBtns";
 import DeleteChartBtn from "../components/DeleteChartBtn";
 import "./styles/style.css";
 
@@ -14,6 +14,16 @@ const moment = require("moment");
 let chartsLog = ["1-1", "1-2", "1-3", "2-1", "2-2", "2-3"];
 let chartsCounter = 0;
 let recordsCounter = 0;
+
+  const seconds1d = 86400;
+  const seconds5d = 432000;
+  const seconds1m = 2629800;
+  const seconds3m = 7889400;
+  const seconds1y = 31557600;
+  const seconds3y = 94672800;
+  const seconds5y = 157788000;
+  const seconds10y = 315576000;
+
 
 class Tickers extends Component {
   state = {
@@ -48,11 +58,17 @@ class Tickers extends Component {
     });
   };
 
-  handlePeriodBtnClick = async _ => {
+  handlePeriodBtnClick = async periodRef => {
+    const { name, value } = periodRef.target.id;
+    this.setState({
+      [name]: value
+    });
+    console.log("periodRef.target.id: ", periodRef.target.id);
     console.log("this: ", this);
-    console.log("chartRef: ", this.state.chartData["0"].chartDivRefData.chartDivRef);
-    const { chartPeriod } = this.state;
-    console.log("chartPeriod: ", chartPeriod);
+
+    // console.log("chartRef: ", this.state.chartData["0"].chartDivRefData.chartDivRef);
+    // const { chartPeriod } = this.state;
+    // console.log("chartPeriod: ", chartPeriod);
   }
 
   handleDeleteBtnClick = async chartRef => {
@@ -259,15 +275,6 @@ class Tickers extends Component {
 
   let dateNowSeconds = parseInt((moment() / 1000));
   console.log("dateNowSeconds: " + dateNowSeconds);
-
-  // const seconds1d = 86400;
-  // const seconds5d = 432000;
-  // const seconds1m = 2629800;
-  // const seconds3m = 7889400;
-  // const seconds1y = 31557600;
-  // const seconds3y = 94672800;
-  // const seconds5y = 157788000;
-  // const seconds10y = 315576000;
 
   // let startDateSeconds = (dateNowSeconds - seconds1y);
   let startDateSeconds = (dateNowSeconds - period);
@@ -576,10 +583,16 @@ class Tickers extends Component {
                       width={420}
                       height={250}
                     />
-                    {/* <Btn1d
-                      onClick={this.handlePeriodBtnClick("1d")}
-                    /> */}
-                    {/* <PeriodBtns /> */}
+                    <Btn1d
+                      id={"Btn1d"}
+                      value={"1d"}
+                      onClick={this.handlePeriodBtnClick}
+                    />
+                    <Btn5d
+                      id={"Btn5d"}
+                      value={"5d"}
+                      onClick={this.handlePeriodBtnClick}
+                    />
                     <DeleteChartBtn
                       id={chartRender.chartDivRefData.chartDivRef}
                       value={this.state.deleteBtnId}

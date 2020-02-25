@@ -71,6 +71,7 @@ class Portfolio extends Component {
     console.log("latestPrices: ", latestPrices);
 
     const promises = this.state.tickers.map(tickerKey => {
+
       let tickerData = tickerKey.ticker;
       console.log("****tickerData: ", tickerData, " ****"); 
  
