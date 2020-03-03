@@ -9,6 +9,9 @@ import { InputGroup } from 'react-bootstrap';
 
 const moment = require("moment");
 
+let tickersToBeLookedUp = [];
+let apiCallCounter = 0;
+
 class Portfolio extends Component {
   state = {
     tickers: [],
@@ -32,8 +35,10 @@ class Portfolio extends Component {
   async componentDidMount() {
     // componentDidMount() {
     await this.loadStocks();
-    await this.loadStockSummary();
+    // await this.loadStockSummary();
+    this.loadStockSummary();
     console.log("this: ", this);
+
     this.getTickerPrices();
 
   }
@@ -67,14 +72,28 @@ class Portfolio extends Component {
     console.log("Looping through tickers data for API call");
     console.log("this (in getTickerPrices function): ", this);
 
-    const latestPrices = [];
-    console.log("latestPrices: ", latestPrices);
+    let latestPrices = [];
 
-    const promises = this.state.tickers.map(tickerKey => {
+    // let tickersToBeLookedUp = [];
+    // console.log("tickersToBeLookedUp: ", tickersToBeLookedUp);
+
+    // const promises = this.state.tickers.map(tickerKey => {
+    this.state.tickers.map(tickerKey => {
 
       let tickerData = tickerKey.ticker;
-      console.log("****tickerData: ", tickerData, " ****"); 
- 
+      console.log("****tickerData: ", tickerData, " ****");
+      apiCallCounter++;
+      console.log("apiCallCounter: ", apiCallCounter);
+
+      if (tickersToBeLookedUp.includes(tickerData)) {
+        console.log("!!! ", tickerData, " already in array !!!")
+      } else {
+        tickersToBeLookedUp.push(tickerData);
+      }
+      console.log("tickersToBeLookedUp: ", tickersToBeLookedUp);
+    });
+
+    const promises = tickersToBeLookedUp.map(tickerData => {
       let settings = {
         "async": true,
         "crossDomain": true,
@@ -83,10 +102,23 @@ class Portfolio extends Component {
         "headers": {
           "x-rapidapi-host": "apidojo-yahoo-finance-v1.p.rapidapi.com",
           "x-rapidapi-key": "e3f35368bdmsheaf36be3f76863bp1b27c9jsn06d6a302ff59"
+        },
+        latestPrice: function() {
+          return this;
         }
       }
 
-      const latestPrice = fetch(settings.url, settings)
+      const unboundApiCall = settings.latestPrice;
+
+      const boundApiCall = unboundApiCall.bind(settings);
+      const boundApiCallURL = boundApiCall().url;
+      const boundApiCallsettings = boundApiCall();
+      console.log("boundApiCallsettings: ", boundApiCall());
+      console.log("boundApiCallURL: ", boundApiCallURL);
+
+      // const latestPrice = fetch(settings.url, settings)
+      const latestPrice = fetch.bind(boundApiCallURL, boundApiCallsettings);
+
       return latestPrice;
     })
 
@@ -95,7 +127,7 @@ class Portfolio extends Component {
 
     const priceOutputs = responseData.map(async item => {
       // const priceOutputs =await responseData.map(async item => {
-        const resolvedItem = await item.json();
+      const resolvedItem = await item.json();
       console.log("resolvedItem: ", resolvedItem);
       return resolvedItem;
     })
@@ -127,9 +159,9 @@ class Portfolio extends Component {
         if (latestPrice.ticker === latestPriceInfo.price.symbol) {
           latestPrice.latestprice = latestPriceInfo.price.regularMarketPrice.fmt;
           latestPrice.gainlossnum = (latestPriceInfo.price.regularMarketPrice.fmt - destination.transactionprice).toFixed(2);
-          console.log("gainlossnum: ", latestPrice.gainlossnum);
-          latestPrice.gainlosspct = (((latestPriceInfo.price.regularMarketPrice.fmt / destination.transactionprice)-1)*100).toFixed(2);
-          console.log("gainlosspct: ", latestPrice.gainlosspct);
+          // console.log("gainlossnum: ", latestPrice.gainlossnum);
+          latestPrice.gainlosspct = (((latestPriceInfo.price.regularMarketPrice.fmt / destination.transactionprice) - 1) * 100).toFixed(2);
+          // console.log("gainlosspct: ", latestPrice.gainlosspct);
 
         }
       });
@@ -139,9 +171,27 @@ class Portfolio extends Component {
     this.setState({ tickers: collatedData });
     console.log("this: ", this);
 
-};
+  };
 
-  // NJIB  End of new code
+  //   listTickers = tickers => {
+  //   console.log("tickersToBeLookedUp: " + tickersToBeLookedUp);
+
+  //   // const promises = this.state.tickers.map(tickerKey => {
+  //     this.state.tickers.map(tickerKey => {
+
+  //     let tickerData = tickerKey.ticker;
+  //     console.log("****tickerData: " + tickerData + " ****");
+  //     apiCallCounter++;
+  //     console.log("apiCallCounter: " + apiCallCounter);
+
+  //     if (tickersToBeLookedUp.includes(tickerData)){
+  //       console.log("!!! " + tickerData + " already in array !!!")
+  //     } else {
+  //     tickersToBeLookedUp.push(tickerData);
+  //     };
+  //     console.log("tickersToBeLookedUp: " + tickersToBeLookedUp);
+  //   }
+  // };
 
   deleteTicker = id => {
     API.deleteTicker(id)
