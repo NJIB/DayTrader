@@ -94,7 +94,8 @@ class Portfolio extends Component {
     });
 
     const promises = tickersToBeLookedUp.map(tickerData => {
-      let settings = {
+      // const promises = tickersToBeLookedUp.map(tickerData => {
+        let settings = {
         "async": true,
         "crossDomain": true,
         "url": "https://apidojo-yahoo-finance-v1.p.rapidapi.com/stock/v2/get-financials?symbol=" + tickerData,
@@ -102,24 +103,25 @@ class Portfolio extends Component {
         "headers": {
           "x-rapidapi-host": "apidojo-yahoo-finance-v1.p.rapidapi.com",
           "x-rapidapi-key": "e3f35368bdmsheaf36be3f76863bp1b27c9jsn06d6a302ff59"
-        },
-        latestPrice: function() {
-          return this;
+        // },
+        // latestPrice: function() {
+        //   return this;
         }
       }
 
-      const unboundApiCall = settings.latestPrice;
+      // const unboundApiCall = settings.latestPrice;
+      // const boundApiCall = unboundApiCall.bind(settings);
+      // const boundApiCallURL = boundApiCall().url;
+      // const boundApiCallsettings = boundApiCall();
+      // console.log("boundApiCallsettings: ", boundApiCall());
+      // console.log("boundApiCallURL: ", boundApiCallURL);
+      // const latestPrice = fetch.bind(boundApiCallURL [boundApiCallsettings]) ;
 
-      const boundApiCall = unboundApiCall.bind(settings);
-      const boundApiCallURL = boundApiCall().url;
-      const boundApiCallsettings = boundApiCall();
-      console.log("boundApiCallsettings: ", boundApiCall());
-      console.log("boundApiCallURL: ", boundApiCallURL);
-
-      // const latestPrice = fetch(settings.url, settings)
-      const latestPrice = fetch.bind(boundApiCallURL, boundApiCallsettings);
-
+      const latestPrice = fetch(settings.url, settings)
+      // const latestPrice = fetch.bind(boundApiCallURL, boundApiCallsettings);
+      // const latestPrice = setTimeout(fetch.bind(boundApiCallURL, boundApiCallsettings),1000);
       return latestPrice;
+      // return boundApiCall;
     })
 
     const responseData = await Promise.all(promises);
