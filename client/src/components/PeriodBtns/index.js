@@ -19,14 +19,65 @@ export function Btn5d(props) {
   );
 }
 
+export function Btn10d(props) {
+  return (
+    <button {...props} className="10d periodBtn btn" role="button">
+      {props.children}
+      10d
+    </button>
+  );
+}
 
+export function Btn1m(props) {
+  return (
+    <button {...props} className="1m periodBtn btn" role="button">
+      {props.children}
+      1m
+    </button>
+  );
+}
 
-// const seconds1d = 86400;
-// const seconds5d = 432000;
-// const seconds1m = 2629800;
-// const seconds3m = 7889400;
-// const seconds1y = 31557600;
-// const seconds3y = 94672800;
-// const seconds5y = 157788000;
-// const seconds10y = 315576000;
+export function Btn3m(props) {
+  return (
+    <button {...props} className="3m periodBtn btn" role="button">
+      {props.children}
+      3m
+    </button>
+  );
+}
 
+export function Btn1y(props) {
+  return (
+    <button {...props} className="1y periodBtn btn" role="button">
+      {props.children}
+      1y
+    </button>
+  );
+}
+
+export function Btn3y(props) {
+  return (
+    <button {...props} className="3y periodBtn btn" role="button">
+      {props.children}
+      3y
+    </button>
+  );
+}
+
+export function Btn5y(props) {
+  return (
+    <button {...props} className="5y periodBtn btn" role="button">
+      {props.children}
+      5y
+    </button>
+  );
+}
+
+export function Btn10y(props) {
+  return (
+    <button {...props} className="10y periodBtn btn" role="button">
+      {props.children}
+      10y
+    </button>
+  );
+}
