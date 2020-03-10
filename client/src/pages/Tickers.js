@@ -258,7 +258,6 @@ class Tickers extends Component {
     };
   };
 
-  // NJIB Test 02/17/2020
   getTickerData = async (period, chartRef) => {
 
     let tickerData;
@@ -455,13 +454,29 @@ class Tickers extends Component {
       }
     }
 
-    chartData.push(localChartData);
+    console.log("chartData.length: ", chartData.length);
+    if (chartData.length > 0) {
+      for (var j = 0; j < chartData.length; j++) {
+        if (chartDivRef === chartData[j].chartDivRefData.chartDivRef) {
+          console.log(chartDivRef, " found")
+          chartData[j] = localChartData;
+          console.log("chartData: ", chartData);
+        }
+        else {
+          chartData.push(localChartData);
+        }
+      }
+    }
+    else {
+      console.log("NO CHARTDATA FOUND!")
+      chartData.push(localChartData);
+    }
+
 
     this.setState({ chartData });
     this.setState({ tickerSearch: "" })
     console.log("this.state: ", this.state)
   };
-  //NJIB End test 02/17/2020
 
   getMarketData = async event => {
 
