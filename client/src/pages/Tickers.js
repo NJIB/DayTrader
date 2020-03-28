@@ -262,9 +262,11 @@ class Tickers extends Component {
 
     let tickerData;
 
-    await console.log("period: ", period);
-    await console.log("chartRef: ", chartRef);
-    await console.log("this.state: ", this.state);
+    console.log("*******************************************************************************************");
+    console.log("period: ", period);
+    console.log("chartRef: ", chartRef);
+    console.log("this.state.chartData: ", this.state.chartData);
+    console.log("this.state: ", this.state);
 
     const { chartData } = this.state;
 
@@ -454,15 +456,32 @@ class Tickers extends Component {
       }
     }
 
+    let tickers = [];
+    let chartPush = true;
+
     console.log("chartData.length: ", chartData.length);
     if (chartData.length > 0) {
-      for (var j = 0; j < chartData.length; j++) {
+
+      // Log number of charts, to avoid duplicating charts
+      const chartCount = chartData.length;
+      console.log("chartCount: ", chartCount);
+
+      for (var j = 0; j < chartCount; j++) {
+        tickers.push(chartData[j].chartDivRefData.tickerSearch);
+        console.log("tickers: ", tickers);
+
         if (chartDivRef === chartData[j].chartDivRefData.chartDivRef) {
           console.log(chartDivRef, " found")
           chartData[j] = localChartData;
+          chartPush = false;
+          console.log("chartData updated: ", chartData);
+          // chartData.length = chartCount;
           console.log("chartData: ", chartData);
         }
-        else {
+        else 
+        if (chartPush == true)
+        {
+          // else if (chartDivRef !== chartData[j].chartDivRefData.chartDivRef && (!tickers.indexOf(tickerData))) {
           chartData.push(localChartData);
         }
       }
