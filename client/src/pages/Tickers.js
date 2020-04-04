@@ -10,6 +10,7 @@ import DeleteChartBtn from "../components/DeleteChartBtn";
 import "./styles/style.css";
 
 const moment = require("moment");
+let tickers = [];
 
 let chartsLog = ["1-1", "1-2", "1-3", "2-1", "2-2", "2-3"];
 let chartsCounter = 0;
@@ -107,154 +108,6 @@ class Tickers extends Component {
 
       const seconds1y = 31557600;
       this.getTickerData('1y');
-
-      // let tickerData = this.state.tickerSearch;
-
-      //   let dateNow = (moment().format("MM")) + "/"
-      //     + (moment().format("DD")) + "/"
-      //     + (moment().format("YYYY"));
-      //   console.log("dateNow: " + dateNow);
-
-      //   let dateNowSeconds = parseInt((moment() / 1000));
-      //   console.log("dateNowSeconds: " + dateNowSeconds);
-
-      //   const seconds1d = 86400;
-      //   const seconds5d = 432000;
-      //   const seconds1m = 2629800;
-      //   const seconds3m = 7889400;
-      //   const seconds1y = 31557600;
-      //   const seconds3y = 94672800;
-      //   const seconds5y = 157788000;
-      //   const seconds10y = 315576000;
-
-      //   let startDateSeconds = (dateNowSeconds - seconds1y);
-      //   console.log("startDateSeconds: " + startDateSeconds);
-
-      //   // console.log("startDate: "
-      //   //   + (moment(startDateSeconds).format("MM")) + "/"
-      //   //   + (moment().format("DD")) + "/"
-      //   //   + (moment().format("YYYY")));
-
-      //   console.log("****tickerData: ", tickerData, " ****");
-      //   let settings = {
-      //     "async": true,
-      //     "crossDomain": true,
-      //     "url": "https://apidojo-yahoo-finance-v1.p.rapidapi.com/stock/v2/get-historical-data?frequency=1d&filter=history&period1=" + startDateSeconds + "&period2=" + dateNowSeconds + "&symbol=" + tickerData,
-      //     "method": "GET",
-      //     "headers": {
-      //       "x-rapidapi-host": "apidojo-yahoo-finance-v1.p.rapidapi.com",
-      //       "x-rapidapi-key": "7eb729d91fmshd56769216684858p17fff1jsna4991481e499"
-      //       // "x-rapidapi-key": process.env.apiKey
-      //     }
-      //   }
-
-      //   console.log("queryURL: " + settings.url);
-      //   const chartResponse = await fetch(settings.url, settings)
-      //   const responseData = await chartResponse.json();
-      //   console.log("responseData: ", responseData);
-
-      //   // Populating the different chart areas
-
-      //   chartsCounter++;
-      //   console.log("chartsCounter: " + chartsCounter);
-      //   let chartDivRef = ("ChartDivRef" + chartsLog[chartsCounter - 1]);
-      //   let priceResults = [];
-      //   let volResults = [];
-      //   let dayDate = [];
-      //   let latestPrice = "";
-      //   let priorDayPrice = "";
-      //   let latestPriceDate = "";
-      //   let latestPriceChangeNum = "";
-      //   let latestPriceChangePct = "";
-
-      //   for (var i = (responseData.prices.length - 1); i > 0; i--) {
-      //     priceResults.push(responseData.prices[i].close);
-      //     volResults.push(responseData.prices[i].volume / 1000000);
-      //     dayDate.push(moment((responseData.prices[i].date) * 1000).format("MMM Do YY"));
-      //     // console.log("responseData.prices[i].date: ", moment((responseData.prices[i].date) * 1000).format("MMM Do YYYY"));
-      //     recordsCounter++;
-      //     // console.log("recordsCounter: ", recordsCounter);
-      //     // console.log("responseData.prices.length: ", responseData.prices.length);
-
-      //     if (recordsCounter === (responseData.prices.length - 2)) {
-      //       priorDayPrice = (responseData.prices[i].close).toFixed(2);
-      //     };
-
-      //     if (recordsCounter === (responseData.prices.length - 1)) {
-      //       latestPrice = (responseData.prices[i].close).toFixed(2);
-      //       latestPriceDate = (moment((responseData.prices[i].date) * 1000).format("MMM Do YYYY"));
-      //       latestPriceChangeNum = (latestPrice - priorDayPrice).toFixed(2);
-      //       latestPriceChangePct = (latestPrice / priorDayPrice).toFixed(2);
-      //       recordsCounter = 0;
-      //     };
-
-      //   }
-
-      //   // console.log("priceResults: " + priceResults);
-      //   // console.log("volResults: " + volResults);
-      //   // console.log("dayDate: " + dayDate);
-
-      //   console.log("chartDivRef: " + chartDivRef);
-
-      //   const localChartData = {
-      //     chartDivRefData: {
-      //       chartDivRef: chartDivRef,
-      //       tickerSearch: tickerData,
-      //       latestPrice: latestPrice,
-      //       latestPriceDate: latestPriceDate,
-      //       latestPriceChangeNum: latestPriceChangeNum,
-      //       latestPriceChangePct: latestPriceChangePct
-      //     },
-      //     labels:
-      //       dayDate,
-      //     datasets: [
-      //       {
-      //         label: "Stock Price",
-      //         type: 'line',
-      //         // yAxisID: "A",
-      //         yAxesGroup: "A",
-      //         data: priceResults,
-      //         backgroundColor: 'grey',
-      //         pointRadius: '1px',
-      //         y1axis: true
-      //       },
-      //       {
-      //         label: "Volume",
-      //         // yAxisID: "B",
-      //         yAxesGroup: "B",
-      //         data: volResults,
-      //         backgroundColor: 'white',
-      //         // y2axis: true
-      //       }
-      //     ],
-      //     options: {
-      //       scales: {
-      //         yAxes: [
-      //           {
-      //             id: 'A',
-      //             type: 'linear',
-      //             position: 'left',
-      //           },
-      //           {
-      //             id: 'B',
-      //             type: 'linear',
-      //             position: 'right',
-      //             ticks: {
-      //             // min: 0,
-      //             // max: 1
-      //             },
-      //           }
-      //         ]
-      //       },
-      //       legendPosition: "bottom"
-      //     }
-      //   }
-
-      //   chartData.push(localChartData);
-
-      //   this.setState({ chartData });
-      //   this.setState({ tickerSearch: "" })
-      //   console.log("this.state: ", this.state)
     };
   };
 
@@ -265,20 +118,16 @@ class Tickers extends Component {
     console.log("*******************************************************************************************");
     console.log("period: ", period);
     console.log("chartRef: ", chartRef);
-    console.log("this.state.chartData: ", this.state.chartData);
     console.log("this.state: ", this.state);
 
     const { chartData } = this.state;
 
     if (!chartRef) {
       tickerData = this.state.tickerSearch;
-      console.log("!@!@!@! tickerData: ", tickerData, "!@!@!@!");
     } else {
       for (let i = 0; i < this.state.chartData.length; i++) {
-        console.log("this.state.chartData[i].chartDivRefData.chartDivRef: ", this.state.chartData[i].chartDivRefData.chartDivRef);
         if (chartRef === this.state.chartData[i].chartDivRefData.chartDivRef) {
           tickerData = this.state.chartData[i].chartDivRefData.tickerSearch;
-          console.log("!@!@!@! tickerData: ", tickerData, "!@!@!@!");
         }
       }
     }
@@ -286,11 +135,9 @@ class Tickers extends Component {
     let dateNow = (moment().format("MM")) + "/"
       + (moment().format("DD")) + "/"
       + (moment().format("YYYY"));
-    console.log("dateNow: " + dateNow);
 
     let dateNowSeconds = parseInt((moment() / 1000));
     console.log("dateNowSeconds: " + dateNowSeconds);
-    console.log("period: ", period);
 
     switch (period) {
       case '1d':
@@ -321,17 +168,8 @@ class Tickers extends Component {
         startSeconds = seconds10y;
         break;
     }
-    console.log("startSeconds: ", startSeconds)
 
-    // let startDateSeconds = (dateNowSeconds - seconds1y);
-    // let startDateSeconds = (dateNowSeconds - period);
     let startDateSeconds = (dateNowSeconds - startSeconds);
-    console.log("startDateSeconds: " + startDateSeconds);
-
-    // console.log("startDate: "
-    //   + (moment(startDateSeconds).format("MM")) + "/"
-    //   + (moment().format("DD")) + "/"
-    //   + (moment().format("YYYY")));
 
     console.log("****tickerData in getTickerData: ", tickerData, " ****");
     let settings = {
@@ -342,7 +180,6 @@ class Tickers extends Component {
       "headers": {
         "x-rapidapi-host": "apidojo-yahoo-finance-v1.p.rapidapi.com",
         "x-rapidapi-key": "7eb729d91fmshd56769216684858p17fff1jsna4991481e499"
-        // "x-rapidapi-key": process.env.apiKey
       }
     }
 
@@ -354,8 +191,6 @@ class Tickers extends Component {
     // Populating the different chart areas
 
     chartsCounter++;
-    console.log("chartsCounter: " + chartsCounter);
-    // let chartDivRef = ("ChartDivRef" + chartsLog[chartsCounter - 1]);
     let chartDivRef = "";
     let priceResults = [];
     let volResults = [];
@@ -368,18 +203,17 @@ class Tickers extends Component {
 
     if (!chartRef) {
       chartDivRef = ("ChartDivRef" + chartsLog[chartsCounter - 1]);
+      console.log("*** chartDivRef: ", chartDivRef, " ***");
     } else {
       chartDivRef = chartRef;
+      console.log("*** chartDivRef: ", chartDivRef, " ***");
     }
 
     for (var i = (responseData.prices.length - 1); i > 0; i--) {
       priceResults.push(responseData.prices[i].close);
       volResults.push(responseData.prices[i].volume / 1000000);
       dayDate.push(moment((responseData.prices[i].date) * 1000).format("MMM Do YY"));
-      // console.log("responseData.prices[i].date: ", moment((responseData.prices[i].date) * 1000).format("MMM Do YYYY"));
       recordsCounter++;
-      // console.log("recordsCounter: ", recordsCounter);
-      // console.log("responseData.prices.length: ", responseData.prices.length);
 
       if (recordsCounter === (responseData.prices.length - 2)) {
         priorDayPrice = (responseData.prices[i].close).toFixed(2);
@@ -392,14 +226,7 @@ class Tickers extends Component {
         latestPriceChangePct = (latestPrice / priorDayPrice).toFixed(2);
         recordsCounter = 0;
       };
-
     }
-
-    // console.log("priceResults: " + priceResults);
-    // console.log("volResults: " + volResults);
-    // console.log("dayDate: " + dayDate);
-
-    console.log("chartDivRef: " + chartDivRef);
 
     const localChartData = {
       chartDivRefData: {
@@ -456,40 +283,43 @@ class Tickers extends Component {
       }
     }
 
-    let tickers = [];
-    let chartPush = true;
+    // let chartPush = true;
 
-    console.log("chartData.length: ", chartData.length);
-    if (chartData.length > 0) {
+    // console.log("chartData.length: ", chartData.length);
+    // if (chartData.length > 0) {
 
-      // Log number of charts, to avoid duplicating charts
-      const chartCount = chartData.length;
-      console.log("chartCount: ", chartCount);
+    for (var j = 0; j < chartData.length; j++) {
+      tickers.push(chartData[j].chartDivRefData.tickerSearch);
+    }
 
-      for (var j = 0; j < chartCount; j++) {
-        tickers.push(chartData[j].chartDivRefData.tickerSearch);
-        console.log("tickers: ", tickers);
-
-        if (chartDivRef === chartData[j].chartDivRefData.chartDivRef) {
-          console.log(chartDivRef, " found")
-          chartData[j] = localChartData;
-          chartPush = false;
-          console.log("chartData updated: ", chartData);
-          // chartData.length = chartCount;
-          console.log("chartData: ", chartData);
-        }
-        else 
-        if (chartPush == true)
-        {
-          // else if (chartDivRef !== chartData[j].chartDivRefData.chartDivRef && (!tickers.indexOf(tickerData))) {
-          chartData.push(localChartData);
-        }
+    for (var k = 0; k < chartData.length; k++) {
+      if (chartDivRef === chartData[k].chartDivRefData.chartDivRef) {
+        console.log(chartDivRef, " found")
+        chartData[k] = localChartData;
+        console.log("chartData[", k, "]: ", chartData[k]);
+        // chartPush = false;
+        console.log("chartData updated: ", chartData);
       }
     }
-    else {
-      console.log("NO CHARTDATA FOUND!")
+
+    console.log("tickers: ", tickers);
+    console.log("localChartData.chartDivRefData.tickerSearch ", localChartData.chartDivRefData.tickerSearch);
+    var n = tickers.indexOf(localChartData.chartDivRefData.tickerSearch);
+    console.log("n: ", n);
+
+    if (n > -1) {
+      console.log("DUPLICATE TICKER FOUND");
+    } else {
       chartData.push(localChartData);
-    }
+    };
+
+    console.log("chartData: ", chartData);
+    // }
+    // }
+    // else {
+    // console.log("NO CHARTDATA FOUND!")
+    // chartData.push(localChartData);
+    // }
 
 
     this.setState({ chartData });
@@ -526,7 +356,6 @@ class Tickers extends Component {
         priceChange: exchange.regularMarketChange.fmt,
         priceChangePercent: exchange.regularMarketChangePercent.fmt
       }
-      // console.log("localExchangeData: ", localExchangeData);
       exchangeCounter++;
       if (exchangeCounter <= 3) {
         exchangeData.push(localExchangeData);
@@ -536,7 +365,6 @@ class Tickers extends Component {
     });
 
     this.setState({ exchangeData });
-    // console.log("this.state: ", this.state);
 
   }
 
