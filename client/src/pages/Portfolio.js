@@ -39,7 +39,7 @@ class Portfolio extends Component {
     this.loadStockSummary();
     console.log("this: ", this);
 
-    this.getTickerPrices();
+    await this.getTickerPrices();
 
   }
 
@@ -94,34 +94,35 @@ class Portfolio extends Component {
     });
 
     const promises = tickersToBeLookedUp.map(tickerData => {
-      // const promises = tickersToBeLookedUp.map(tickerData => {
-        let settings = {
-        "async": true,
-        "crossDomain": true,
-        "url": "https://apidojo-yahoo-finance-v1.p.rapidapi.com/stock/v2/get-financials?symbol=" + tickerData,
-        "method": "GET",
-        "headers": {
-          "x-rapidapi-host": "apidojo-yahoo-finance-v1.p.rapidapi.com",
-          "x-rapidapi-key": "e3f35368bdmsheaf36be3f76863bp1b27c9jsn06d6a302ff59"
-        // },
-        // latestPrice: function() {
-        //   return this;
+      let settings = {
+        "url_details": {
+          "async": true,
+          "crossDomain": true,
+          "url": "https://apidojo-yahoo-finance-v1.p.rapidapi.com/stock/v2/get-financials?symbol=" + tickerData,
+          "method": "GET",
+          "headers": {
+            "x-rapidapi-host": "apidojo-yahoo-finance-v1.p.rapidapi.com",
+            "x-rapidapi-key": "e3f35368bdmsheaf36be3f76863bp1b27c9jsn06d6a302ff59"
+          },
+        },
+        "latestPrice": function () {
+          return this.url_details;
         }
       }
 
-      // const unboundApiCall = settings.latestPrice;
-      // const boundApiCall = unboundApiCall.bind(settings);
-      // const boundApiCallURL = boundApiCall().url;
-      // const boundApiCallsettings = boundApiCall();
-      // console.log("boundApiCallsettings: ", boundApiCall());
-      // console.log("boundApiCallURL: ", boundApiCallURL);
-      // const latestPrice = fetch.bind(boundApiCallURL [boundApiCallsettings]) ;
+      const unboundLatestPrice = settings.latestPrice;
+      console.log("unboundLatestPrice: ", unboundLatestPrice);
+      const boundLatestPrice = unboundLatestPrice.bind(settings);
+      console.log("boundLatestPrice: ", boundLatestPrice());
 
-      const latestPrice = fetch(settings.url, settings)
-      // const latestPrice = fetch.bind(boundApiCallURL, boundApiCallsettings);
-      // const latestPrice = setTimeout(fetch.bind(boundApiCallURL, boundApiCallsettings),1000);
+      console.log("boundLatestPrice.url: ", boundLatestPrice().url);
+      const latestPrice = fetch.bind(boundLatestPrice().url, boundLatestPrice);
+
+      // NJIB Original version commented out 4/5/2020
+      // const latestPrice = fetch(settings.url, settings)
+      //NJIB
+
       return latestPrice;
-      // return boundApiCall;
     })
 
     const responseData = await Promise.all(promises);
