@@ -33,14 +33,11 @@ class Portfolio extends Component {
   };
 
   async componentDidMount() {
-    // componentDidMount() {
     await this.loadStocks();
-    // await this.loadStockSummary();
     this.loadStockSummary();
     console.log("this: ", this);
-
     await this.getTickerPrices();
-
+    await this.makeAPICall();
   }
 
   // NJIB This code would load stocks, but getTickerPrices would not work (would not await)
@@ -67,7 +64,6 @@ class Portfolio extends Component {
       .catch(err => console.log(err));
   };
 
-  // NJIB Latest Stock Prices obtained - NOT QUITE WORKING (NOT LOOPING THROUGH ON THE  MAP)
   getTickerPrices = async _ => {
     console.log("Looping through tickers data for API call");
     console.log("this (in getTickerPrices function): ", this);
@@ -114,14 +110,13 @@ class Portfolio extends Component {
       console.log("unboundLatestPrice: ", unboundLatestPrice);
       const boundLatestPrice = unboundLatestPrice.bind(settings);
       console.log("boundLatestPrice: ", boundLatestPrice());
-
       console.log("boundLatestPrice.url: ", boundLatestPrice().url);
-      const latestPrice = fetch.bind(boundLatestPrice().url, boundLatestPrice);
 
-      // NJIB Original version commented out 4/5/2020
-      // const latestPrice = fetch(settings.url, settings)
-      //NJIB
+      const url = boundLatestPrice().url;
+      console.log("url: ", url);
 
+      //NJIB 4/6/2020 trying calling fewtch from a separate async function
+      const latestPrice = fetch.bind(url, boundLatestPrice);
       return latestPrice;
     })
 
