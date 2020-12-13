@@ -37,7 +37,7 @@ class Portfolio extends Component {
     this.loadStockSummary();
     console.log("this: ", this);
     await this.getTickerPrices();
-    await this.makeAPICall();
+    // await this.makeAPICall();
   }
 
   // NJIB This code would load stocks, but getTickerPrices would not work (would not await)
@@ -115,7 +115,8 @@ class Portfolio extends Component {
       const url = boundLatestPrice().url;
       console.log("url: ", url);
 
-      //NJIB 4/6/2020 trying calling fewtch from a separate async function
+      //NJIB 4/6/2020 trying calling fetch from a separate async function
+      //NJIB 12/12/2020 looks like this is not working - returning undefined 
       const latestPrice = fetch.bind(url, boundLatestPrice);
       return latestPrice;
     })
@@ -125,49 +126,52 @@ class Portfolio extends Component {
 
     const priceOutputs = responseData.map(async item => {
       // const priceOutputs =await responseData.map(async item => {
-      const resolvedItem = await item.json();
-      console.log("resolvedItem: ", resolvedItem);
+        //12/12/2020 change to remove brackets (was crashing)
+        // const resolvedItem = await item.json();
+        const resolvedItem = await item.json;
+        console.log("resolvedItem: ", resolvedItem);
       return resolvedItem;
     })
     console.log("priceOutputs; ", priceOutputs);
     const resolvedPriceOutputs = await Promise.all(priceOutputs);
     console.log("resolvedPriceOutputs; ", resolvedPriceOutputs);
 
-    const collatedData = this.state.tickers.map(destination => {
-      const latestPrice = {
-        ticker: "",
-        actiontype: "",
-        quantity: 0,
-        transactiondate: "",
-        transactionprice: 0,
-        latestprice: 0,
-        gainlossnum: 0,
-        gainlosspct: 0
-      };
-      latestPrice.ticker = destination.ticker;
-      latestPrice.transactiontype = destination.transactiontype;
-      latestPrice.quantity = destination.quantity;
-      latestPrice.transactiondate = destination.transactiondate;
-      latestPrice.transactionprice = destination.transactionprice;
+    //NJIB 12/12/2020 temporary comment out to check resolvedPriceOutputs
+    // const collatedData = this.state.tickers.map(destination => {
+    //   const latestPrice = {
+    //     ticker: "",
+    //     actiontype: "",
+    //     quantity: 0,
+    //     transactiondate: "",
+    //     transactionprice: 0,
+    //     latestprice: 0,
+    //     gainlossnum: 0,
+    //     gainlosspct: 0
+    //   };
+    //   latestPrice.ticker = destination.ticker;
+    //   latestPrice.transactiontype = destination.transactiontype;
+    //   latestPrice.quantity = destination.quantity;
+    //   latestPrice.transactiondate = destination.transactiondate;
+    //   latestPrice.transactionprice = destination.transactionprice;
 
-      latestPrices.push(latestPrice);
-      console.log("latestPrices added to: ", latestPrices);
+    //   latestPrices.push(latestPrice);
+    //   console.log("latestPrices added to: ", latestPrices);
 
-      resolvedPriceOutputs.forEach(latestPriceInfo => {
-        if (latestPrice.ticker === latestPriceInfo.price.symbol) {
-          latestPrice.latestprice = latestPriceInfo.price.regularMarketPrice.fmt;
-          latestPrice.gainlossnum = (latestPriceInfo.price.regularMarketPrice.fmt - destination.transactionprice).toFixed(2);
-          // console.log("gainlossnum: ", latestPrice.gainlossnum);
-          latestPrice.gainlosspct = (((latestPriceInfo.price.regularMarketPrice.fmt / destination.transactionprice) - 1) * 100).toFixed(2);
-          // console.log("gainlosspct: ", latestPrice.gainlosspct);
+    //   resolvedPriceOutputs.forEach(latestPriceInfo => {
+    //     if (latestPrice.ticker === latestPriceInfo.price.symbol) {
+    //       latestPrice.latestprice = latestPriceInfo.price.regularMarketPrice.fmt;
+    //       latestPrice.gainlossnum = (latestPriceInfo.price.regularMarketPrice.fmt - destination.transactionprice).toFixed(2);
+    //       // console.log("gainlossnum: ", latestPrice.gainlossnum);
+    //       latestPrice.gainlosspct = (((latestPriceInfo.price.regularMarketPrice.fmt / destination.transactionprice) - 1) * 100).toFixed(2);
+    //       // console.log("gainlosspct: ", latestPrice.gainlosspct);
 
-        }
-      });
-      return latestPrice;
-    })
-    console.log("collatedData; ", collatedData);
-    this.setState({ tickers: collatedData });
-    console.log("this: ", this);
+    //     }
+    //   });
+    //   return latestPrice;
+    // })
+    // console.log("collatedData; ", collatedData);
+    // this.setState({ tickers: collatedData });
+    // console.log("this: ", this);
 
   };
 

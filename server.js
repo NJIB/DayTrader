@@ -17,7 +17,7 @@ app.use(routes);
 
 // Connect to the Mongo DB
 // mongoose.connect(process.env.MONGODB_URI || "mongodb://localhost/reactreadinglist");
-mongoose.connect(process.env.MONGODB_URI || "mongodb://localhost/DayTrader");
+mongoose.connect(process.env.MONGODB_URI || "mongodb://localhost/DayTrader3");
 
 // Start the API server
 app.listen(PORT, function() {
